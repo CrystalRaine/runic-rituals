@@ -7,8 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.runicrituals.item.ModItems;
-import net.runicrituals.item.ModMenuTypes;
+import net.runicrituals.item.RunicRitualsMenuTypes;
 import org.jspecify.annotations.NonNull;
 
 public class RuneEngraverMenu extends AbstractContainerMenu {
@@ -31,7 +30,7 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
     }
 
     public RuneEngraverMenu(final int containerId, final Inventory inventory, final Container container) {
-        super(ModMenuTypes.RUNE_ENGRAVER_MENU_MENU_TYPE, containerId);
+        super(RunicRitualsMenuTypes.RUNE_ENGRAVER_MENU_MENU_TYPE, containerId);
         checkContainerSize(container, SLOTS_COUNT);
         this.container = container;
 

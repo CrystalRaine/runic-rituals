@@ -10,9 +10,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.item.blocks.rune_engraver.RuneEngraverBlockEntity;
 
-public class ModBlockEntities {
+public class RunicRitualsBlockEntities {
 
-    public static BlockEntityType<RuneEngraverBlockEntity> RUNE_ENGRAVER_BLOCK_ENTITY = register( "rune_engraver", RuneEngraverBlockEntity::new, ModBlocks.RUNE_ENGRAVER );
+    public static BlockEntityType<RuneEngraverBlockEntity> RUNE_ENGRAVER_BLOCK_ENTITY = register( "rune_engraver", RuneEngraverBlockEntity::new, RunicRitualsBlocks.RUNE_ENGRAVER );
 
     private static <T extends BlockEntity> BlockEntityType<T> register(
             String name,

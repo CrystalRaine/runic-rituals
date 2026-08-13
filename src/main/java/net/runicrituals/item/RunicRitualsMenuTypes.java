@@ -9,7 +9,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.item.blocks.rune_engraver.RuneEngraverMenu;
 
-public class ModMenuTypes {
+public class RunicRitualsMenuTypes {
 
     public static final MenuType<RuneEngraverMenu> RUNE_ENGRAVER_MENU_MENU_TYPE = register("rune_engraver", RuneEngraverMenu::new);
 

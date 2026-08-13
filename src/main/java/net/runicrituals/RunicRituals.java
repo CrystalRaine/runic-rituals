@@ -14,12 +14,13 @@ public class RunicRituals implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ModItems.registerItems();
-		ModBlocks.registerBlocks();
-		ModBlockEntities.registerBlockEntityTypes();
-		ModCreativeTabs.registerCreativeTabs();
-		ModMenuTypes.registerMenuTypes();
-		ModScreens.registerScreens();
+		RunicRitualsItems.registerItems();
+		RunicRitualsBlocks.registerBlocks();
+		RunicRitualsBlockEntities.registerBlockEntityTypes();
+		RunicRitualsCreativeTabs.registerCreativeTabs();
+		RunicRitualsMenuTypes.registerMenuTypes();
+		RunicRitualsScreens.registerScreens();
+		RunicRitualsStats.registerStats();
 	}
 
 	public static Identifier id(String path) {

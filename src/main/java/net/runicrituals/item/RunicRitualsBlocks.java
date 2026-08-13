@@ -17,7 +17,7 @@ import net.runicrituals.item.blocks.rune_engraver.RuneEngraver;
 
 import java.util.function.Function;
 
-public class ModBlocks {
+public class RunicRitualsBlocks {
 
     public static final Block RUNE_ENGRAVER = register(createWithId("rune_engraver"), RuneEngraver::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(1.5f).noOcclusion());
     public static final Block RUNESLATE = register(createWithId("runeslate"), Block::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(1.5f).noOcclusion());

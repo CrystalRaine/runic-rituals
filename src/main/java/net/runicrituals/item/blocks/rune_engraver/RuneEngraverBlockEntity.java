@@ -16,8 +16,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.runicrituals.item.ModBlockEntities;
-import net.runicrituals.item.ModItems;
+import net.runicrituals.item.RunicRitualsBlockEntities;
+import net.runicrituals.item.RunicRitualsItems;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -31,7 +31,7 @@ public class RuneEngraverBlockEntity extends BlockEntity implements Container, W
     NonNullList<ItemStack> stacks = NonNullList.withSize(3, ItemStack.EMPTY);
 
     public RuneEngraverBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(ModBlockEntities.RUNE_ENGRAVER_BLOCK_ENTITY, worldPosition, blockState);
+        super(RunicRitualsBlockEntities.RUNE_ENGRAVER_BLOCK_ENTITY, worldPosition, blockState);
     }
 
 //    worldly container
@@ -47,7 +47,7 @@ public class RuneEngraverBlockEntity extends BlockEntity implements Container, W
 
     @Override
     public boolean canPlaceItemThroughFace(int slot, @NonNull ItemStack itemStack, @Nullable Direction direction) {
-        if (slot == 0 && (itemStack.is(ModItems.RUNESTONE) || itemStack.is(ModItems.RUNESLATE))) {
+        if (slot == 0 && (itemStack.is(RunicRitualsItems.RUNESTONE) || itemStack.is(RunicRitualsItems.RUNESLATE))) {
             return true;
         }
         if (slot == 1 && (

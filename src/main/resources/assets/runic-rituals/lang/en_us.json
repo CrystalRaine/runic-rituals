@@ -5,5 +5,9 @@
   "block.runic-rituals.rune_engraver": "Rune Engraver",
   "block.runic-rituals.runeslate": "Runeslate",
 
-  "creativeTab.runic-rituals.mod" : "Runic Rituals"
+  "creativeTab.runic-rituals.mod" : "Runic Rituals",
+
+  "stat.runic-rituals.interact_with_rune_engraver": "Interactions with Rune Engraver",
+  "stat.runic-rituals.runes_engraved": "Runes Engraved"
+
 }
