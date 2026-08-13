@@ -22,6 +22,7 @@ public class ModCreativeTabs {
         .displayItems((params, output) -> {
             output.accept(ModItems.BASIC_WAND);
             output.accept(ModItems.RUNESTONE);
+            output.accept(ModBlocks.RUNESLATE);
             output.accept(ModBlocks.RUNE_ENGRAVER);
         })
         .build();

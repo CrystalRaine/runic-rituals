@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": "runic-rituals:runestone"
+  },
+  "result": {
+    "id": "runic-rituals:runeslate"
+  }
+}

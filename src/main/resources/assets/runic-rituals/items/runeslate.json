@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "runic-rituals:block/rune_engraver"
+    "model": "runic-rituals:block/runeslate"
   }
 }

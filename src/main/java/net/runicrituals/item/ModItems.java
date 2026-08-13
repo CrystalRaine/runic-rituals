@@ -17,8 +17,10 @@ public class ModItems {
 
     public static final Item RUNESTONE = registerItem("runestone", Item::new, new Item.Properties());
     public static final Item BASIC_WAND = registerItem("wand", Item::new, new Item.Properties().stacksTo(1));
+    public static final Item RUNESLATE = ModBlocks.RUNESLATE.asItem();
+    public static final Item RUNE_ENGRAVER = ModBlocks.RUNE_ENGRAVER.asItem();
 
-    public static void registerModItems() {
+    public static void registerItems() {
         RunicRituals.LOGGER.info("Registering mod items");
 
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register((tab)-> {tab.accept(RUNESTONE);});

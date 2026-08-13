@@ -1,4 +1,7 @@
 {
   "replace": false,
-  "values": ["runic-rituals:rune_engraver"]
+  "values": [
+    "runic-rituals:rune_engraver",
+    "runic-rituals:runeslate"
+  ]
 }
