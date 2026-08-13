@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "runic-rituals:block/rune_engraver"
+  }
+}

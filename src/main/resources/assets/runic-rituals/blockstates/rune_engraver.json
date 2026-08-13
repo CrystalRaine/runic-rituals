@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "runic-rituals:block/rune_engraver"
+    }
+  }
+}

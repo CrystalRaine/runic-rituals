@@ -4,6 +4,9 @@ import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.resources.Identifier;
 
+import net.runicrituals.item.ModBlocks;
+import net.runicrituals.item.ModCreativeTabs;
+import net.runicrituals.item.ModItems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +16,9 @@ public class RunicRituals implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-
+		ModItems.registerModItems();
+		ModBlocks.registerModBlocks();
+		ModCreativeTabs.registerCreativeTabs();
 	}
 
 	public static Identifier id(String path) {
