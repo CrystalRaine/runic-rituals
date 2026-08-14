@@ -1,5 +1,6 @@
-package net.runicrituals.item.blocks.rune_engraver;
+package net.runicrituals.registries.blocks.rune_engraver;
 
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -7,15 +8,14 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.ResultContainer;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.runicrituals.item.RunicRitualsBlocks;
-import net.runicrituals.item.RunicRitualsMenuTypes;
-import net.runicrituals.item.RunicRitualsRecipes;
+import net.runicrituals.registries.RunicRitualsBlocks;
+import net.runicrituals.registries.RunicRitualsComponents;
+import net.runicrituals.registries.RunicRitualsMenuTypes;
+import net.runicrituals.registries.RunicRitualsRecipes;
+import net.runicrituals.registries.components.RuneDataComponent;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -115,6 +115,9 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
 
                     if (this.output.setRecipeUsed((ServerPlayer) this.player, recipeHolder)) {
                         ItemStack recipeResult = recipe.assemble(recipeInput);
+
+                        // add engraving Component
+                        recipeResult.set(RunicRitualsComponents.ELEMENT_DATA_COMPONENT_TYPE, new RuneDataComponent(0,this.input.getItem(1).getItem()));
 
                         if (recipeResult.isItemEnabled(level.enabledFeatures())) {
                             result = recipeResult;

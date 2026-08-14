@@ -1,37 +1,40 @@
-package net.runicrituals.item.blocks.rune_engraver;
+package net.runicrituals.registries.blocks.rune_engraver;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.runicrituals.item.RunicRitualsRecipes;
+import net.runicrituals.registries.RunicRitualsRecipes;
 import org.jspecify.annotations.NonNull;
+
+import java.util.Optional;
 
 public class RuneEngravingRecipe implements Recipe<RuneEngravingRecipeInput> {
     private final Ingredient runeBase;
-    private final Ingredient inlayMaterial;
+    private final Optional<Ingredient> inlayMaterial;
     private final ItemStackTemplate result;
 
     public static final MapCodec<RuneEngravingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     Ingredient.CODEC.fieldOf("runeBase").forGetter(RuneEngravingRecipe::getRuneBase),
-                    Ingredient.CODEC.fieldOf("inlayMaterial").forGetter(RuneEngravingRecipe::getInlayMaterial),
+                    Ingredient.CODEC.optionalFieldOf("inlayMaterial").forGetter(RuneEngravingRecipe::getInlayMaterial),
                     ItemStackTemplate.CODEC.fieldOf("result").forGetter(RuneEngravingRecipe::getResult)
             ).apply(instance, RuneEngravingRecipe::new)
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, RuneEngravingRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC, RuneEngravingRecipe::getRuneBase,
-            Ingredient.CONTENTS_STREAM_CODEC, RuneEngravingRecipe::getInlayMaterial,
+            ByteBufCodecs.optional(Ingredient.CONTENTS_STREAM_CODEC), RuneEngravingRecipe::getInlayMaterial,
             ItemStackTemplate.STREAM_CODEC, RuneEngravingRecipe::getResult,
             RuneEngravingRecipe::new
     );
-
-    public RuneEngravingRecipe(Ingredient runeBase, Ingredient inlayMaterial, ItemStackTemplate result) {
+    public RuneEngravingRecipe(Ingredient runeBase, Optional<Ingredient> inlayMaterial, ItemStackTemplate result) {
         this.runeBase = runeBase;
         this.inlayMaterial = inlayMaterial;
         this.result = result;
@@ -45,13 +48,13 @@ public class RuneEngravingRecipe implements Recipe<RuneEngravingRecipeInput> {
         return this.runeBase;
     }
 
-    public Ingredient getInlayMaterial() {
+    public Optional<Ingredient> getInlayMaterial() {
         return this.inlayMaterial;
     }
 
     @Override
     public boolean matches(@NonNull RuneEngravingRecipeInput input, @NonNull Level level) {
-        return this.runeBase.test(input.getItem(0)) && this.inlayMaterial.test(input.getItem(1));
+        return this.runeBase.test(input.getItem(0)) && (this.inlayMaterial.isPresent() && this.inlayMaterial.get().test(input.getItem(1)) || (this.inlayMaterial.isEmpty() && input.getItem(1).isEmpty()));
     }
 
     @Override
@@ -93,4 +96,5 @@ public class RuneEngravingRecipe implements Recipe<RuneEngravingRecipeInput> {
     public boolean isSpecial() {
         return true;
     }
+
 }

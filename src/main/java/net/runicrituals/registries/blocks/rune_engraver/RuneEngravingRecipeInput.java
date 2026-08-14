@@ -1,4 +1,4 @@
-package net.runicrituals.item.blocks.rune_engraver;
+package net.runicrituals.registries.blocks.rune_engraver;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;

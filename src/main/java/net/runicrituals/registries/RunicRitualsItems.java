@@ -1,4 +1,4 @@
-package net.runicrituals.item;
+package net.runicrituals.registries;
 
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
@@ -9,16 +9,20 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.runicrituals.RunicRituals;
+import net.runicrituals.registries.items.Runestone;
 
 import java.util.Locale;
 import java.util.function.Function;
 
+import static net.runicrituals.registries.RunicRitualsComponents.ELEMENT_DATA_COMPONENT_TYPE;
+
 public class RunicRitualsItems {
 
-    public static final Item RUNESTONE = registerItem("runestone", Item::new, new Item.Properties());
-    public static final Item BASIC_WAND = registerItem("wand", Item::new, new Item.Properties().stacksTo(1));
-    public static final Item RUNESLATE = RunicRitualsBlocks.RUNESLATE.asItem();
-    public static final Item RUNE_ENGRAVER = RunicRitualsBlocks.RUNE_ENGRAVER.asItem();
+    public static final ResourceKey<Item> RUNESTONE_KEY = resourceKey("runestone");
+    public static final ResourceKey<Item> BASIC_WAND_KEY = resourceKey("wand");
+
+    public static final Item RUNESTONE = registerItem(RUNESTONE_KEY, Runestone::new, new Item.Properties());
+    public static final Item BASIC_WAND = registerItem(BASIC_WAND_KEY, Item::new, new Item.Properties().stacksTo(1));
 
     public static void registerItems() {
         RunicRituals.LOGGER.info("Registering mod items");

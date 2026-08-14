@@ -1,4 +1,4 @@
-package net.runicrituals.item;
+package net.runicrituals.registries;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;

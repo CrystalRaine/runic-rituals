@@ -1,4 +1,4 @@
-package net.runicrituals.item;
+package net.runicrituals.registries;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -7,7 +7,7 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.item.blocks.rune_engraver.RuneEngraverMenu;
+import net.runicrituals.registries.blocks.rune_engraver.RuneEngraverMenu;
 
 public class RunicRitualsMenuTypes {
 

@@ -1,4 +1,4 @@
-package net.runicrituals.item.blocks.rune_engraver;
+package net.runicrituals.registries.blocks.rune_engraver;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.runicrituals.item.RunicRitualsStats;
+import net.runicrituals.registries.RunicRitualsStats;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 

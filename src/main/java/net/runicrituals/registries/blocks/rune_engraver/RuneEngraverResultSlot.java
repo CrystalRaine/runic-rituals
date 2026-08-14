@@ -1,4 +1,4 @@
-package net.runicrituals.item.blocks.rune_engraver;
+package net.runicrituals.registries.blocks.rune_engraver;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;

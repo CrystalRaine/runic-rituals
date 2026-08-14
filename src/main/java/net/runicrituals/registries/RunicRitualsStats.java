@@ -1,4 +1,4 @@
-package net.runicrituals.item;
+package net.runicrituals.registries;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;

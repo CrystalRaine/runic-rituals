@@ -1,8 +1,19 @@
 {
   "type": "runic-rituals:rune_engraving",
   "runeBase": "runic-rituals:runestone",
-  "inlayMaterial": "minecraft:gold_ingot",
+  "inlayMaterial": [
+    "minecraft:iron_ingot",
+    "minecraft:diamond",
+    "minecraft:gold_ingot",
+    "minecraft:amethyst_shard",
+    "minecraft:glass",
+    "minecraft:copper_ingot",
+    "minecraft:obsidian"
+  ],
   "result": {
-    "id": "minecraft:iron_ingot"
+    "id": [
+      "runic-rituals:runestone",
+      "runic-rituals:runeslate"
+    ]
   }
 }

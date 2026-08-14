@@ -1,4 +1,4 @@
-package net.runicrituals.item;
+package net.runicrituals.registries;
 
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.minecraft.core.Registry;
@@ -7,7 +7,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.item.blocks.rune_engraver.RuneEngravingRecipe;
+import net.runicrituals.registries.blocks.rune_engraver.RuneEngravingRecipe;
 
 public class RunicRitualsRecipes {
 

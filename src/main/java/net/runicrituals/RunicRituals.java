@@ -4,7 +4,7 @@ import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.resources.Identifier;
 
-import net.runicrituals.item.*;
+import net.runicrituals.registries.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +22,7 @@ public class RunicRituals implements ModInitializer {
 		RunicRitualsScreens.registerScreens();
 		RunicRitualsStats.registerStats();
 		RunicRitualsRecipes.registerRecipes();
+		RunicRitualsComponents.registerComponents();
 	}
 
 	public static Identifier id(String path) {

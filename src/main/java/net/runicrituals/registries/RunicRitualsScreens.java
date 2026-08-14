@@ -1,8 +1,8 @@
-package net.runicrituals.item;
+package net.runicrituals.registries;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.item.blocks.rune_engraver.RuneEngraverScreen;
+import net.runicrituals.registries.blocks.rune_engraver.RuneEngraverScreen;
 
 public class RunicRitualsScreens {
 
