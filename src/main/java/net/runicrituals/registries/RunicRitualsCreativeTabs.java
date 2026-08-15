@@ -43,7 +43,7 @@ public class RunicRitualsCreativeTabs {
                 for(RuneSymbol symbol : RuneSymbol.values()) {
                     for(RuneMaterial material : RuneMaterial.values()) {
                         ItemStack typedRunestone = new ItemStack(RunicRitualsItems.RUNESTONE);
-                        typedRunestone.set(RunicRitualsComponents.ELEMENT_DATA_COMPONENT_TYPE, new RuneDataComponent(symbol,material));
+                        typedRunestone.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(symbol,material));
 
                         output.accept(typedRunestone);
 
@@ -54,7 +54,7 @@ public class RunicRitualsCreativeTabs {
                 for(RuneSymbol symbol : RuneSymbol.values()) {
                     for(RuneMaterial material : RuneMaterial.values()) {
                         ItemStack typedRunestone = new ItemStack(RunicRitualsBlocks.RUNESLATE);
-                        typedRunestone.set(RunicRitualsComponents.ELEMENT_DATA_COMPONENT_TYPE, new RuneDataComponent(symbol,material));
+                        typedRunestone.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(symbol,material));
 
                         output.accept(typedRunestone);
 

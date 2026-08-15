@@ -1,6 +1,5 @@
 package net.runicrituals.registries.blocks.rune_engraver;
 
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,6 +38,7 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
     private static final int CONTAINER_START_X = 20;
     private static final int CONTAINER_START_Y = 51;
 
+//    private SelectableRecipe.SingleInputSet<RuneEngravingRecipe> recipesForInput = SelectableRecipe.SingleInputSet.empty();
     private final ResultContainer output = new ResultContainer();
     private final ContainerLevelAccess access;
 
@@ -117,7 +117,7 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
                         ItemStack recipeResult = recipe.assemble(recipeInput);
 
                         // add engraving Component
-                        recipeResult.set(RunicRitualsComponents.ELEMENT_DATA_COMPONENT_TYPE, new RuneDataComponent(0,this.input.getItem(1).getItem()));
+                        recipeResult.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(0,this.input.getItem(1).getItem()));
 
                         if (recipeResult.isItemEnabled(level.enabledFeatures())) {
                             result = recipeResult;
@@ -191,6 +191,37 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
 
         return clicked;
     }
+
+//    public SelectableRecipe.SingleInputSet<RuneEngravingRecipe> getVisibleRecipes() {
+//        return this.recipesForInput;
+//    }
+//
+//    public int getNumberOfVisibleRecipes() {
+//        return this.recipesForInput.size();
+//    }
+//
+//    public boolean hasInputItem() {
+//        return !Objects.requireNonNull(this.input.getSlot(0)).get().isEmpty() && !this.recipesForInput.isEmpty();
+//    }
+//
+//    private void setupResultSlot(final int index) {
+//        Optional<RecipeHolder<RuneEngravingRecipe>> usedRecipe;
+//        if (!this.recipesForInput.isEmpty()) {
+//            SelectableRecipe.SingleInputEntry<RuneEngravingRecipe> entry = this.recipesForInput.entries().get(index);
+//            usedRecipe = entry.recipe().recipe();
+//        } else {
+//            usedRecipe = Optional.empty();
+//        }
+//
+//        usedRecipe.ifPresentOrElse(recipe -> {
+//            this.resultContainer.setRecipeUsed((RecipeHolder<?>)recipe);
+//            this.resultSlot.set(recipe.value().assemble(new SingleRecipeInput(this.container.getItem(0))));
+//        }, () -> {
+//            this.resultSlot.set(ItemStack.EMPTY);
+//            this.resultContainer.setRecipeUsed(null);
+//        });
+//        this.broadcastChanges();
+//    }
 
     @Override
     public void removed(Player player) {

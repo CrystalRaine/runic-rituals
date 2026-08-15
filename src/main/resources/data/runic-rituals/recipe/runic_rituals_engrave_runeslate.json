@@ -1,6 +1,6 @@
 {
   "type": "runic-rituals:rune_engraving",
-  "runeBase": "runic-rituals:runestone",
+  "runeBase": "runic-rituals:runeslate",
   "inlayMaterial": [
     "minecraft:iron_ingot",
     "minecraft:diamond",
@@ -11,6 +11,9 @@
     "minecraft:obsidian"
   ],
   "result": {
-    "id": "runic-rituals:runestone"
+    "id": "runic-rituals:runeslate",
+    "components": {
+
+    }
   }
 }
