@@ -19,7 +19,7 @@ public enum RuneSymbol  {
     SPACE(5, ChatFormatting.LIGHT_PURPLE, "Space", RunicRitualsItems.SPACE_RUNE),
     TIME(6, ChatFormatting.GREEN, "Time",  RunicRitualsItems.TIME_RUNE),
     MANIFEST(8, ChatFormatting.BLUE, "Manifest", RunicRitualsItems.MANIFEST_RUNE),
-    SACRIFICE(7, ChatFormatting.GREEN, "Sacrifice",  RunicRitualsItems.SACRIFICE_RUNE)
+    SACRIFICE(7, ChatFormatting.DARK_AQUA, "Sacrifice",  RunicRitualsItems.SACRIFICE_RUNE)
     ;
 
     private final int id;
