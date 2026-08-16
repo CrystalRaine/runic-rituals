@@ -1,7 +1,0 @@
-{
-  "type": "runic-rituals:rune_engraving",
-  "runeBase": "runic-rituals:runestone",
-  "result": {
-    "id": "runic-rituals:runestone"
-  }
-}

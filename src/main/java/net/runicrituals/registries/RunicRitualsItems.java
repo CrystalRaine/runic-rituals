@@ -25,7 +25,7 @@ public class RunicRitualsItems {
     public static final ResourceKey<Item> SPACE_RUNE_KEY = resourceKey("space_rune");
     public static final ResourceKey<Item> TIME_RUNE_KEY = resourceKey("time_rune");
     public static final ResourceKey<Item> MANIFEST_RUNE_KEY = resourceKey("manifest_rune");
-
+    public static final ResourceKey<Item> SACRIFICE_RUNE_KEY = resourceKey("sacrifice_rune");
 
     public static final Item KINETIC_RUNE = registerItem(KINETIC_RUNE_KEY, Item::new, new Item.Properties());
     public static final Item ARCANE_RUNE = registerItem(ARCANE_RUNE_KEY, Item::new, new Item.Properties());
@@ -35,6 +35,7 @@ public class RunicRitualsItems {
     public static final Item SPACE_RUNE = registerItem(SPACE_RUNE_KEY, Item::new, new Item.Properties());
     public static final Item TIME_RUNE = registerItem(TIME_RUNE_KEY, Item::new, new Item.Properties());
     public static final Item MANIFEST_RUNE = registerItem(MANIFEST_RUNE_KEY, Item::new, new Item.Properties());
+    public static final Item SACRIFICE_RUNE = registerItem(SACRIFICE_RUNE_KEY, Item::new, new Item.Properties());
 
 
     public static final ResourceKey<Item> BASIC_WAND_KEY = resourceKey("wand");

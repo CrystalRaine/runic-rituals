@@ -1,28 +1,37 @@
 package net.runicrituals.logic;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.runicrituals.registries.RunicRitualsItems;
 
 import java.util.Arrays;
 import java.util.List;
 
 public enum RuneSymbol  {
-    ARCANE(0,ChatFormatting.AQUA, "Arcane"),
-    KINETIC(1, ChatFormatting.GRAY, "Kinetic"),
-    THERMAL(2, ChatFormatting.RED, "Thermal"),
-    ELECTRIC(3, ChatFormatting.YELLOW, "Electric"),
-    LIGHT(4, ChatFormatting.WHITE, "Light"),
-    SPACE(5, ChatFormatting.LIGHT_PURPLE, "Space"),
-    TIME(6, ChatFormatting.GREEN, "Time"),
-    MANIFEST(7, ChatFormatting.BLUE, "Manifest");
+    ARCANE(0,ChatFormatting.AQUA, "Arcane", RunicRitualsItems.ARCANE_RUNE),
+    KINETIC(1, ChatFormatting.GRAY, "Kinetic", RunicRitualsItems.KINETIC_RUNE),
+    THERMAL(2, ChatFormatting.RED, "Thermal", RunicRitualsItems.THERMAL_RUNE),
+    ELECTRIC(3, ChatFormatting.YELLOW, "Electric", RunicRitualsItems.ELECTRIC_RUNE),
+    LIGHT(4, ChatFormatting.WHITE, "Light", RunicRitualsItems.LIGHT_RUNE),
+    SPACE(5, ChatFormatting.LIGHT_PURPLE, "Space", RunicRitualsItems.SPACE_RUNE),
+    TIME(6, ChatFormatting.GREEN, "Time",  RunicRitualsItems.TIME_RUNE),
+    MANIFEST(8, ChatFormatting.BLUE, "Manifest", RunicRitualsItems.MANIFEST_RUNE),
+    SACRIFICE(7, ChatFormatting.GREEN, "Sacrifice",  RunicRitualsItems.SACRIFICE_RUNE)
+    ;
 
     private final int id;
     private final String name;
     private final ChatFormatting formatting;
+    private final Item symbolItem;
 
-    RuneSymbol(int id, ChatFormatting formatting, String name){
+    RuneSymbol(int id, ChatFormatting formatting, String name, Item symbolItem){
         this.id = id;
         this.name = name;
         this.formatting = formatting;
+        this.symbolItem = symbolItem;
     }
 
     public int getId(){
@@ -37,7 +46,11 @@ public enum RuneSymbol  {
         return formatting;
     }
 
-    public static RuneSymbol getElementFromId(int id){
+    public Item getSymbolItem() {
+        return symbolItem;
+    }
+
+    public static RuneSymbol getSymbolFromId(int id){
 //        be a little fancier to prevent crashes : )
         List<RuneSymbol> candidates = Arrays.stream(RuneSymbol.values()).filter(e -> e.id == id).toList();
         if (!candidates.isEmpty()) {
@@ -46,11 +59,20 @@ public enum RuneSymbol  {
         return RuneSymbol.ARCANE;
     }
 
+    public static RuneSymbol getSymbolFromItem(ItemStackTemplate resultItem){
+//        be a little fancier to prevent crashes : )
+        List<RuneSymbol> candidates = Arrays.stream(RuneSymbol.values()).filter(e -> resultItem.is(e.symbolItem)).toList();
+        if (!candidates.isEmpty()) {
+            return candidates.getFirst();
+        }
+        return RuneSymbol.ARCANE;
+    }
+
     public static String getNameFromElementId(int id) {
-        return getElementFromId(id).getName();
+        return getSymbolFromId(id).getName();
     }
 
     public static ChatFormatting getFormattingFromElementId(int id) {
-        return getElementFromId(id).getFormatting();
+        return getSymbolFromId(id).getFormatting();
     }
 }

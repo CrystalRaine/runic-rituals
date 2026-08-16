@@ -18,6 +18,9 @@ import net.runicrituals.registries.RunicRitualsStats;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+/**
+ * well. this was a pain to set up lol
+ */
 public class RuneEngraver extends Block {
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;

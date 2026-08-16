@@ -2,15 +2,24 @@ package net.runicrituals.registries.blocks.rune_engraver;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.inventory.LoomMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
+import net.runicrituals.RunicRituals;
+import net.runicrituals.registries.RunicRitualsComponents;
 import net.runicrituals.registries.RunicRitualsRecipes;
+import net.runicrituals.registries.components.RuneDataComponent;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
@@ -19,6 +28,9 @@ public class RuneEngravingRecipe implements Recipe<RuneEngravingRecipeInput> {
     private final Ingredient runeBase;
     private final Optional<Ingredient> inlayMaterial;
     private final ItemStackTemplate result;
+
+    public static final TagKey<Item> INLAYABLE_ITEMS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "inlay_items"));
+    public static final TagKey<Item> ENGRAVABLE_ITEMS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "engrave_items"));
 
     public static final MapCodec<RuneEngravingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
@@ -59,7 +71,13 @@ public class RuneEngravingRecipe implements Recipe<RuneEngravingRecipeInput> {
 
     @Override
     public @NonNull ItemStack assemble(@NonNull RuneEngravingRecipeInput input) {
-        return this.result.create();
+
+        // output from this workbench mostly ignores the recipe, as it only gives data for the rune to set into the engraved item.
+        ItemStack recipeResult = input.getItem(0).copy();
+        recipeResult.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(input.getSymbol(), input.getItem(1).getItem()));
+        recipeResult.setCount(1);
+
+        return recipeResult;
     }
 
     @Override
@@ -88,13 +106,17 @@ public class RuneEngravingRecipe implements Recipe<RuneEngravingRecipeInput> {
     }
 
     @Override
-    public @NonNull RecipeBookCategory recipeBookCategory() {
+    public RecipeBookCategory recipeBookCategory() {
         return null;
     }
 
     @Override
     public boolean isSpecial() {
         return true;
+    }
+
+    public SlotDisplay resultDisplay() {
+        return new SlotDisplay.ItemStackSlotDisplay(result);
     }
 
 }

@@ -6,15 +6,18 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.item.RangeSelectItemModel;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.runicrituals.RunicRituals;
+import net.runicrituals.logic.RuneSymbol;
 import net.runicrituals.registries.RunicRitualsComponents;
 import net.runicrituals.registries.RunicRitualsItems;
 import net.runicrituals.registries.components.RuneSymbolItemModelProperty;
 import org.jspecify.annotations.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,29 +47,25 @@ public class RunicRitualsModelProvider extends FabricModelProvider {
 
         ItemModel.Unbaked runestone = ItemModelUtils.plainModel(itemModelGenerator.createFlatItemModel(RunicRitualsItems.RUNESTONE, ModelTemplates.FLAT_ITEM));
 
-        ItemModel.Unbaked kineticRune   =   registerScaledHalf(RunicRitualsItems.KINETIC_RUNE, itemModelGenerator);
-        ItemModel.Unbaked arcaneRune    =   registerScaledHalf(RunicRitualsItems.ARCANE_RUNE, itemModelGenerator);
-        ItemModel.Unbaked thermalRune   =   registerScaledHalf(RunicRitualsItems.THERMAL_RUNE, itemModelGenerator);
-        ItemModel.Unbaked electricRune  =   registerScaledHalf(RunicRitualsItems.ELECTRIC_RUNE, itemModelGenerator);
-        ItemModel.Unbaked lightRune     =   registerScaledHalf(RunicRitualsItems.LIGHT_RUNE, itemModelGenerator);
-        ItemModel.Unbaked spaceRune     =   registerScaledHalf(RunicRitualsItems.SPACE_RUNE, itemModelGenerator);
-        ItemModel.Unbaked timeRune      =   registerScaledHalf(RunicRitualsItems.TIME_RUNE, itemModelGenerator);
-        ItemModel.Unbaked manifestRune  =   registerScaledHalf(RunicRitualsItems.MANIFEST_RUNE, itemModelGenerator);
+//        create list of runesymbols entries from the enum
+        List<RangeSelectItemModel.Entry> unbakedRuneSymbols = new ArrayList<>();
+        for(RuneSymbol symbol : RuneSymbol.values()) {
+            Identifier halfScaleId = Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "item/rune_overlay/" + symbol.name().toLowerCase());
+            Identifier halfScaleModel = HALF_SCALE.create(
+                    halfScaleId,
+                    TextureMapping.singleSlot(TextureSlot.LAYER0, new Material(ModelLocationUtils.getModelLocation(symbol.getSymbolItem()))),
+                    itemModelGenerator.modelOutput
+            );
+            unbakedRuneSymbols.add(ItemModelUtils.override(ItemModelUtils.plainModel(halfScaleModel), symbol.getId()));
+        }
 
+//        add the entries to a rangeselect
         ItemModel.Unbaked runeSelect = ItemModelUtils.rangeSelect(
             new RuneSymbolItemModelProperty(),
-            List.of(
-                ItemModelUtils.override(arcaneRune,     0),
-                ItemModelUtils.override(kineticRune,    1),
-                ItemModelUtils.override(thermalRune,    2),
-                ItemModelUtils.override(electricRune,   3),
-                ItemModelUtils.override(lightRune,      4),
-                ItemModelUtils.override(spaceRune,      5),
-                ItemModelUtils.override(timeRune,       6),
-                ItemModelUtils.override(manifestRune,   7)
-            )
+            unbakedRuneSymbols
         );
 
+//        choose the rangeselect (composite on blank stone) or blank runestone depending on data
         itemModelGenerator.generateBooleanDispatch(
             RunicRitualsItems.RUNESTONE,
             ItemModelUtils.hasComponent(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE),
@@ -76,6 +75,10 @@ public class RunicRitualsModelProvider extends FabricModelProvider {
             ),
             runestone
         );
+
+        for(RuneSymbol symbol : RuneSymbol.values()) {
+            itemModelGenerator.generateFlatItem(symbol.getSymbolItem(), ModelTemplates.FLAT_ITEM);
+        }
     }
 
     @Override
