@@ -2,10 +2,7 @@ package net.runicrituals;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.runicrituals.data_generation.RunicRitualsEnglishLangProvider;
-import net.runicrituals.data_generation.RunicRitualsModelProvider;
-import net.runicrituals.data_generation.RunicRitualsRecipeProvider;
-import net.runicrituals.data_generation.RunicRitualsTagProvider;
+import net.runicrituals.data_generation.*;
 
 public class RunicRitualsDataGenerator implements DataGeneratorEntrypoint {
 	@Override
@@ -16,5 +13,6 @@ public class RunicRitualsDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(RunicRitualsModelProvider::new);
 		pack.addProvider(RunicRitualsTagProvider::new);
 		pack.addProvider(RunicRitualsRecipeProvider::new);
+		pack.addProvider(RunicRitualsLootTableProvider::new);
 	}
 }

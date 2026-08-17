@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -12,11 +13,14 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.context.ContextMap;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.SelectableRecipe;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.runicrituals.RunicRituals;
+
+import static net.minecraft.world.inventory.AbstractContainerMenu.SLOT_SIZE;
 
 public class RuneEngraverScreen extends AbstractContainerScreen<RuneEngraverMenu> {
 
@@ -27,6 +31,9 @@ public class RuneEngraverScreen extends AbstractContainerScreen<RuneEngraverMenu
     private static final Identifier RECIPE_SELECTED_SPRITE = Identifier.withDefaultNamespace("container/stonecutter/recipe_selected");
     private static final Identifier RECIPE_HIGHLIGHTED_SPRITE = Identifier.withDefaultNamespace("container/stonecutter/recipe_highlighted");
     private static final Identifier RECIPE_SPRITE = Identifier.withDefaultNamespace("container/stonecutter/recipe");
+
+    private static final Identifier RUNESTONE_SLOT_SPRITE = Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "container/slot/runestone");
+    private static final Identifier INGOT_SLOT_SPRITE = Identifier.withDefaultNamespace("container/slot/ingot");
 
     private float scrollOffs;
     private boolean scrolling;
@@ -51,6 +58,18 @@ public class RuneEngraverScreen extends AbstractContainerScreen<RuneEngraverMenu
         int scrollerXStart = xo + 119;
         int scrollerYStart = yo + 15;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, scrollerXStart, scrollerYStart + sy, 12, 15);
+
+        SlotAccess inlayMaterialSlot = this.menu.getInlayMaterialSlot();
+        SlotAccess runeBaseSlot = this.menu.getRuneBaseSlot();
+
+        if(runeBaseSlot.get().isEmpty()) {
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, RUNESTONE_SLOT_SPRITE, xo + RuneEngraverMenu.CONTAINER_START_X, yo + RuneEngraverMenu.CONTAINER_START_Y, 16, 16);
+        }
+
+        if(inlayMaterialSlot.get().isEmpty()) {
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, INGOT_SLOT_SPRITE, xo + RuneEngraverMenu.CONTAINER_START_X, yo + RuneEngraverMenu.CONTAINER_START_Y - 2 * SLOT_SIZE, 16, 16);
+        }
+
         if (mouseX >= scrollerXStart && mouseY >= scrollerYStart && mouseX < scrollerXStart + 12 && mouseY < scrollerYStart + 54) {
             if (this.isScrollBarActive()) {
                 graphics.requestCursor(this.scrolling ? CursorTypes.RESIZE_NS : CursorTypes.POINTING_HAND);

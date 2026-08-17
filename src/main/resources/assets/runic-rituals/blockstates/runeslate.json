@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "runic-rituals:block/runeslate"
+    },
+    "facing=south": {
+      "model": "runic-rituals:block/runeslate",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "runic-rituals:block/runeslate",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "runic-rituals:block/runeslate",
+      "y": 90
     }
   }
 }

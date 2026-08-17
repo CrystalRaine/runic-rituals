@@ -1,9 +1,11 @@
 package net.runicrituals.registries.blocks.rune_engraver;
 
+import net.minecraft.client.gui.screens.inventory.LoomScreen;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
@@ -29,8 +31,8 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
     private static final int HOTBAR_END = HOTBAR_START + 9; // 39
     private static final int INVENTORY_START_X = 8;
     private static final int INVENTORY_START_Y = 84;
-    private static final int CONTAINER_START_X = 20;
-    private static final int CONTAINER_START_Y = 51;
+    protected static final int CONTAINER_START_X = 20;
+    protected static final int CONTAINER_START_Y = 51;
 
     private final DataSlot selectedRuneSymbol = DataSlot.standalone();
     private SelectableRecipe.SingleInputSet<RuneEngravingRecipe> recipesForInput = SelectableRecipe.SingleInputSet.empty();
@@ -121,7 +123,6 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
                         lastSoundTime = gameTime;
                     }
                 });
-                super.onTake(player, carried);
             }
         });
     }
@@ -138,7 +139,7 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
         }
 
         usedRecipe.ifPresentOrElse(recipe -> {
-            output.setRecipeUsed((RecipeHolder<?>)recipe);
+            output.setRecipeUsed(recipe);
 
             RuneEngravingRecipeInput recipeInput = new RuneEngravingRecipeInput(this.input.getItem(0), this.input.getItem(1));
             recipeInput.setSymbol(RuneSymbol.getSymbolFromItem(recipe.value().getResult()));
@@ -157,13 +158,35 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
 
     @Override
     public void slotsChanged(@NonNull Container container) {
-        ItemStack input = this.input.getItem(0);
-        this.setupRecipeList(input);
+        ItemStack baseInput = this.input.getItem(0);
+        int previousSelection = this.selectedRuneSymbol.get();
+        SelectableRecipe.SingleInputSet<RuneEngravingRecipe> previousRecipes = this.recipesForInput;
+
+        this.setupRecipeList(baseInput);
+
+        if (previousSelection >= 0 && previousSelection < previousRecipes.size()) {
+            SelectableRecipe.SingleInputEntry<RuneEngravingRecipe> prevEntry =
+                    previousRecipes.entries().get(previousSelection);
+            RuneEngravingRecipe prevRecipe = prevEntry.recipe().recipe().map(r -> r.value()).orElse(null);
+
+            List<SelectableRecipe.SingleInputEntry<RuneEngravingRecipe>> newEntries =
+                    this.recipesForInput.entries();
+            for (int i = 0; i < newEntries.size(); i++) {
+                Optional<RuneEngravingRecipe> newRecipeOpt =
+                        newEntries.get(i).recipe().recipe().map(r -> r.value());
+                if (newRecipeOpt.isPresent() && newRecipeOpt.get() == prevRecipe) {
+                    this.selectedRuneSymbol.set(i);
+                    this.setupResultSlot(i);
+                    return;
+                }
+            }
+        }
     }
 
     private void setupRecipeList(final ItemStack item) {
         selectedRuneSymbol.set(-1);
         output.setItem(0, ItemStack.EMPTY);
+
         if (!item.isEmpty()) {
             Collection<RecipeHolder<RuneEngravingRecipe>> allRuneEngravingRecipes = this.level.recipeAccess().getSynchronizedRecipes().getAllOfType(RunicRitualsRecipes.RUNE_ENGRAVER_RECIPE_RECIPE_TYPE);
             List<SelectableRecipe.SingleInputEntry<RuneEngravingRecipe>> runeEngravingRecipes = new ArrayList<>();
@@ -198,7 +221,7 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int slotIndex) {
+    public @NonNull ItemStack quickMoveStack(Player player, int slotIndex) {
         Slot slot = this.slots.get(slotIndex);
 
         //noinspection ConstantValue
@@ -295,5 +318,12 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
         this.slotUpdateListener = slotUpdateListener;
     }
 
+    public SlotAccess getInlayMaterialSlot() {
+        return input.getSlot(1);
+    }
 
+
+    public SlotAccess getRuneBaseSlot() {
+        return input.getSlot(0);
+    }
 }

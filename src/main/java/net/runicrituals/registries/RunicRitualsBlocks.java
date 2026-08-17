@@ -14,6 +14,8 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.blocks.rune_engraver.RuneEngraver;
+import net.runicrituals.registries.blocks.rune_obelisk.RuneObelisk;
+import net.runicrituals.registries.blocks.rune_slate.Runeslate;
 
 import java.util.function.Function;
 
@@ -21,15 +23,18 @@ public class RunicRitualsBlocks {
 
     public static final BlockItemId RUNE_ENGRAVER_KEY = createWithId("rune_engraver");
     public static final BlockItemId RUNESLATE_KEY = createWithId("runeslate");
+    public static final BlockItemId RUNE_OBELISK_KEY = createWithId("rune_obelisk");
 
     public static final Block RUNE_ENGRAVER = register(RUNE_ENGRAVER_KEY, RuneEngraver::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(1.5f).noOcclusion());
-    public static final Block RUNESLATE = register(RUNESLATE_KEY, Block::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(1.5f).noOcclusion());
+    public static final Block RUNESLATE = register(RUNESLATE_KEY, Runeslate::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(0.5f).noOcclusion());
+    public static final Block RUNE_OBELISK = register(RUNE_OBELISK_KEY, RuneObelisk::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(2.5f).noOcclusion());
 
     public static void registerBlocks() {
         RunicRituals.LOGGER.info("Registering mod blocks");
 
-        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register((tab) -> tab.accept(RUNE_ENGRAVER) );
-        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.BUILDING_BLOCKS).register((tab) -> tab.accept(RUNESLATE) );
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register((tab) -> tab.accept(RUNE_ENGRAVER));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.BUILDING_BLOCKS).register((tab) -> tab.accept(RUNESLATE));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.BUILDING_BLOCKS).register((tab) -> tab.accept(RUNE_OBELISK));
     }
 
     private static BlockItemId createWithId(String name) {

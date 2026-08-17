@@ -11,15 +11,24 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum RuneSymbol  {
+//    Elemental Runes
     ARCANE(0,ChatFormatting.AQUA, "Arcane", RunicRitualsItems.ARCANE_RUNE),
     KINETIC(1, ChatFormatting.GRAY, "Kinetic", RunicRitualsItems.KINETIC_RUNE),
     THERMAL(2, ChatFormatting.RED, "Thermal", RunicRitualsItems.THERMAL_RUNE),
     ELECTRIC(3, ChatFormatting.YELLOW, "Electric", RunicRitualsItems.ELECTRIC_RUNE),
     LIGHT(4, ChatFormatting.WHITE, "Light", RunicRitualsItems.LIGHT_RUNE),
-    SPACE(5, ChatFormatting.LIGHT_PURPLE, "Space", RunicRitualsItems.SPACE_RUNE),
-    TIME(6, ChatFormatting.GREEN, "Time",  RunicRitualsItems.TIME_RUNE),
+    MATTER(5, ChatFormatting.GOLD, "Matter", RunicRitualsItems.MATTER_RUNE),
+    SPACE(6, ChatFormatting.LIGHT_PURPLE, "Space", RunicRitualsItems.SPACE_RUNE),
+    TIME(7, ChatFormatting.GREEN, "Time",  RunicRitualsItems.TIME_RUNE),
+
+//    Action Runes
     MANIFEST(8, ChatFormatting.BLUE, "Manifest", RunicRitualsItems.MANIFEST_RUNE),
-    SACRIFICE(7, ChatFormatting.DARK_AQUA, "Sacrifice",  RunicRitualsItems.SACRIFICE_RUNE)
+    SACRIFICE(9, ChatFormatting.DARK_AQUA, "Sacrifice",  RunicRitualsItems.SACRIFICE_RUNE)
+
+//    Form Runes
+
+
+//    Logical Runes
     ;
 
     private final int id;

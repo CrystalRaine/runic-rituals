@@ -31,6 +31,7 @@ public class RunicRitualsCreativeTabs {
                 output.accept(RunicRitualsItems.RUNESTONE);
                 output.accept(RunicRitualsBlocks.RUNESLATE);
                 output.accept(RunicRitualsBlocks.RUNE_ENGRAVER);
+                output.accept(RunicRitualsBlocks.RUNE_OBELISK);
             })
             .build();
 

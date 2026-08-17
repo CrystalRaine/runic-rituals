@@ -30,6 +30,7 @@ public class RunicRitualsEnglishLangProvider extends FabricLanguageProvider {
         
         translationBuilder.add("block.runic-rituals.rune_engraver",                 "Rune Engraver");
         translationBuilder.add("block.runic-rituals.runeslate",                     "Runeslate");
+        translationBuilder.add("block.runic-rituals.rune_obelisk",                  "Rune Obelisk");
 
         translationBuilder.add("creativeTab.runic_rituals.mod",                     "Runic Rituals");
         translationBuilder.add("creativeTab.runic_rituals_runes.mod",               "Runes");

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "runic-rituals:block/rune_obelisk_bottom"
+    },
+    "half=upper": {
+      "model": "runic-rituals:block/rune_obelisk_top"
+    }
+  }
+}
