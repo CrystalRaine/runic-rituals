@@ -11,7 +11,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class RuneObeliskEntityRenderState extends BlockEntityRenderState {
 
-    boolean active = false;
+    private boolean active = false;
     public List<ItemStackRenderState> items = Collections.emptyList();
 
     public boolean getActive() {

@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.CampfireBlockEntity;
 import net.runicrituals.registries.RunicRitualsComponents;
 import net.runicrituals.registries.RunicRitualsItems;
 import net.runicrituals.registries.RunicRitualsMenuTypes;
@@ -14,7 +15,7 @@ import org.jspecify.annotations.NonNull;
 
 public class RuneObeliskMenu extends AbstractContainerMenu {
 
-    private static final int SLOTS_COUNT = 4;
+    static final int SLOTS_COUNT = 4;
     private static final int CONTAINER_START = 0;
     private static final int INVENTORY_START = SLOTS_COUNT + 1;
     private static final int INVENTORY_END = INVENTORY_START + 27;

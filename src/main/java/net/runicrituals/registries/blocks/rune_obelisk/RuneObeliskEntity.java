@@ -18,16 +18,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class RuneObeliskEntity extends BlockEntity implements Container, MenuProvider {
 
-    private final NonNullList<ItemStack> items = NonNullList.withSize(4, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> items = NonNullList.withSize(RuneObeliskMenu.SLOTS_COUNT, ItemStack.EMPTY);
     private boolean active;
 
     public RuneObeliskEntity(BlockPos worldPosition, BlockState blockState) {
@@ -57,6 +57,11 @@ public class RuneObeliskEntity extends BlockEntity implements Container, MenuPro
     protected void loadAdditional(@NonNull ValueInput input) {
         super.loadAdditional(input);
         active = input.getBooleanOr("active", true);
+
+        // This one line... is not in the goddamn docs on block containers and is required for the entity renderer
+        // to work properly here. https://docs.fabricmc.net/26.1.2/develop/blocks/block-containers
+        this.items.clear();
+
         ContainerHelper.loadAllItems(input, this.items);
     }
 
@@ -93,13 +98,13 @@ public class RuneObeliskEntity extends BlockEntity implements Container, MenuPro
 
     @Override
     public @NonNull ItemStack removeItem(int slot, int count) {
-        ItemStack result = ContainerHelper.removeItem(items, slot, count);
+        ItemStack removedItems = ContainerHelper.removeItem(items, slot, count);
 
-        if (!result.isEmpty()) {
+        if (!removedItems.isEmpty()) {
             this.setChanged();
         }
 
-        return result;
+        return removedItems;
     }
 
     @Override
@@ -124,6 +129,7 @@ public class RuneObeliskEntity extends BlockEntity implements Container, MenuPro
 
         BlockState state = getBlockState();
         level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
+        level.gameEvent(GameEvent.BLOCK_CHANGE, worldPosition, GameEvent.Context.of(state));
     }
 
     @Override
