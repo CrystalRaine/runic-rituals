@@ -20,7 +20,7 @@ public class RunicRitualsEnglishLangProvider extends FabricLanguageProvider {
         RuneSymbol[] runeSymbols = RuneSymbol.values();
 
         for(RuneSymbol s : runeSymbols) {
-            translationBuilder.add("item.runic-rituals." + s.getName().toLowerCase(Locale.ROOT) + "_rune", s.getName() + " Rune");
+            translationBuilder.add("item.runic-rituals." + s.getName().toLowerCase(Locale.ROOT).replace(" ", "_") + "_rune", s.getName() + " Rune");
         }
 
         translationBuilder.add("item.runic-rituals.runestone",                      "Runestone");

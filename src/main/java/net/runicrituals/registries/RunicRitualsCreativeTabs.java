@@ -54,17 +54,6 @@ public class RunicRitualsCreativeTabs {
 
                     }
                 }
-
-                output.accept(RunicRitualsBlocks.RUNESLATE);
-                for(RuneSymbol symbol : RuneSymbol.values()) {
-                    for(RuneInlayMaterial material : RuneInlayMaterial.values()) {
-                        ItemStack typedRunestone = new ItemStack(RunicRitualsBlocks.RUNESLATE);
-                        typedRunestone.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(symbol,material));
-
-                        output.accept(typedRunestone);
-
-                    }
-                }
             })
             .build();
 

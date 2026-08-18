@@ -3,8 +3,10 @@ package net.runicrituals.registries.blocks.rune_obelisk;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,7 +15,6 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -21,8 +22,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.runicrituals.registries.RunicRitualsItems;
+import net.runicrituals.registries.RunicRitualsStats;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -34,8 +39,19 @@ public class RuneObelisk extends BaseEntityBlock {
 
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
-    private static final VoxelShape OBELISK_BOTTOM = Block.box(3.0, 0.0, 3.0, 13.0, 16.0, 13.0);
-    private static final VoxelShape OBELISK_TOP = Block.box(3.0, 0.0, 3.0, 13.0, 11.0, 13.0);
+    public static final VoxelShape OBELISK_BOTTOM = Block.box(3.0, 0.0, 3.0, 13.0, 16.0, 13.0);
+
+    private static final VoxelShape LAYER_1 = Block.box(4.0, 11.0, 4.0, 12.0, 12.0, 12.0);
+    private static final VoxelShape LAYER_2 = Block.box(5.0, 12.0, 5.0, 11.0, 13.0, 11.0);
+    private static final VoxelShape LAYER_3 = Block.box(6.0, 13.0, 6.0, 10.0, 14.0, 10.0);
+    private static final VoxelShape LAYER_4 = Block.box(7.0, 14.0, 7.0, 9.0, 15.0, 9.0);
+
+    private static final VoxelShape OBELISK_TOP_PYRAMID_1 = Shapes.or(LAYER_1, LAYER_2);
+    private static final VoxelShape OBELISK_TOP_PYRAMID_2 = Shapes.or(LAYER_3, LAYER_4);
+
+    private static final VoxelShape OBELISK_TOP_PYRAMID = Shapes.or(OBELISK_TOP_PYRAMID_1, OBELISK_TOP_PYRAMID_2);
+    private static final VoxelShape OBELISK_TOP_BASE = Block.box(3.0, 0.0, 3.0, 13.0, 11.0, 13.0);
+    public static final VoxelShape OBELISK_TOP = Shapes.or(OBELISK_TOP_BASE, OBELISK_TOP_PYRAMID);
 
     public static final MapCodec<RuneObelisk> CODEC = simpleCodec(RuneObelisk::new);
 
@@ -50,20 +66,74 @@ public class RuneObelisk extends BaseEntityBlock {
     }
 
     @Override
-    public MapCodec<? extends RuneObelisk> codec() {
+    protected @NonNull InteractionResult useItemOn(@NonNull ItemStack stack, @NonNull BlockState state, @NonNull Level level, @NonNull BlockPos pos, @NonNull Player player, @NonNull InteractionHand hand, @NonNull BlockHitResult hit) {
+        RuneObeliskEntity roe = getBlockEntity(level, pos, state);
+
+        if(player.getItemInHand(hand).is(RunicRitualsItems.BASIC_WAND)) {
+            if(roe != null) {
+                roe.toggleActive();
+                if (level.isClientSide()) {
+                    player.sendOverlayMessage(Component.literal(roe.getActive() ? "Active" : "Inactive"));
+                }
+            }
+        } else {
+            if (!level.isClientSide() && roe != null) {
+                player.openMenu(roe);
+                player.awardStat(RunicRitualsStats.INTERACT_WITH_RUNE_OBELISKS);
+            }
+        }
+
+        return InteractionResult.SUCCESS;
+    }
+
+
+    private RuneObeliskEntity getBlockEntity(Level level, BlockPos pos, BlockState state) {
+//        Double block container, so always use the bottom block's inventory so they aren't different
+//        depending on which part of the block you click on.
+        DoubleBlockHalf half = state.getValue(HALF);
+        BlockEntity be;
+        if(half == DoubleBlockHalf.LOWER) {
+            be = level.getBlockEntity(pos);
+        } else {
+            be = level.getBlockEntity(pos.below());
+        }
+
+        if(!(be instanceof RuneObeliskEntity)){
+            return null;
+        }
+        return (RuneObeliskEntity) be;
+    }
+
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(@NonNull BlockPos worldPosition, @NonNull BlockState blockState) {
+//        only bottom half has a blockEntity, so only create that half.
+//        via getBlockEntity, only the bottom half's entity will be accessed.
+        DoubleBlockHalf half = blockState.getValue(HALF);
+        if(half == DoubleBlockHalf.LOWER) {
+            return new RuneObeliskEntity(worldPosition, blockState);
+        } else {
+            return null;
+        }
+    }
+
+//    Below this is basically letting the multi-tile nonsense work. a lot of this is also modified
+//    double flower code
+    @Override
+    public @NonNull MapCodec<? extends RuneObelisk> codec() {
         return CODEC;
     }
 
     @Override
-    protected BlockState updateShape(
+    protected @NonNull BlockState updateShape(
             final BlockState state,
-            final LevelReader level,
-            final ScheduledTickAccess ticks,
-            final BlockPos pos,
+            final @NonNull LevelReader level,
+            final @NonNull ScheduledTickAccess ticks,
+            final @NonNull BlockPos pos,
             final Direction directionToNeighbour,
-            final BlockPos neighbourPos,
-            final BlockState neighbourState,
-            final RandomSource random
+            final @NonNull BlockPos neighbourPos,
+            final @NonNull BlockState neighbourState,
+            final @NonNull RandomSource random
     ) {
         DoubleBlockHalf half = state.getValue(HALF);
         if (directionToNeighbour.getAxis() != Direction.Axis.Y
@@ -145,10 +215,5 @@ public class RuneObelisk extends BaseEntityBlock {
             return OBELISK_BOTTOM;
         }
         return OBELISK_TOP;
-    }
-
-    @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        return null;
     }
 }

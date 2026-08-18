@@ -116,6 +116,8 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
                     setupResultSlot(selectedRuneSymbol.get());
                 }
 
+                player.awardStat(RunicRitualsStats.RUNES_ENGRAVED);
+
                 access.execute((level, pos) -> {
                     long gameTime = level.getGameTime();
                     if (lastSoundTime != gameTime) {

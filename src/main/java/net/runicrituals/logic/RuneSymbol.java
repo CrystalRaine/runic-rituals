@@ -12,6 +12,8 @@ import java.util.List;
 
 public enum RuneSymbol  {
 //    Elemental Runes
+//    using ids rather than ordinals so that adding new ones can't break things,
+//    as long as you don't update the old ones
     ARCANE(0,ChatFormatting.AQUA, "Arcane", RunicRitualsItems.ARCANE_RUNE),
     KINETIC(1, ChatFormatting.GRAY, "Kinetic", RunicRitualsItems.KINETIC_RUNE),
     THERMAL(2, ChatFormatting.RED, "Thermal", RunicRitualsItems.THERMAL_RUNE),
@@ -22,13 +24,16 @@ public enum RuneSymbol  {
     TIME(7, ChatFormatting.GREEN, "Time",  RunicRitualsItems.TIME_RUNE),
 
 //    Action Runes
-    MANIFEST(8, ChatFormatting.BLUE, "Manifest", RunicRitualsItems.MANIFEST_RUNE),
-    SACRIFICE(9, ChatFormatting.DARK_AQUA, "Sacrifice",  RunicRitualsItems.SACRIFICE_RUNE)
+    MANIFEST(8, ChatFormatting.BLUE, "Manifest Action", RunicRitualsItems.MANIFEST_RUNE),
+    SACRIFICE(9, ChatFormatting.DARK_AQUA, "Sacrifice Action",  RunicRitualsItems.SACRIFICE_RUNE),
+    BIND(10, ChatFormatting.AQUA, "Bind Action",  RunicRitualsItems.BIND_RUNE),
 
 //    Form Runes
-
+    BOLT(11, ChatFormatting.GOLD, "Bolt Form",  RunicRitualsItems.BOLT_RUNE),
 
 //    Logical Runes
+    REPEAT(12, ChatFormatting.WHITE, "Repeat Logic",  RunicRitualsItems.REPEAT_RUNE),
+    CONTROL(13, ChatFormatting.WHITE, "Control Logic",  RunicRitualsItems.CONTROL_RUNE),
     ;
 
     private final int id;

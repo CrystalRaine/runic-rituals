@@ -23,11 +23,17 @@ public class RunicRitualsItems {
     public static final ResourceKey<Item> ELECTRIC_RUNE_KEY = resourceKey("electric_rune");
     public static final ResourceKey<Item> LIGHT_RUNE_KEY = resourceKey("light_rune");
     public static final ResourceKey<Item> MATTER_RUNE_KEY = resourceKey("matter_rune");
-
     public static final ResourceKey<Item> SPACE_RUNE_KEY = resourceKey("space_rune");
     public static final ResourceKey<Item> TIME_RUNE_KEY = resourceKey("time_rune");
-    public static final ResourceKey<Item> MANIFEST_RUNE_KEY = resourceKey("manifest_rune");
-    public static final ResourceKey<Item> SACRIFICE_RUNE_KEY = resourceKey("sacrifice_rune");
+
+    public static final ResourceKey<Item> MANIFEST_RUNE_KEY = resourceKey("manifest_action_rune");
+    public static final ResourceKey<Item> SACRIFICE_RUNE_KEY = resourceKey("sacrifice_action_rune");
+    public static final ResourceKey<Item> BIND_RUNE_KEY = resourceKey("bind_action_rune");
+
+    public static final ResourceKey<Item> BOLT_RUNE_KEY = resourceKey("bolt_form_rune");
+
+    public static final ResourceKey<Item> REPEAT_RUNE_KEY = resourceKey("repeat_logic_rune");
+    public static final ResourceKey<Item> CONTROL_RUNE_KEY = resourceKey("control_logic_rune");
 
     public static final Item KINETIC_RUNE = registerItem(KINETIC_RUNE_KEY, Item::new, new Item.Properties());
     public static final Item ARCANE_RUNE = registerItem(ARCANE_RUNE_KEY, Item::new, new Item.Properties());
@@ -40,6 +46,12 @@ public class RunicRitualsItems {
 
     public static final Item MANIFEST_RUNE = registerItem(MANIFEST_RUNE_KEY, Item::new, new Item.Properties());
     public static final Item SACRIFICE_RUNE = registerItem(SACRIFICE_RUNE_KEY, Item::new, new Item.Properties());
+    public static final Item BIND_RUNE = registerItem(BIND_RUNE_KEY, Item::new, new Item.Properties());
+
+    public static final Item BOLT_RUNE = registerItem(BOLT_RUNE_KEY, Item::new, new Item.Properties());
+
+    public static final Item REPEAT_RUNE = registerItem(REPEAT_RUNE_KEY, Item::new, new Item.Properties());
+    public static final Item CONTROL_RUNE = registerItem(CONTROL_RUNE_KEY, Item::new, new Item.Properties());
 
 
     public static final ResourceKey<Item> BASIC_WAND_KEY = resourceKey("wand");

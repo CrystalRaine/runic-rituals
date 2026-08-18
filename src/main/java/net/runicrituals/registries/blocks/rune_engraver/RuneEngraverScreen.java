@@ -32,7 +32,7 @@ public class RuneEngraverScreen extends AbstractContainerScreen<RuneEngraverMenu
     private static final Identifier RECIPE_HIGHLIGHTED_SPRITE = Identifier.withDefaultNamespace("container/stonecutter/recipe_highlighted");
     private static final Identifier RECIPE_SPRITE = Identifier.withDefaultNamespace("container/stonecutter/recipe");
 
-    private static final Identifier RUNESTONE_SLOT_SPRITE = Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "container/slot/runestone");
+    public static final Identifier RUNESTONE_SLOT_SPRITE = Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "container/slot/runestone");
     private static final Identifier INGOT_SLOT_SPRITE = Identifier.withDefaultNamespace("container/slot/ingot");
 
     private float scrollOffs;

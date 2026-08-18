@@ -8,10 +8,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.blocks.rune_engraver.RuneEngraverMenu;
+import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskMenu;
 
 public class RunicRitualsMenuTypes {
 
     public static final MenuType<RuneEngraverMenu> RUNE_ENGRAVER_MENU_MENU_TYPE = register("rune_engraver", RuneEngraverMenu::new);
+    public static final MenuType<RuneObeliskMenu> RUNE_OBELISK_MENU_TYPE = register("rune_obelisk", RuneObeliskMenu::new);
 
     public static <T extends AbstractContainerMenu> MenuType<T> register(
             String name,
