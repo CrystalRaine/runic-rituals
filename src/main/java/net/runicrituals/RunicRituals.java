@@ -19,9 +19,9 @@ public class RunicRituals implements ModInitializer {
 		RunicRitualsBlockEntities.registerBlockEntityTypes();
 		RunicRitualsCreativeTabs.registerCreativeTabs();
 		RunicRitualsMenuTypes.registerMenuTypes();
-		RunicRitualsScreens.registerScreens();
 		RunicRitualsStats.registerStats();
 		RunicRitualsRecipes.registerRecipes();
+		RunicRitualsDamageTypes.registerDamageTypes();
 		RunicRitualsComponents.registerComponents();
 	}
 

@@ -31,6 +31,8 @@ public class RunicRitualsItems {
     public static final ResourceKey<Item> BIND_RUNE_KEY = resourceKey("bind_action_rune");
 
     public static final ResourceKey<Item> BOLT_RUNE_KEY = resourceKey("bolt_form_rune");
+    public static final ResourceKey<Item> SPHERE_RUNE_KEY = resourceKey("sphere_form_rune");
+    public static final ResourceKey<Item> CUBE_RUNE_KEY = resourceKey("cube_form_rune");
 
     public static final ResourceKey<Item> REPEAT_RUNE_KEY = resourceKey("repeat_logic_rune");
     public static final ResourceKey<Item> CONTROL_RUNE_KEY = resourceKey("control_logic_rune");
@@ -49,6 +51,8 @@ public class RunicRitualsItems {
     public static final Item BIND_RUNE = registerItem(BIND_RUNE_KEY, Item::new, new Item.Properties());
 
     public static final Item BOLT_RUNE = registerItem(BOLT_RUNE_KEY, Item::new, new Item.Properties());
+    public static final Item SPHERE_RUNE = registerItem(SPHERE_RUNE_KEY, Item::new, new Item.Properties());
+    public static final Item CUBE_RUNE = registerItem(CUBE_RUNE_KEY, Item::new, new Item.Properties());
 
     public static final Item REPEAT_RUNE = registerItem(REPEAT_RUNE_KEY, Item::new, new Item.Properties());
     public static final Item CONTROL_RUNE = registerItem(CONTROL_RUNE_KEY, Item::new, new Item.Properties());

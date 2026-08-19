@@ -16,6 +16,8 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -26,6 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.runicrituals.registries.RunicRitualsBlockEntities;
 import net.runicrituals.registries.RunicRitualsItems;
 import net.runicrituals.registries.RunicRitualsStats;
 import org.jspecify.annotations.NonNull;
@@ -65,6 +68,12 @@ public class RuneObelisk extends BaseEntityBlock {
         );
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NonNull Level level, @NonNull BlockState state, @NonNull BlockEntityType<T> type) {
+        return createTickerHelper(type, RunicRitualsBlockEntities.RUNE_OBELISK_ENTITY_BLOCK_ENTITY, RuneObeliskEntity::tick);
+    }
+
     @Override
     protected @NonNull InteractionResult useItemOn(@NonNull ItemStack stack, @NonNull BlockState state, @NonNull Level level, @NonNull BlockPos pos, @NonNull Player player, @NonNull InteractionHand hand, @NonNull BlockHitResult hit) {
         RuneObeliskEntity roe = getBlockEntity(level, pos, state);
@@ -74,6 +83,8 @@ public class RuneObelisk extends BaseEntityBlock {
                 roe.toggleActive();
                 if (level.isClientSide()) {
                     player.sendOverlayMessage(Component.literal(roe.getActive() ? "Active" : "Inactive"));
+                } else if(roe.getActive()){
+                    roe.addMana(10);
                 }
             }
         } else {

@@ -12,6 +12,7 @@ import org.jspecify.annotations.NonNull;
 
 import static net.minecraft.world.inventory.AbstractContainerMenu.SLOT_SIZE;
 import static net.runicrituals.registries.blocks.rune_engraver.RuneEngraverScreen.RUNESTONE_SLOT_SPRITE;
+import static net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskMenu.CONTAINER_START_X;
 
 public class RuneObeliskScreen extends AbstractContainerScreen<RuneObeliskMenu> {
 
@@ -19,7 +20,6 @@ public class RuneObeliskScreen extends AbstractContainerScreen<RuneObeliskMenu> 
 
     public RuneObeliskScreen(RuneObeliskMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
-
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 
@@ -33,9 +33,21 @@ public class RuneObeliskScreen extends AbstractContainerScreen<RuneObeliskMenu> 
         for(int i = 0; i < this.menu.getSlotCount(); i++) {
             Slot slot = this.menu.getSlot(i);
             if(!slot.hasItem()) {
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, RUNESTONE_SLOT_SPRITE, xo + (i * SLOT_SIZE) + RuneObeliskMenu.CONTAINER_START_X, yo + RuneObeliskMenu.CONTAINER_START_Y, 16, 16);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, RUNESTONE_SLOT_SPRITE, xo + (i * SLOT_SIZE) + CONTAINER_START_X, yo + RuneObeliskMenu.CONTAINER_START_Y, 16, 16);
             }
-
         }
+
+        String active = this.menu.getActive() ? "Active" : "Inactive";
+        String cost = String.format("%1$3d", this.menu.getCost()) + "/";
+        String mana = String.format("%1$3d", this.menu.getMana()) + "/";
+        String manaCap = String.format("%1$3d", this.menu.getManaCap());
+        String intensity = String.format("%1$d", this.menu.getIntensity());
+
+        Component manaStats = Component.literal("Cost/Mana/Cap | " + cost + mana + manaCap);
+        Component activeText = Component.literal(active + " intensity: " + intensity);
+
+        graphics.text(this.font, manaStats, this.leftPos + (this.imageWidth / 2) - (this.font.width(manaStats) / 2), this.topPos + 20, -12566464, false);
+        graphics.text(this.font, activeText, this.leftPos + (this.imageWidth / 2) - (this.font.width(activeText) / 2), this.topPos + 60, -12566464, false);
     }
+
 }

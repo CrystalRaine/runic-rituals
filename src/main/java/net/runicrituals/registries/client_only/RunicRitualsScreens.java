@@ -1,7 +1,8 @@
-package net.runicrituals.registries;
+package net.runicrituals.registries.client_only;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.runicrituals.RunicRituals;
+import net.runicrituals.registries.RunicRitualsMenuTypes;
 import net.runicrituals.registries.blocks.rune_engraver.RuneEngraverScreen;
 import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskScreen;
 

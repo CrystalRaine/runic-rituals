@@ -37,11 +37,6 @@ public class RunicRitualsModelProvider extends FabricModelProvider {
         return new ModelTemplate(Optional.of(Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "item/" + parent)), Optional.empty(), requiredTextureKeys);
     }
 
-    public static ItemModel.Unbaked registerScaledHalf(Item item, ItemModelGenerators generator) {
-        Identifier itemModel = HALF_SCALE.create(item, TextureMapping.singleSlot(TextureSlot.LAYER0, new Material(ModelLocationUtils.getModelLocation(item))), generator.modelOutput);
-        return ItemModelUtils.plainModel(itemModel);
-    }
-
     @Override
     public void generateItemModels(@NonNull ItemModelGenerators itemModelGenerator) {
 

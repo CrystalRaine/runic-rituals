@@ -1,6 +1,5 @@
 package net.runicrituals.registries.blocks.rune_engraver;
 
-import net.minecraft.client.gui.screens.inventory.LoomScreen;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -15,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneSymbol;
 import net.runicrituals.registries.*;
+import net.runicrituals.registries.client_only.RunicRitualsComponentsClient;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;

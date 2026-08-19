@@ -40,5 +40,9 @@ public class RunicRitualsEnglishLangProvider extends FabricLanguageProvider {
 
         translationBuilder.add("tag.item.runic-rituals.engrave_items",              "Engravable Items");
         translationBuilder.add("tag.item.runic-rituals.inlay_items",                "Rune Inlay Items");
+
+        translationBuilder.add("death.attack.disintegration.item",                  "%1$s was disintegrated by %2$s using %3$s");
+        translationBuilder.add("death.attack.disintegration.player",                "%1$s was disintegrated by %2$s");
+        translationBuilder.add("death.attack.disintegration",                       "%1$s disintegrated");
     }
 }

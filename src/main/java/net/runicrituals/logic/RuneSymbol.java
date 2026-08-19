@@ -5,6 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.runicrituals.logic.runes.element.Matter;
 import net.runicrituals.registries.RunicRitualsItems;
 
 import java.util.Arrays;
@@ -30,10 +31,12 @@ public enum RuneSymbol  {
 
 //    Form Runes
     BOLT(11, ChatFormatting.GOLD, "Bolt Form",  RunicRitualsItems.BOLT_RUNE),
+    SPHERE(12, ChatFormatting.GOLD, "Sphere Form",  RunicRitualsItems.SPHERE_RUNE),
+    CUBE(13, ChatFormatting.GOLD, "Cube Form",  RunicRitualsItems.CUBE_RUNE),
 
 //    Logical Runes
-    REPEAT(12, ChatFormatting.WHITE, "Repeat Logic",  RunicRitualsItems.REPEAT_RUNE),
-    CONTROL(13, ChatFormatting.WHITE, "Control Logic",  RunicRitualsItems.CONTROL_RUNE),
+    REPEAT(14, ChatFormatting.WHITE, "Repeat Logic",  RunicRitualsItems.REPEAT_RUNE),
+    CONTROL(15, ChatFormatting.WHITE, "Control Logic",  RunicRitualsItems.CONTROL_RUNE),
     ;
 
     private final int id;
