@@ -1,4 +1,4 @@
-package net.runicrituals.registries;
+package net.runicrituals.registries.server_only;
 
 import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry;
 import net.minecraft.core.Registry;

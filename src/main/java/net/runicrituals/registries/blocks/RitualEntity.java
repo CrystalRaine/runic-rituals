@@ -7,12 +7,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.BeaconMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -23,10 +20,11 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneInlayMaterial;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.RuneSymbol;
-import net.runicrituals.registries.RunicRitualsComponents;
+import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import net.runicrituals.registries.components.RuneDataComponent;
 import org.jspecify.annotations.NonNull;
 
@@ -74,13 +72,13 @@ public abstract class RitualEntity extends BlockEntity implements Container {
         if(level.getBlockEntity(pos) instanceof RitualEntity ritualEntity) {
             if(ritualEntity.sequence == null) {
                 ritualEntity.sequence = new RuneSequence(ritualEntity, level, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
-            } else {
-                ritualEntity.sequence.clearRunes();
             }
-            if(ritualEntity.active) {
-                getSequence(ritualEntity.sequence, ritualEntity.items);
+            ritualEntity.sequence.clearRunes();
 
-                if(ritualEntity.sequence.getManaCost() <= ritualEntity.mana) {
+            getSequence(ritualEntity.sequence, ritualEntity.items);
+
+            if(ritualEntity.sequence.getManaCost() <= ritualEntity.mana) {
+                if(ritualEntity.active) {
                     ritualEntity.sequence.tick();
                 }
             }

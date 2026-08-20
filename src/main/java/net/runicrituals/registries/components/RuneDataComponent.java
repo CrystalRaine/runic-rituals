@@ -28,20 +28,13 @@ public record RuneDataComponent(int runeSymbol, int inlay) implements TooltipPro
         this(symbol.getId(), RuneInlayMaterial.getByMaterial(inlay).getId());
     }
 
-    public RuneDataComponent(int symbol, Item inlay) {
-        this(symbol, RuneInlayMaterial.getByMaterial(inlay).getId());
-    }
-
     public RuneDataComponent(int symbol, RuneInlayMaterial inlay) {
         this(symbol, inlay.getId());
     }
 
-    public RuneDataComponent(RuneSymbol symbol, int inlay) {
-        this(symbol.getId(), inlay);
-    }
-
     @Override
     public void addToTooltip(Item.@NonNull TooltipContext context, @NonNull Consumer<Component> consumer, @NonNull TooltipFlag flag, @NonNull DataComponentGetter components) {
+
         consumer.accept(Component.translatable("item.runic-rituals.element.rune_type_tooltip", RuneSymbol.getNameFromElementId(runeSymbol)).withStyle(RuneSymbol.getFormattingFromElementId(runeSymbol)));
         consumer.accept(Component.translatable("item.runic-rituals.element.rune_inlay_tooltip", RuneInlayMaterial.getNameFromElementId(inlay)).withStyle(RuneInlayMaterial.getFormattingFromElementId(inlay)));
     }

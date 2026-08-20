@@ -9,10 +9,9 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.runicrituals.registries.RunicRitualsComponents;
+import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import net.runicrituals.registries.RunicRitualsItems;
 import net.runicrituals.registries.RunicRitualsMenuTypes;
-import net.runicrituals.registries.blocks.RitualEntity;
 import org.jspecify.annotations.NonNull;
 
 import static net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskEntity.DATA_SLOT_COUNT;
@@ -25,8 +24,9 @@ public class RuneObeliskMenu extends AbstractContainerMenu {
     private static final int INVENTORY_END = INVENTORY_START + 27;
     private static final int INVENTORY_START_X = 8;
     private static final int INVENTORY_START_Y = 84;
-    protected static final int CONTAINER_START_X = 53;
+    protected static final int CONTAINER_START_X = 80;
     protected static final int CONTAINER_START_Y = 33;
+    private static final int SLOTS_PER_ROW = 9;
 
     private final Container container;
     private final ContainerData ritualData;
@@ -59,16 +59,15 @@ public class RuneObeliskMenu extends AbstractContainerMenu {
     public int getCost() {
         return ritualData.get(1);
     }
-    public int getIntensity() {
-        return ritualData.get(4);
-    }
     public int getManaCap() {
         return ritualData.get(3);
     }
 
     private void addSlots() {
+        int slotStart = CONTAINER_START_X - (SLOT_SIZE * ((Math.min(SLOTS_COUNT, SLOTS_PER_ROW)) - 1) / 2);
+
         for(int i = 0; i < SLOTS_COUNT; i++) {
-            Slot s = new Slot(this.container, i, CONTAINER_START_X + i * SLOT_SIZE, CONTAINER_START_Y) {
+            Slot s = new Slot(this.container, i, slotStart + (i % SLOTS_PER_ROW) * SLOT_SIZE, CONTAINER_START_Y + (i / 9) * SLOT_SIZE) {
                 @Override
                 public boolean mayPlace(final ItemStack itemStack) {
                     return itemStack.is(RunicRitualsItems.RUNESTONE) && itemStack.has(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE);

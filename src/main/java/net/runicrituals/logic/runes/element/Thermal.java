@@ -3,31 +3,25 @@ package net.runicrituals.logic.runes.element;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BeaconBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
-import net.runicrituals.registries.RunicRitualsDamageTypes;
-
-import java.util.Random;
 
 public class Thermal extends ElementRune{
 
     public Thermal() {
         super();
+    }
+
+    @Override
+    public double proposeCost(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+        return defaultCosts(action);
     }
 
     @Override
@@ -52,6 +46,11 @@ public class Thermal extends ElementRune{
     }
 
     @Override
+    public double proposeCost(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+        return defaultCosts(action);
+    }
+
+    @Override
     public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
         if(entity != null) {
             switch (action.getActionType()) {
@@ -64,7 +63,7 @@ public class Thermal extends ElementRune{
                     if (entity instanceof LivingEntity && level instanceof ServerLevel serverLevel) {
                         entity.setTicksFrozen(0); // no freezing while on fire, unless you set up a 140+ effective intensity ritual : )
                         if(runningSequence.intensity > 1) {
-                            entity.setRemainingFireTicks(runningSequence.intensity);
+                            entity.setRemainingFireTicks((int)runningSequence.intensity);
                         }
                     }
                 }
@@ -105,10 +104,5 @@ public class Thermal extends ElementRune{
 //                do nothing
             }
         }
-    }
-
-    @Override
-    public double applyEfficiencyToCost(double cost) {
-        return cost * invertEfficiency();
     }
 }

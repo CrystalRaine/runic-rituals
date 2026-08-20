@@ -4,12 +4,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.runicrituals.logic.RuneSequence;
@@ -17,6 +20,7 @@ import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.registries.RunicRitualsDamageTypes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -24,6 +28,7 @@ public class Matter extends ElementRune {
 
     Random random;
     List<BlockState> settableBlocks;
+    List<TagKey<Block>> intensityBlockTags = Arrays.asList(null, BlockTags.NEEDS_STONE_TOOL, BlockTags.NEEDS_IRON_TOOL, BlockTags.NEEDS_DIAMOND_TOOL);
 
     public Matter() {
         super();
@@ -56,27 +61,37 @@ public class Matter extends ElementRune {
     }
 
     @Override
-    public double applyEfficiencyToCost(double cost) {
-        return cost * invertEfficiency();
+    public double proposeCost(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+        return defaultCosts(action);
     }
 
     @Override
     public void applyAction(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence){
-            switch (action.getActionType()) {
-                case SACRIFICE -> {
-                    BlockState old = level.getBlockState(position);
+        switch (action.getActionType()) {
+            case SACRIFICE -> {
+                BlockState old = level.getBlockState(position);
+
+                if(old.is(intensityBlockTags.get((int)runningSequence.intensity))) {
                     level.destroyBlock(position, false);
                     level.sendBlockUpdated(position, old, Blocks.AIR.defaultBlockState(), 3);
-                }
-                case MANIFEST -> {
-                    if(level.getBlockState(position).canBeReplaced()){
-                        level.setBlockAndUpdate(position, settableBlocks.get(random.nextInt(settableBlocks.size())));
-                    }
-                }
-                default -> {
-//                do nothing
+                    invertEfficiency();
                 }
             }
+            case MANIFEST -> {
+                if(level.getBlockState(position).canBeReplaced()){
+                    level.setBlockAndUpdate(position, settableBlocks.get(random.nextInt(settableBlocks.size())));
+                    efficiency();
+                }
+            }
+            default -> {
+//                do nothing
+            }
+        }
+    }
+
+    @Override
+    public double proposeCost(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+        return defaultCosts(action);
     }
 
     @Override
@@ -92,7 +107,8 @@ public class Matter extends ElementRune {
                                         .get(RunicRitualsDamageTypes.DISINTEGRATION_DAMAGE)
                                         .orElseThrow()
                         );
-                        entity.hurtServer(serverLevel, disintegrationDamage, 3);
+                        entity.hurtServer(serverLevel, disintegrationDamage, (int)runningSequence.intensity);
+                        efficiency();
                     }
                 }
                 case MANIFEST -> {

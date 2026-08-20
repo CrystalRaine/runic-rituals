@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneSymbol;
 import net.runicrituals.registries.*;
-import net.runicrituals.registries.client_only.RunicRitualsComponentsClient;
+import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;

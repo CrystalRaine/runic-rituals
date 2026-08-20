@@ -12,6 +12,7 @@ import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneInlayMaterial;
 import net.runicrituals.logic.RuneSymbol;
 import net.runicrituals.registries.components.RuneDataComponent;
+import net.runicrituals.registries.server_only.RunicRitualsComponents;
 
 public class RunicRitualsCreativeTabs {
 

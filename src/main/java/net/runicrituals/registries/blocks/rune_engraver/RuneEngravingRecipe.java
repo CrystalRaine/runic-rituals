@@ -15,7 +15,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.registries.RunicRitualsComponents;
+import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import net.runicrituals.registries.RunicRitualsRecipes;
 import net.runicrituals.registries.components.RuneDataComponent;
 import org.jspecify.annotations.NonNull;

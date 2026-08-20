@@ -4,16 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 
 public class Arcane extends ElementRune {
-
-    @Override
-    public double applyEfficiencyToCost(double cost) {
-        return material.getEfficiency() * cost;
-    }
 
     @Override
     public void createParticle(Level level, BlockPos pos, ActionRune action) {
@@ -30,17 +26,24 @@ public class Arcane extends ElementRune {
     }
 
     @Override
-    public void updateIntensity(ActionRune action, RuneSequence sequence) {
+    public double proposeCost(ActionRune action, RuneSequence runningSequence) {
+
+        return BASE_RUNE_MANA_COST / 3;
+    }
+
+    @Override
+    public double updateIntensity(ActionRune action, double intensity) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
-                sequence.intensity /= 2;
+                return intensity / 2;
             }
             case MANIFEST -> {
-                sequence.intensity += 2;
+                return intensity + 1;
             }
             default -> {
 //                do nothing
             }
         }
+        return intensity;
     }
 }

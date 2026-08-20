@@ -22,8 +22,8 @@ public class RuneSequence {
     List<Rune> runes = new ArrayList<>();
     List<CastingBlock> castingBlocks = null;
 
-    public static final int BASE_SEQUENCE_COST = 10;
-    public int intensity = 1;
+    private static final int BASE_INTENSITY = 1;
+    public double intensity = BASE_INTENSITY;
 
     public RuneSequence(RitualEntity triggeringRitual, Level level, Position initialPos) {
         this.triggeringRitual = triggeringRitual;
@@ -54,10 +54,6 @@ public class RuneSequence {
         }
 
         this.castingBlocks = blocks;
-
-        for(CastingBlock block : blocks) {
-            block.getIntensity(this);
-        }
     }
 
     public void tick() {
@@ -70,10 +66,16 @@ public class RuneSequence {
 
         for(CastingBlock block : castingBlocks) {
             if(block.isCastable()) {
-                block.cast(level, initialPos, this);
+
+                double cost = block.getManaCost(level, initialPos, this);
+
+                if(triggeringRitual.getMana() >= cost && triggeringRitual.getMana() - cost <= triggeringRitual.getManaCap()) {
+                    block.cast(level, initialPos, this);
+                    triggeringRitual.addMana(-cost);
+                    block.resetQueue();
+                }
             }
         }
-        this.triggeringRitual.addMana(-getManaCost()); // pay cost
     }
 
     public double getManaCost() {
@@ -82,7 +84,7 @@ public class RuneSequence {
         double cost = 0;
         for(CastingBlock block : castingBlocks) {
             if(block.isCastable()) {
-                cost += block.getManaCost();
+                cost += block.getManaCost(level, initialPos, this);
             }
         }
         return cost;
@@ -91,10 +93,14 @@ public class RuneSequence {
     public void clearRunes() {
         runes.clear();
         castingBlocks = null;
-        intensity = 1;
+        intensity = BASE_INTENSITY;
     }
 
     public void addRune(RuneSymbol symbol, RuneInlayMaterial inlay) {
         runes.add(Rune.create(symbol, inlay));
+    }
+
+    public void resetIntensity() {
+        intensity = BASE_INTENSITY;
     }
 }

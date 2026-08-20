@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 
 import net.runicrituals.registries.*;
+import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

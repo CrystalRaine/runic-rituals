@@ -5,7 +5,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemStack;
-import net.runicrituals.registries.RunicRitualsComponents;
+import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;

@@ -13,10 +13,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.PowderSnowBlock;
 import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.RuneSymbol;
-import net.runicrituals.registries.RunicRitualsComponents;
+import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
@@ -45,7 +44,8 @@ public class RuneObeliskEntityRenderer implements BlockEntityRenderer<RuneObelis
 
 //                    these translations / rotations were annoying - why is it always in local item-space?  just why?
 //                    translate to center of block
-                pose.translate(new Vec3(0.5f, 1f, 0.5f));
+                pose.translate(new Vec3(0.5f, 1.4f, 0.5f));
+                pose.translate(new Vec3(0, -(int)(slot / 4) * 0.5f, 0));
 
 //                    Rotate to face direction for movement
                 Direction direction = Direction.from2DDataValue(slot % 4);

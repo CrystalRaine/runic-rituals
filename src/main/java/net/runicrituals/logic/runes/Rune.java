@@ -10,14 +10,19 @@ import net.runicrituals.logic.runes.form.Sphere;
 
 public abstract class Rune {
 
+    protected final double BASE_RUNE_MANA_COST = 2;
+
     protected RuneInlayMaterial material;
 
     public abstract RuneType getType();
 
     public abstract double applyEfficiencyToCost(double cost);
 
-    protected double invertEfficiency() {
+    protected double efficiency() {
         return 1 + (1 - material.getEfficiency());
+    }
+    protected double invertEfficiency() {
+        return material.getEfficiency();
     }
 
     public static Rune create(RuneSymbol symbol, RuneInlayMaterial material) {
