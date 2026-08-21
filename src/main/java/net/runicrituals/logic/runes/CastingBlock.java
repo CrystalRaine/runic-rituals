@@ -77,7 +77,6 @@ public class CastingBlock {
             }
 
             clearIndex();
-            blockPosDeque.clear();
         }
 
         protected boolean isEmpty() {
@@ -91,8 +90,8 @@ public class CastingBlock {
 
         if(!this.isCastable()) return Double.POSITIVE_INFINITY;
 
-        sequence.resetIntensity();
         double actionCostSum = 0;
+        sequence.resetIntensity();
         for(ActionNode actionNode : actions) {
             double elementSetCost = 0;
             for (ElementRune element : actionNode.elements) {
@@ -122,7 +121,6 @@ public class CastingBlock {
 //        clear the index, and stop writing for if mana cost is called again.
         deque.clearIndex();
         deque.stopWriting();
-        sequence.resetIntensity();
 
         return this.form.applyEfficiencyToCost(actionCostSum);
     }
@@ -161,7 +159,6 @@ public class CastingBlock {
             }
         }
 
-        sequence.resetIntensity();
         deque.reset();
     }
 
@@ -179,6 +176,14 @@ public class CastingBlock {
         if(actions.isEmpty()) return;
 
         actions.getLast().elements.add(e);
+    }
+
+    public String formName() {
+        if(form != null) {
+            return form.name();
+        } else {
+            return "";
+        }
     }
 
     public boolean isCastable() {

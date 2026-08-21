@@ -30,29 +30,82 @@ public abstract class ElementRune extends Rune {
         return RuneType.ELEMENT;
     }
 
+    /**
+     * apply this rune's action on a block
+     * @param level current level
+     * @param position the block position to act on
+     * @param action the action to take
+     * @param runningSequence currently running rune sequence
+     */
     public void applyAction(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence) {
     };
 
+    /**
+     * apply this rune's action on an entity
+     * @param level current level
+     * @param entity the entity to act on
+     * @param action the action to take
+     * @param runningSequence currently running rune sequence
+     */
     public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
     };
 
+    /**
+     * propose a cost for using this rune's action on a block
+     * @param level current level
+     * @param position the block position to act on
+     * @param action the action to take
+     * @param runningSequence currently running rune sequence
+     * @return cost to act on this block
+     */
     public double proposeCost(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence) {
         return 0;
     };
 
+    /**
+     * propose a cost for using this rune's action on a block
+     * @param level current level
+     * @param entity the entity to act on
+     * @param action the action to take
+     * @param runningSequence currently running rune sequence
+     * @return cost to act on this entity
+     */
     public double proposeCost(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
         return 0;
     };
 
+    /**
+     * propose a cost to change this ritual's intensity
+     * @param action action being taken
+     * @param runningSequence the current running rune sequence
+     * @return cost to update the rune sequence's intensity
+     */
     public double proposeCost(ActionRune action, RuneSequence runningSequence) {
         return 0;
     }
 
+    /**
+     * create a particle in the world corresponding to this element
+     * @param level the current level
+     * @param pos position to create the particle
+     * @param action action being taken
+     */
     public abstract void createParticle(Level level, BlockPos pos, ActionRune action);
 
+    /**
+     * updates intensity of the rune sequence
+     * @param action current action being taken
+     * @param intensity current sequence intensity
+     * @return the new intensity
+     */
     public double updateIntensity(ActionRune action, double intensity) {return intensity;}
 
-    public void destroyBlock(Level level, BlockPos pos, BlockState block) {
+    /**
+     * helper method to destroy a block at a given position. does nothing when run on client, but does update client with server's state.
+     * @param level current level
+     * @param pos blockPos to destroy
+     */
+    public void destroyBlock(Level level, BlockPos pos) {
         if(!level.isClientSide()) {
             BlockState old = level.getBlockState(pos);
             level.destroyBlock(pos, false);
@@ -60,18 +113,51 @@ public abstract class ElementRune extends Rune {
         }
     }
 
+    /**
+     * Sets a block into the world
+     * @param level current level
+     * @param pos position to place block
+     * @param block block to set
+     */
     public void setBlock(Level level, BlockPos pos, Block block) {
         if(!level.isClientSide()){
             level.setBlockAndUpdate(pos, block.defaultBlockState());
         }
     }
 
+    /**
+     * replaces a block with new block. `replaced` is the block that can be removed, and replaceWith is what is put in it's place. if `pos` is not `replaced` does nothing.
+     * @param level current level
+     * @param pos position to replace
+     * @param replaced block that can be replaced
+     * @param replaceWith block to set in it's place
+     */
     public void replaceBlock(Level level, BlockPos pos, Block replaced, Block replaceWith) {
         if(!level.isClientSide() && level.getBlockState(pos).is(replaced)){
             level.setBlockAndUpdate(pos, replaceWith.defaultBlockState());
         }
     }
 
+    /**
+     * replaces a block with new block. `replaced` is the block that can be removed, and replaceWith is what is put in it's place. if `pos` is not `replaced` does nothing.
+     * @param level current level
+     * @param pos position to replace
+     * @param replaced block that can be replaced
+     * @param replaceWith block to set in it's place
+     */
+    public void replaceBlock(Level level, BlockPos pos, Block replaced, Block replaceWith, boolean sourceFlowing) {
+        if(!level.isClientSide() && level.getBlockState(pos).is(replaced) && ((level.getBlockState(pos).getFluidState().isSource() && !sourceFlowing) || (!level.getBlockState(pos).getFluidState().isSource() && sourceFlowing))){
+            level.setBlockAndUpdate(pos, replaceWith.defaultBlockState());
+        }
+    }
+
+    /**
+     * replaces a block with new block. `replaced` is the block set that can be removed, and replaceWith is what is put in it's place. if `pos` is not `replaced` does nothing.
+     * @param level current level
+     * @param pos position to replace
+     * @param replaced block tag that can be replaced
+     * @param replaceWith block to set in it's place
+     */
     public void replaceBlock(Level level, BlockPos pos, TagKey<Block> replaced, Block replaceWith) {
         if(!level.isClientSide() && level.getBlockState(pos).is(replaced)){
             level.setBlockAndUpdate(pos, replaceWith.defaultBlockState());
@@ -83,6 +169,11 @@ public abstract class ElementRune extends Rune {
         return cost;
     }
 
+    /**
+     * get the default set of costs for this rune.
+     * @param action action being taken
+     * @return cost of this rune
+     */
     protected double defaultCosts(ActionRune action) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
@@ -92,6 +183,6 @@ public abstract class ElementRune extends Rune {
                 return BASE_RUNE_MANA_COST * efficiency();
             }
         }
-        return 0;
+        return Double.POSITIVE_INFINITY;
     }
 }

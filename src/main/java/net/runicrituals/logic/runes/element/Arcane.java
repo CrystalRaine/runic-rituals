@@ -9,6 +9,14 @@ import net.minecraft.world.level.Level;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 
+/** <pre>
+ * effects:
+ *      - SACRIFICE
+ *          - cuts current intensity in half
+ *      - MANIFEST
+ *          - +1 intensity
+ * </pre>
+ */
 public class Arcane extends ElementRune {
 
     @Override
@@ -27,7 +35,6 @@ public class Arcane extends ElementRune {
 
     @Override
     public double proposeCost(ActionRune action, RuneSequence runningSequence) {
-
         return BASE_RUNE_MANA_COST / 3;
     }
 

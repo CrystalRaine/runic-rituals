@@ -39,7 +39,7 @@ public class Cube extends FormRune {
 
     @Override
     public double applyEfficiencyToCost(double cost) {
-        return cost;
+        return cost * efficiency();
     }
 
     @Override

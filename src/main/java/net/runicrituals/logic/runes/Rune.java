@@ -10,12 +10,17 @@ import net.runicrituals.logic.runes.form.Sphere;
 
 public abstract class Rune {
 
-    protected final double BASE_RUNE_MANA_COST = 2;
+    protected final double BASE_RUNE_MANA_COST = 10;
 
     protected RuneInlayMaterial material;
 
     public abstract RuneType getType();
 
+    /**
+     * applies this rune's efficiency to the current cost.
+     * @param cost summed cost of all sub-runes
+     * @return new cost
+     */
     public abstract double applyEfficiencyToCost(double cost);
 
     protected double efficiency() {

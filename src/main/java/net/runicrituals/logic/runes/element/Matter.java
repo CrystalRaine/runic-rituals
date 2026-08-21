@@ -1,6 +1,7 @@
 package net.runicrituals.logic.runes.element;
 
-import net.minecraft.core.BlockPos;
+import com.mojang.datafixers.util.Either;
+import net.minecraft.core.*;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -8,6 +9,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.RandomSequence;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,50 +21,50 @@ import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.registries.RunicRitualsDamageTypes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.rmi.registry.Registry;
+import java.util.*;
 
+/**<pre>
+ * effects:
+ *      - SACRIFICE
+ *          - deletes blocks from existence based on intensity
+ *          - damages players
+ *      - MANIFEST
+ *          - creates blocks based on intensity
+ * </pre>
+ */
 public class Matter extends ElementRune {
 
-    Random random;
     List<BlockState> settableBlocks;
-    List<TagKey<Block>> intensityBlockTags = Arrays.asList(null, BlockTags.NEEDS_STONE_TOOL, BlockTags.NEEDS_IRON_TOOL, BlockTags.NEEDS_DIAMOND_TOOL);
+    List<TagKey<Block>> intensityBlockTags = Arrays.asList(BlockTags.INCORRECT_FOR_WOODEN_TOOL, BlockTags.INCORRECT_FOR_STONE_TOOL, BlockTags.INCORRECT_FOR_COPPER_TOOL, BlockTags.INCORRECT_FOR_IRON_TOOL, BlockTags.INCORRECT_FOR_GOLD_TOOL, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 
     public Matter() {
         super();
-        this.random = new Random();
 
         settableBlocks = new ArrayList<>();
-        settableBlocks.add(Blocks.STONE.defaultBlockState());
-        settableBlocks.add(Blocks.COBBLESTONE.defaultBlockState());
-        settableBlocks.add(Blocks.DEEPSLATE.defaultBlockState());
-        settableBlocks.add(Blocks.COBBLED_DEEPSLATE.defaultBlockState());
-        settableBlocks.add(Blocks.DIORITE.defaultBlockState());
-        settableBlocks.add(Blocks.GRANITE.defaultBlockState());
-        settableBlocks.add(Blocks.ANDESITE.defaultBlockState());
-        settableBlocks.add(Blocks.GRAVEL.defaultBlockState());
-        settableBlocks.add(Blocks.DIRT.defaultBlockState());
-        settableBlocks.add(Blocks.REDSTONE_ORE.defaultBlockState());
-        settableBlocks.add(Blocks.IRON_ORE.defaultBlockState());
-        settableBlocks.add(Blocks.COPPER_ORE.defaultBlockState());
-        settableBlocks.add(Blocks.DIAMOND_ORE.defaultBlockState());
-        settableBlocks.add(Blocks.GOLD_ORE.defaultBlockState());
-        settableBlocks.add(Blocks.NETHERRACK.defaultBlockState());
-        settableBlocks.add(Blocks.NETHER_QUARTZ_ORE.defaultBlockState());
-        settableBlocks.add(Blocks.BASALT.defaultBlockState());
-        settableBlocks.add(Blocks.BLACKSTONE.defaultBlockState());
-        settableBlocks.add(Blocks.SAND.defaultBlockState());
-        settableBlocks.add(Blocks.SANDSTONE.defaultBlockState());
-        settableBlocks.add(Blocks.CALCITE.defaultBlockState());
-        settableBlocks.add(Blocks.SMOOTH_BASALT.defaultBlockState());
-        settableBlocks.add(Blocks.RED_SAND.defaultBlockState());
     }
 
     @Override
     public double proposeCost(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence) {
-        return defaultCosts(action);
+        switch (action.getActionType()) {
+            case SACRIFICE -> {
+                if(canDestroyBlock(level, position, runningSequence.intensity)) {
+                    return BASE_RUNE_MANA_COST * invertEfficiency();
+                }
+                return 0;
+            }
+            case MANIFEST -> {
+                if(level.getBlockState(position).canBeReplaced()){
+                    return BASE_RUNE_MANA_COST * efficiency();
+                } else {
+                    return 0;
+                }
+            }
+            default -> {
+//                do nothing
+            }
+        }
+        return 0;
     }
 
     @Override
@@ -71,16 +73,27 @@ public class Matter extends ElementRune {
             case SACRIFICE -> {
                 BlockState old = level.getBlockState(position);
 
-                if(old.is(intensityBlockTags.get((int)runningSequence.intensity))) {
+                if(canDestroyBlock(level, position, runningSequence.intensity)) {
                     level.destroyBlock(position, false);
                     level.sendBlockUpdated(position, old, Blocks.AIR.defaultBlockState(), 3);
-                    invertEfficiency();
                 }
             }
             case MANIFEST -> {
                 if(level.getBlockState(position).canBeReplaced()){
-                    level.setBlockAndUpdate(position, settableBlocks.get(random.nextInt(settableBlocks.size())));
-                    efficiency();
+
+                    List<TagKey<Block>> tagSet = List.of(BlockTags.DIRT, BlockTags.DIRT, BlockTags.BASE_STONE_OVERWORLD, BlockTags.BASE_STONE_OVERWORLD, BlockTags.BASE_STONE_NETHER, BlockTags.BASE_STONE_NETHER, BlockTags.COPPER_ORES, BlockTags.COPPER_ORES, BlockTags.IRON_ORES, BlockTags.IRON_ORES, BlockTags.GOLD_ORES);
+                    List<Block> aggregateOptions = new ArrayList<>();
+                    HolderGetter<Block> lookup = level.registryAccess().lookupOrThrow(Registries.BLOCK);
+
+                    for (int i = 0; i < Math.min(runningSequence.intensity, tagSet.size()); i++) {
+                        aggregateOptions.addAll(lookup.get(tagSet.get(i)).stream().flatMap(holderSet -> holderSet.stream().map(Holder::value)).toList());
+                    }
+
+                    if(runningSequence.intensity >= tagSet.size()) {
+                        aggregateOptions.add(Blocks.DEEPSLATE_DIAMOND_ORE);
+                    }
+
+                    level.setBlockAndUpdate(position, aggregateOptions.get(level.getRandom().nextInt(aggregateOptions.size())).defaultBlockState());
                 }
             }
             default -> {
@@ -91,32 +104,26 @@ public class Matter extends ElementRune {
 
     @Override
     public double proposeCost(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
-        return defaultCosts(action);
+        if (Objects.requireNonNull(action.getActionType()) == ActionRune.Action.SACRIFICE) {
+            if (entity instanceof LivingEntity && level instanceof ServerLevel serverLevel) {
+                return defaultCosts(action);
+            }
+        }
+        return 0;
     }
 
     @Override
     public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
-        if(entity != null) {
-            switch (action.getActionType()) {
-                case SACRIFICE -> {
-                    if (entity instanceof LivingEntity && level instanceof ServerLevel serverLevel) {
-                        DamageSource disintegrationDamage = new DamageSource(
-                                level
-                                        .registryAccess()
-                                        .lookupOrThrow(Registries.DAMAGE_TYPE)
-                                        .get(RunicRitualsDamageTypes.DISINTEGRATION_DAMAGE)
-                                        .orElseThrow()
-                        );
-                        entity.hurtServer(serverLevel, disintegrationDamage, (int)runningSequence.intensity);
-                        efficiency();
-                    }
-                }
-                case MANIFEST -> {
-
-                }
-                default -> {
-//                do nothing
-                }
+        if (Objects.requireNonNull(action.getActionType()) == ActionRune.Action.SACRIFICE) {
+            if (entity instanceof LivingEntity && level instanceof ServerLevel serverLevel) {
+                DamageSource disintegrationDamage = new DamageSource(
+                        level
+                                .registryAccess()
+                                .lookupOrThrow(Registries.DAMAGE_TYPE)
+                                .get(RunicRitualsDamageTypes.DISINTEGRATION_DAMAGE)
+                                .orElseThrow()
+                );
+                entity.hurtServer(serverLevel, disintegrationDamage, (int) runningSequence.intensity);
             }
         }
     }
@@ -151,5 +158,21 @@ public class Matter extends ElementRune {
 //                do nothing
             }
         }
+    }
+
+    private boolean canDestroyBlock(Level level, BlockPos pos, double intensity) {
+        BlockState block = level.getBlockState(pos);
+
+        if(level.getBlockState(pos).is(Blocks.AIR)) {
+            return false;
+        }
+
+        for(int tryIndex = 0; tryIndex <= Math.min(intensity, intensityBlockTags.size()); tryIndex++) {
+            if(!block.is(intensityBlockTags.get(tryIndex))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

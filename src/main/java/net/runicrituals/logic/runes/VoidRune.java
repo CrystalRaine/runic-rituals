@@ -15,20 +15,6 @@ import net.runicrituals.logic.runes.element.ElementRune;
 public class VoidRune extends ElementRune {
 
     @Override
-    public double applyEfficiencyToCost(double cost) {
-        return cost;
-    }
-
-    @Override
-    public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
-        if(!level.isClientSide()) {
-            if(entity instanceof Player player) {
-                player.sendSystemMessage(Component.literal("[DEBUG] Void Effect "));
-            }
-        }
-    }
-
-    @Override
     public double proposeCost(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
         return defaultCosts(action);
     }

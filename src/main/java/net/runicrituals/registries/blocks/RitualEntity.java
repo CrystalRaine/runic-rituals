@@ -24,11 +24,15 @@ import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneInlayMaterial;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.RuneSymbol;
+import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import net.runicrituals.registries.components.RuneDataComponent;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class RitualEntity extends BlockEntity implements Container {
 
@@ -37,6 +41,10 @@ public abstract class RitualEntity extends BlockEntity implements Container {
     private double mana;
     private final double manaCap;
     private RuneSequence sequence;
+
+    // cache block -> block costs so that client can read them.
+    private final Map<Integer, Double> blockCostMap = new HashMap<>();
+    private boolean blockCacheDirty = false;
 
     public RitualEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, int runeSlots, double manaCap) {
         super(type, worldPosition, blockState);
@@ -77,10 +85,8 @@ public abstract class RitualEntity extends BlockEntity implements Container {
 
             getSequence(ritualEntity.sequence, ritualEntity.items);
 
-            if(ritualEntity.sequence.getManaCost() <= ritualEntity.mana) {
-                if(ritualEntity.active) {
-                    ritualEntity.sequence.tick();
-                }
+            if(ritualEntity.active) {
+                ritualEntity.sequence.tick();
             }
         }
     }
@@ -102,6 +108,7 @@ public abstract class RitualEntity extends BlockEntity implements Container {
         output.putBoolean("active", active);
         output.putDouble("mana", mana);
 
+        saveBlockCostMap(output);
         super.saveAdditional(output);
     }
 
@@ -115,6 +122,7 @@ public abstract class RitualEntity extends BlockEntity implements Container {
         // to work properly here. https://docs.fabricmc.net/26.1.2/develop/blocks/block-containers
         items.clear();
 
+        loadBlockCostMap(input);
         ContainerHelper.loadAllItems(input, items);
     }
 
@@ -196,5 +204,41 @@ public abstract class RitualEntity extends BlockEntity implements Container {
 
     public List<ItemStack> getItems() {
         return items;
+    }
+
+    public Double getCachedCostForBlock(Integer blockId) {
+        return blockCostMap.get(blockId);
+    }
+
+    public void cacheBlockCost(Integer blockId, Double cost) {
+        Double old = blockCostMap.get(blockId);
+        if(old == null || !old.equals(cost)) {
+            blockCacheDirty = true;
+        }
+
+        blockCostMap.put(blockId, cost);
+    }
+
+    private void saveBlockCostMap(@NonNull ValueOutput output) {
+        output.putInt("blockCount", blockCostMap.size());
+
+        for(int i = 0; i < blockCostMap.size(); i++) {
+            output.putDouble("block[" + i + "]", blockCostMap.get(i));
+        }
+
+        blockCacheDirty = false;
+    }
+
+    private void loadBlockCostMap(@NonNull ValueInput input) {
+        int blockCount = input.getIntOr("blockCount", 0);
+
+        for(int i = 0; i < blockCount; i++) {
+            Double blockVal = input.getDoubleOr("block[" + i + "]", 0);
+            blockCostMap.put(i, blockVal);
+        }
+    }
+
+    public boolean isBlockCostCacheDirty() {
+        return blockCacheDirty;
     }
 }

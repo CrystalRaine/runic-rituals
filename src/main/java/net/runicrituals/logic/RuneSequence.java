@@ -64,20 +64,42 @@ public class RuneSequence {
 
         if(castingBlocks.isEmpty()) return;
 
+        int blockId = 0;
         for(CastingBlock block : castingBlocks) {
             if(block.isCastable()) {
+                double cost;
 
-                double cost = block.getManaCost(level, initialPos, this);
+                if(level.isClientSide() && triggeringRitual.getCachedCostForBlock(blockId) != null) {
+                    cost = triggeringRitual.getCachedCostForBlock(blockId);
+                } else if (!level.isClientSide()){
+                    cost = block.getManaCost(level, initialPos, this);
+                    if(null == triggeringRitual.getCachedCostForBlock(blockId) || cost != triggeringRitual.getCachedCostForBlock(blockId)) { // if block cost has updated
+                        triggeringRitual.cacheBlockCost(blockId, cost);
+                    }
+                } else {
+                    cost = Double.POSITIVE_INFINITY;
+                }
 
-                if(triggeringRitual.getMana() >= cost && triggeringRitual.getMana() - cost <= triggeringRitual.getManaCap()) {
+                blockId ++;
+                double proposedPostCastMana = triggeringRitual.getMana() - cost;
+
+                if(proposedPostCastMana <= triggeringRitual.getManaCap() && proposedPostCastMana >= 0) {
                     block.cast(level, initialPos, this);
                     triggeringRitual.addMana(-cost);
                     block.resetQueue();
                 }
             }
         }
+
+//      update client if a block's cost changed.
+        if(triggeringRitual.isBlockCostCacheDirty())
+            triggeringRitual.setChanged();
     }
 
+    /**
+     * return the aggregate mana cost of all casting blocks
+     * @return mana cost
+     */
     public double getManaCost() {
         buildCastingBlocks();
 
