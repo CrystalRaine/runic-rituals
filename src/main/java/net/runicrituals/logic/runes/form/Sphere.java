@@ -70,6 +70,11 @@ public class Sphere extends FormRune{
     }
 
     @Override
+    public boolean isPositionInVolume(Position center, BlockPos position) {
+        return position.distSqr(new BlockPos((int)center.x(), (int)center.y(), (int)center.z())) <= radius;
+    }
+
+    @Override
     public String name() {
         return "Sphere";
     }

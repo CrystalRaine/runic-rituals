@@ -2,9 +2,9 @@ package net.runicrituals.logic.runes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
-import net.minecraft.util.ArrayListDeque;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.WebBlock;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
@@ -12,7 +12,6 @@ import net.runicrituals.logic.runes.element.ElementRune;
 import net.runicrituals.logic.runes.form.FormRune;
 
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 public class CastingBlock {
@@ -100,19 +99,18 @@ public class CastingBlock {
 
                 if(!level.isClientSide()) {
 
-                    elementSetCost += element.proposeCost(actionNode.action, sequence);
+                    elementSetCost += element.proposeCostForIntensityChange(actionNode.action, sequence);
 
                     for (int i = 0; i < sequence.intensity; i++) {
                         BlockPos targetBlock = deque.enqueue(form, level, initialPos);
 
-                        if(targetBlock != null) {
-                            elementSetCost += element.proposeCost(level, targetBlock, actionNode.action, sequence);
+                        if (targetBlock != null) {
+                            elementSetCost += element.proposeCostForBlock(level, form, initialPos, targetBlock, actionNode.action, sequence);
                         }
                     }
-
-                    for (Entity e : selectedEntities) {
-                        elementSetCost += element.proposeCost(level, e, actionNode.action, sequence);
-                    }
+                }
+                for (Entity e : selectedEntities) {
+                    elementSetCost += element.proposeCostForEntity(level, e, actionNode.action, sequence);
                 }
             }
             actionCostSum += actionNode.action.applyEfficiencyToCost(elementSetCost);
@@ -142,18 +140,21 @@ public class CastingBlock {
 
                     for (int i = 0; i < sequence.intensity; i++) {
                         BlockPos targetBlock = deque.dequeue();
-                        if(targetBlock != null) {
-                            element.applyAction(level, targetBlock, actionNode.action, sequence);
+                        if (targetBlock != null) {
+                            element.applyAction(level, form, initialPos, targetBlock, actionNode.action, sequence);
                         }
                     }
 
-                    for (Entity e : selectedEntities) {
-                        element.applyAction(level, e, actionNode.action, sequence);
-                    }
                 } else {
                     BlockPos targetBlock = form.getTargetBlock(level, initialPos);
                     if(targetBlock != null) {
                         element.createParticle(level, targetBlock, actionNode.action);
+                    }
+                }
+
+                if(!level.isClientSide() || element.canRunClientSide()) {
+                    for (Entity e : selectedEntities) {
+                        element.applyAction(level, e, actionNode.action, sequence);
                     }
                 }
             }

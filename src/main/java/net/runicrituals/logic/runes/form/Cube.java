@@ -5,9 +5,7 @@ import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.runicrituals.logic.RuneInlayMaterial;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -23,18 +21,12 @@ public class Cube extends FormRune {
 
     @Override
     public List<Entity> getTargetEntities(Level level, Position position) {
-        if (!level.isClientSide()) {
-            List<Entity> entities = new ArrayList<>();
 
-            BlockPos blockPos = new BlockPos((int)position.x(), (int)position.y(), (int)position.z());
+        BlockPos blockPos = new BlockPos((int)position.x(), (int)position.y(), (int)position.z());
 
-            AABB bb = new AABB(blockPos).inflate(radius);
-            entities.addAll(level.getEntities(null, bb));
+        AABB bb = new AABB(blockPos).inflate(radius);
 
-            return entities;
-        }
-
-        return new ArrayList<>();
+        return level.getEntities(null, bb);
     }
 
     @Override
@@ -55,6 +47,11 @@ public class Cube extends FormRune {
         }
 
         return new BlockPos((int)position.x() + dx, (int)position.y() + dy, (int)position.z() + dz);
+    }
+
+    @Override
+    public boolean isPositionInVolume(Position center, BlockPos position) {
+        return Math.abs(center.x() - position.getX()) <= radius &&  Math.abs(center.y() - position.getY()) <= radius &&  Math.abs(center.z() - position.getZ()) <= radius;
     }
 
     @Override

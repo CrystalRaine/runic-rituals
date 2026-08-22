@@ -1,6 +1,5 @@
 package net.runicrituals.logic.runes.element;
 
-import com.mojang.datafixers.util.Either;
 import net.minecraft.core.*;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -9,7 +8,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.RandomSequence;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,9 +17,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
+import net.runicrituals.logic.runes.form.FormRune;
 import net.runicrituals.registries.RunicRitualsDamageTypes;
 
-import java.rmi.registry.Registry;
 import java.util.*;
 
 /**<pre>
@@ -45,7 +43,7 @@ public class Matter extends ElementRune {
     }
 
     @Override
-    public double proposeCost(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForBlock(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
                 if(canDestroyBlock(level, position, runningSequence.intensity)) {
@@ -68,7 +66,7 @@ public class Matter extends ElementRune {
     }
 
     @Override
-    public void applyAction(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence){
+    public void applyAction(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence){
         switch (action.getActionType()) {
             case SACRIFICE -> {
                 BlockState old = level.getBlockState(position);
@@ -103,7 +101,7 @@ public class Matter extends ElementRune {
     }
 
     @Override
-    public double proposeCost(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
         if (Objects.requireNonNull(action.getActionType()) == ActionRune.Action.SACRIFICE) {
             if (entity instanceof LivingEntity && level instanceof ServerLevel serverLevel) {
                 return defaultCosts(action);

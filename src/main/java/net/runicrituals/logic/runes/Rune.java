@@ -14,6 +14,20 @@ public abstract class Rune {
 
     protected RuneInlayMaterial material;
 
+    private boolean canRunClientSide = false;
+
+    public Rune() {
+    }
+
+    /**
+     * running client side can only happen with Entity-Only runes. block-effect runes should run server side due to
+     * @param canRunClientSide if this rune can run client side
+     */
+    public Rune(boolean canRunClientSide) {
+        this.canRunClientSide = canRunClientSide;
+    }
+
+
     public abstract RuneType getType();
 
     /**
@@ -38,13 +52,13 @@ public abstract class Rune {
                 createdRune = new Arcane();
             }
             case KINETIC -> {
-                createdRune = new VoidRune();
+                createdRune = new Kinetic();
             }
             case THERMAL -> {
                 createdRune =  new Thermal();
             }
             case ELECTRIC -> {
-                createdRune =  new VoidRune();
+                createdRune =  new Electric();
             }
             case LIGHT -> {
                 createdRune =  new VoidRune();
@@ -76,9 +90,6 @@ public abstract class Rune {
             case CUBE -> {
                 createdRune =  new Cube(8);
             }
-            case REPEAT -> {
-                createdRune =  new VoidRune();
-            }
             case CONTROL -> {
                 createdRune =  new VoidRune();
             }
@@ -89,4 +100,7 @@ public abstract class Rune {
         return createdRune;
     }
 
+    public boolean canRunClientSide() {
+        return canRunClientSide;
+    }
 }

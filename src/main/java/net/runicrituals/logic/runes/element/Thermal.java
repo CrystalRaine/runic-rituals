@@ -2,8 +2,8 @@ package net.runicrituals.logic.runes.element;
 
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.references.BlockIds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -12,11 +12,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.FluidIds;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
+import net.runicrituals.logic.runes.form.FormRune;
 
 /** <pre>
  * effects:
@@ -35,7 +33,7 @@ public class Thermal extends ElementRune{
     }
 
     @Override
-    public double proposeCost(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForBlock(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
                 if (runningSequence.intensity >= 2 && level.getBlockState(position).is(Blocks.PACKED_ICE)) return defaultCosts(action);
@@ -54,7 +52,7 @@ public class Thermal extends ElementRune{
     }
 
     @Override
-    public void applyAction(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence){
+    public void applyAction(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence){
         switch (action.getActionType()) {
             case SACRIFICE -> {
                 if(runningSequence.intensity >= 2) replaceBlock(level, position, Blocks.PACKED_ICE, Blocks.BLUE_ICE);
@@ -76,7 +74,7 @@ public class Thermal extends ElementRune{
     }
 
     @Override
-    public double proposeCost(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
         if(entity instanceof ItemEntity) return 0;
         switch (action.getActionType()) {
             case SACRIFICE -> {

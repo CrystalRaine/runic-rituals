@@ -15,7 +15,7 @@ import net.runicrituals.logic.runes.element.ElementRune;
 public class VoidRune extends ElementRune {
 
     @Override
-    public double proposeCost(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
         return defaultCosts(action);
     }
 

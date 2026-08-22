@@ -18,5 +18,7 @@ public abstract class FormRune extends Rune {
     public abstract List<Entity> getTargetEntities(Level level, Position position);
     public abstract BlockPos getTargetBlock(Level level, Position position);
 
+    public abstract boolean isPositionInVolume(Position center, BlockPos position);
+
     public abstract String name();
 }

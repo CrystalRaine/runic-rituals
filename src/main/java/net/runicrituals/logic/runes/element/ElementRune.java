@@ -1,6 +1,7 @@
 package net.runicrituals.logic.runes.element;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -11,9 +12,7 @@ import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.Rune;
 import net.runicrituals.logic.runes.RuneType;
 import net.runicrituals.logic.runes.action.ActionRune;
-
-import static net.runicrituals.logic.RuneSymbol.MANIFEST;
-import static net.runicrituals.logic.RuneSymbol.SACRIFICE;
+import net.runicrituals.logic.runes.form.FormRune;
 
 /**
  * Element runes define the expression of a rune sequence.
@@ -25,6 +24,13 @@ import static net.runicrituals.logic.RuneSymbol.SACRIFICE;
  */
 public abstract class ElementRune extends Rune {
 
+    public ElementRune() {
+    }
+
+    public ElementRune(boolean canRunClientSide) {
+        super(canRunClientSide);
+    }
+
     @Override
     public RuneType getType() {
         return RuneType.ELEMENT;
@@ -32,12 +38,15 @@ public abstract class ElementRune extends Rune {
 
     /**
      * apply this rune's action on a block
-     * @param level current level
-     * @param position the block position to act on
-     * @param action the action to take
+     *
+     * @param level           current level
+     * @param form
+     * @param ritualCenter    center of the ritual
+     * @param actAt           the block position to act on
+     * @param action          the action to take
      * @param runningSequence currently running rune sequence
      */
-    public void applyAction(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+    public void applyAction(Level level, FormRune form, Position ritualCenter, BlockPos actAt, ActionRune action, RuneSequence runningSequence) {
     };
 
     /**
@@ -52,25 +61,28 @@ public abstract class ElementRune extends Rune {
 
     /**
      * propose a cost for using this rune's action on a block
-     * @param level current level
-     * @param position the block position to act on
-     * @param action the action to take
+     *
+     * @param level           current level
+     * @param form
+     * @param initialPos      position of the ritual's center
+     * @param position        the block position to act on
+     * @param action          the action to take
      * @param runningSequence currently running rune sequence
      * @return cost to act on this block
      */
-    public double proposeCost(Level level, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForBlock(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence) {
         return 0;
     };
 
     /**
-     * propose a cost for using this rune's action on a block
+     * propose a cost for using this rune's action on an entity
      * @param level current level
      * @param entity the entity to act on
      * @param action the action to take
      * @param runningSequence currently running rune sequence
      * @return cost to act on this entity
      */
-    public double proposeCost(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
         return 0;
     };
 
@@ -80,7 +92,7 @@ public abstract class ElementRune extends Rune {
      * @param runningSequence the current running rune sequence
      * @return cost to update the rune sequence's intensity
      */
-    public double proposeCost(ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForIntensityChange(ActionRune action, RuneSequence runningSequence) {
         return 0;
     }
 
