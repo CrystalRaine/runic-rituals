@@ -70,7 +70,7 @@ public abstract class Rune {
                 createdRune =  new VoidRune();
             }
             case TIME -> {
-                createdRune =  new VoidRune();
+                createdRune =  new Time();
             }
             case MANIFEST -> {
                 createdRune =  new Manifest();

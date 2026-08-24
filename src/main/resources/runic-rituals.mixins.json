@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "EntityMovementMixin",
+    ,
+    "PlayerMovementMixin"
   ],
   "injectors": {
     "defaultRequire": 1

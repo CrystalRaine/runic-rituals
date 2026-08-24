@@ -5,10 +5,12 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.mixin_hooks.EntityAdditions;
+import net.runicrituals.mixin_hooks.PlayerAdditions;
 
 public class Kinetic extends ElementRune {
 
@@ -24,11 +26,10 @@ public class Kinetic extends ElementRune {
     @Override
     public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
 
-        long wearOffTimestamp = System.currentTimeMillis() + (long)(1000 * 0.5f); // active for 0.5 seconds
-
-        switch (action.getActionType()) {
-            case MANIFEST -> ((EntityAdditions)entity).runic_rituals$setDeltaScale(runningSequence.intensity + 1, wearOffTimestamp);
-            case SACRIFICE -> ((EntityAdditions)entity).runic_rituals$setDeltaScale(1 / (runningSequence.intensity + 1), wearOffTimestamp);
+        if(!(entity instanceof Player)) {
+            scaleEntityMotion((EntityAdditions) entity, action, runningSequence);
+        } else {
+            scalePlayerMotion((PlayerAdditions) entity, action, runningSequence);
         }
     }
 

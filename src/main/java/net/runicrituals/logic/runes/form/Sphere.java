@@ -4,14 +4,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.logic.RuneInlayMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class Sphere extends FormRune{
 
@@ -25,20 +26,15 @@ public class Sphere extends FormRune{
 
 
     @Override
-    public List<Entity> getTargetEntities(Level level, Position position) {
-        if (!level.isClientSide()) {
-            List<Entity> entities = new ArrayList<>();
+    public List<Entity> getTargetEntities(Level level, BlockPos position) {
+        List<Entity> entities = new ArrayList<>();
 
-            BlockPos blockPos = new BlockPos((int)position.x(), (int)position.y(), (int)position.z());
+        AABB bb = new AABB(position).inflate(radius);
+        entities.addAll(level.getEntities(null, bb));
 
-            AABB bb = new AABB(blockPos).inflate(radius);
-            entities.addAll(level.getEntities(null, bb));
-
-            entities = entities.stream().filter(e -> e.distanceToSqr(new Vec3((int)position.x(), (int)position.y(), (int)position.z())) < radius * radius).toList();
-            return entities;
-        }
-
-        return new ArrayList<>();
+        entities = entities.stream().filter(e -> e.distanceToSqr(new Vec3(position.getX(), position.getY(), position.getZ())) < radius * radius).toList();
+        RunicRituals.LOGGER.info(entities.size() + "");
+        return entities;
     }
 
     @Override
@@ -77,5 +73,10 @@ public class Sphere extends FormRune{
     @Override
     public String name() {
         return "Sphere";
+    }
+
+    @Override
+    public Stream<BlockPos> getAllBlocks(Level level, BlockPos center) {
+        return BlockPos.betweenClosedStream(new AABB(center)).filter(b -> !level.getBlockState(b).is(Blocks.AIR) && isPositionInVolume(new Vec3(center.getX(), center.getY(), center.getZ()), b));
     }
 }

@@ -13,6 +13,8 @@ import net.runicrituals.logic.runes.Rune;
 import net.runicrituals.logic.runes.RuneType;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;
+import net.runicrituals.mixin_hooks.EntityAdditions;
+import net.runicrituals.mixin_hooks.PlayerAdditions;
 
 /**
  * Element runes define the expression of a rune sequence.
@@ -35,6 +37,18 @@ public abstract class ElementRune extends Rune {
     public RuneType getType() {
         return RuneType.ELEMENT;
     }
+
+    /**
+     * apply this rune's action on the entire volume
+     *
+     * @param level           current level
+     * @param form
+     * @param ritualCenter    center of the ritual
+     * @param action          the action to take
+     * @param runningSequence currently running rune sequence
+     */
+    public void applyAction(Level level, FormRune form, Position ritualCenter, ActionRune action, RuneSequence runningSequence) {
+    };
 
     /**
      * apply this rune's action on a block
@@ -196,5 +210,23 @@ public abstract class ElementRune extends Rune {
             }
         }
         return Double.POSITIVE_INFINITY;
+    }
+
+    static void scaleEntityMotion(EntityAdditions entity, ActionRune action, RuneSequence runningSequence) {
+        long wearOffTimestamp = System.currentTimeMillis() + (long)(1000 * 0.5f); // active for 0.5 seconds
+
+        switch (action.getActionType()) {
+            case MANIFEST -> entity.runic_rituals$setDeltaScale(runningSequence.intensity + 1, wearOffTimestamp);
+            case SACRIFICE -> entity.runic_rituals$setDeltaScale(1 / (runningSequence.intensity + 1), wearOffTimestamp);
+        }
+    }
+
+    static void scalePlayerMotion(PlayerAdditions entity, ActionRune action, RuneSequence runningSequence) {
+        long wearOffTimestamp = System.currentTimeMillis() + (long)(1000 * 0.5f); // active for 0.5 seconds
+
+        switch (action.getActionType()) {
+            case MANIFEST -> entity.runic_rituals$setDeltaScale(runningSequence.intensity + 1, wearOffTimestamp);
+            case SACRIFICE -> entity.runic_rituals$setDeltaScale(1 / (runningSequence.intensity + 1), wearOffTimestamp);
+        }
     }
 }

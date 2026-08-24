@@ -94,7 +94,7 @@ public class CastingBlock {
         for(ActionNode actionNode : actions) {
             double elementSetCost = 0;
             for (ElementRune element : actionNode.elements) {
-                List<Entity> selectedEntities = form.getTargetEntities(level, initialPos);
+                List<Entity> selectedEntities = form.getTargetEntities(level, new BlockPos((int)initialPos.x(), (int)initialPos.y(), (int)initialPos.z()));
                 sequence.intensity = element.updateIntensity(actionNode.action, sequence.intensity);
 
                 if(!level.isClientSide()) {
@@ -132,7 +132,7 @@ public class CastingBlock {
         sequence.resetIntensity();
         for(ActionNode actionNode : actions) {
             for(ElementRune element : actionNode.elements) {
-                List<Entity> selectedEntities = form.getTargetEntities(level, initialPos);
+                List<Entity> selectedEntities = form.getTargetEntities(level, new BlockPos((int)initialPos.x(), (int)initialPos.y(), (int)initialPos.z()));
 
                 sequence.intensity = element.updateIntensity(actionNode.action, sequence.intensity);
 
@@ -144,6 +144,8 @@ public class CastingBlock {
                             element.applyAction(level, form, initialPos, targetBlock, actionNode.action, sequence);
                         }
                     }
+
+                    element.applyAction(level, form, initialPos, actionNode.action, sequence);
 
                 } else {
                     BlockPos targetBlock = form.getTargetBlock(level, initialPos);

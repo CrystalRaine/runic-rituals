@@ -47,13 +47,13 @@ public class Matter extends ElementRune {
         switch (action.getActionType()) {
             case SACRIFICE -> {
                 if(canDestroyBlock(level, position, runningSequence.intensity)) {
-                    return BASE_RUNE_MANA_COST * invertEfficiency();
+                    return BASE_RUNE_MANA_COST * invertEfficiency() * 5;
                 }
                 return 0;
             }
             case MANIFEST -> {
                 if(level.getBlockState(position).canBeReplaced()){
-                    return BASE_RUNE_MANA_COST * efficiency();
+                    return BASE_RUNE_MANA_COST * efficiency() * 5;
                 } else {
                     return 0;
                 }
@@ -104,7 +104,7 @@ public class Matter extends ElementRune {
     public double proposeCostForEntity(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
         if (Objects.requireNonNull(action.getActionType()) == ActionRune.Action.SACRIFICE) {
             if (entity instanceof LivingEntity && level instanceof ServerLevel serverLevel) {
-                return defaultCosts(action);
+                return defaultCosts(action) * 3;
             }
         }
         return 0;

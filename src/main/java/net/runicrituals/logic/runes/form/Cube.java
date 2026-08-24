@@ -4,10 +4,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FurnaceBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.minecraft.world.phys.AABB;
+import net.runicrituals.RunicRituals;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class Cube extends FormRune {
 
@@ -20,11 +26,9 @@ public class Cube extends FormRune {
     }
 
     @Override
-    public List<Entity> getTargetEntities(Level level, Position position) {
+    public List<Entity> getTargetEntities(Level level, BlockPos position) {
 
-        BlockPos blockPos = new BlockPos((int)position.x(), (int)position.y(), (int)position.z());
-
-        AABB bb = new AABB(blockPos).inflate(radius);
+        AABB bb = new AABB(position).inflate(radius);
 
         return level.getEntities(null, bb);
     }
@@ -57,5 +61,10 @@ public class Cube extends FormRune {
     @Override
     public String name() {
         return "Cube";
+    }
+
+    @Override
+    public Stream<BlockPos> getAllBlocks(Level level, BlockPos center) {
+        return BlockPos.betweenClosedStream(new AABB(center).inflate(radius)).filter(b -> !level.getBlockState(b).is(Blocks.AIR));
     }
 }
