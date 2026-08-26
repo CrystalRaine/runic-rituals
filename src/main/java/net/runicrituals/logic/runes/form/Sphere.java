@@ -27,14 +27,10 @@ public class Sphere extends FormRune{
 
     @Override
     public List<Entity> getTargetEntities(Level level, BlockPos position) {
-        List<Entity> entities = new ArrayList<>();
 
         AABB bb = new AABB(position).inflate(radius);
-        entities.addAll(level.getEntities(null, bb));
 
-        entities = entities.stream().filter(e -> e.distanceToSqr(new Vec3(position.getX(), position.getY(), position.getZ())) < radius * radius).toList();
-        RunicRituals.LOGGER.info(entities.size() + "");
-        return entities;
+        return  new ArrayList<>(level.getEntities(null, bb)).stream().filter(e -> e.distanceToSqr(new Vec3(position.getX(), position.getY(), position.getZ())) < radius * radius).toList();
     }
 
     @Override

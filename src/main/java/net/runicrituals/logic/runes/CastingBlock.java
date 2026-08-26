@@ -137,7 +137,6 @@ public class CastingBlock {
                 sequence.intensity = element.updateIntensity(actionNode.action, sequence.intensity);
 
                 if(!level.isClientSide()) {
-
                     for (int i = 0; i < sequence.intensity; i++) {
                         BlockPos targetBlock = deque.dequeue();
                         if (targetBlock != null) {

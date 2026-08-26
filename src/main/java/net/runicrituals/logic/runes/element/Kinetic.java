@@ -5,12 +5,10 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.mixin_hooks.EntityAdditions;
-import net.runicrituals.mixin_hooks.PlayerAdditions;
 
 public class Kinetic extends ElementRune {
 
@@ -26,11 +24,7 @@ public class Kinetic extends ElementRune {
     @Override
     public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
 
-        if(!(entity instanceof Player)) {
-            scaleEntityMotion((EntityAdditions) entity, action, runningSequence);
-        } else {
-            scalePlayerMotion((PlayerAdditions) entity, action, runningSequence);
-        }
+        scaleEntityMotion((EntityAdditions) entity, action, runningSequence);
     }
 
     @Override
