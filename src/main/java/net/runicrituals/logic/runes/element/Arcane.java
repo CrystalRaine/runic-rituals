@@ -34,7 +34,7 @@ public class Arcane extends ElementRune {
 
     @Override
     public double proposeCostForIntensityChange(ActionRune action, RuneSequence runningSequence) {
-        return BASE_RUNE_MANA_COST / 3;
+        return defaultCosts(action) / 3;
     }
 
     @Override

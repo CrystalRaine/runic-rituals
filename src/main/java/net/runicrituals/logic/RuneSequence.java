@@ -2,7 +2,6 @@ package net.runicrituals.logic;
 
 import net.minecraft.core.Position;
 import net.minecraft.world.level.Level;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.Rune;
 import net.runicrituals.logic.runes.action.ActionRune;
