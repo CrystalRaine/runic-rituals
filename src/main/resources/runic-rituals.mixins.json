@@ -3,8 +3,13 @@
   "package": "net.runicrituals.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "EntityMovementMixin",
+    "BlockBehaviorMixin",
+    "BlockEntityMixin",
+    "EntityMixin",
+    "LevelChunkBoundTickingBlockEntityMixin",
+    "LevelChunkMixin",
     "LevelChunkTicksMixin",
+    "ServerLevelMixin",
     "TickAccessMixin"
   ],
   "injectors": {

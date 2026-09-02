@@ -1,7 +1,6 @@
 package net.runicrituals.mixin;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.runicrituals.mixin_hooks.EntityAdditions;
@@ -9,16 +8,17 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 
 @Mixin(Entity.class)
-public class EntityMovementMixin implements EntityAdditions {
+public class EntityMixin implements EntityAdditions {
 
     @Unique
     double deltaScale = 1;
+
+    @Unique
+    boolean suppressNextTick = false;
 
     @Unique
     double boostEndTimestamp = Long.MAX_VALUE;
@@ -34,20 +34,31 @@ public class EntityMovementMixin implements EntityAdditions {
 
         Vec3 newDelta = delta.scale(deltaScale);
 
-        if(System.currentTimeMillis() >= boostEndTimestamp)
-            runic_rituals$setDeltaScale(1, Long.MAX_VALUE);
-
+        if(level.getGameTime() >= boostEndTimestamp) {
+            deltaScale = 1;
+            boostEndTimestamp = Long.MAX_VALUE;
+        }
         return newDelta;
     }
 
     @Override
-    public double runic_rituals$getDeltaScale() {
-        return deltaScale;
+    public void runic_rituals$setDeltaScale(double ds) {
+        deltaScale = ds;
+        boostEndTimestamp = level.getGameTime() + 1;
     }
 
     @Override
-    public void runic_rituals$setDeltaScale(double ds, double unixTimeMovementChangeEnds) {
-        deltaScale = ds;
-        boostEndTimestamp = unixTimeMovementChangeEnds;
+    public void runic_rituals$suppressNextTick() {
+        suppressNextTick = true;
+    }
+
+    @Override
+    public void runic_rituals$resetSuppressNextTick() {
+        suppressNextTick = false;
+    }
+
+    @Override
+    public boolean runic_rituals$shouldSuppressNextTick() {
+        return suppressNextTick;
     }
 }
