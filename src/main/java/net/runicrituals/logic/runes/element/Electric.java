@@ -10,7 +10,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.runicrituals.logic.RuneSequence;
+import net.runicrituals.RunicRituals;
+import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;
 
@@ -18,27 +19,27 @@ public class Electric extends ElementRune{
 
 
     @Override
-    public double proposeCostForBlock(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForBlock(Level level, FormRune form, BlockPos position, ActionRune action, CastingBlock block) {
 
         if(action.getActionType() != ActionRune.Action.MANIFEST) {
-            return 0;
+            return Double.POSITIVE_INFINITY;
         }
 
         BlockPos pos = position;
 
-        while (level.getBlockState(pos.below()).is(Blocks.AIR) && form.isPositionInVolume(initialPos, pos)) {
+        while (level.getBlockState(pos.below()).is(Blocks.AIR) && form.isPositionInVolume(pos)) {
             pos = pos.below();
         }
 
-        if(form.isPositionInVolume(initialPos, pos) && level.getBlockState(pos).is(Blocks.AIR) && !level.getBlockState(pos.below()).is(Blocks.AIR)) {
+        if(form.isPositionInVolume(pos) && level.getBlockState(pos).is(Blocks.AIR) && !level.getBlockState(pos.below()).is(Blocks.AIR)) {
             return BASE_RUNE_MANA_COST * 100 * efficiency();
         }
 
-        return 0;
+        return Double.POSITIVE_INFINITY;
     }
 
     @Override
-    public void applyAction(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+    public void applyActionOnBlock(Level level, FormRune form, BlockPos position, ActionRune action, CastingBlock block) {
 
         if(action.getActionType() != ActionRune.Action.MANIFEST) {
             return;
@@ -47,11 +48,11 @@ public class Electric extends ElementRune{
 //        Drop to ground
         BlockPos pos = position;
 
-        while (level.getBlockState(pos.below()).is(Blocks.AIR) && form.isPositionInVolume(initialPos, pos)) {
+        while (level.getBlockState(pos.below()).is(Blocks.AIR) && form.isPositionInVolume(pos)) {
             pos = pos.below();
         }
 
-        if(form.isPositionInVolume(initialPos, pos) && level.getBlockState(pos).is(Blocks.AIR) && !level.getBlockState(pos.below()).is(Blocks.AIR)) {
+        if(form.isPositionInVolume(pos) && level.getBlockState(pos).is(Blocks.AIR) && !level.getBlockState(pos.below()).is(Blocks.AIR)) {
             LightningBolt lightningBolt = EntityTypes.LIGHTNING_BOLT.create(level, EntitySpawnReason.TRIGGERED);
             if(lightningBolt != null) {
                 lightningBolt.teleportTo(pos.getX(), pos.getY(), pos.getZ());
@@ -62,19 +63,19 @@ public class Electric extends ElementRune{
 
 
     @Override
-    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
 
-        if(entity instanceof LightningBolt || entity instanceof ItemEntity || action.getActionType() != ActionRune.Action.MANIFEST || runningSequence.intensity < 3) {
-            return 0;
+        if(entity instanceof LightningBolt || entity instanceof ItemEntity || action.getActionType() != ActionRune.Action.MANIFEST || block.intensity < 3) {
+            return Double.POSITIVE_INFINITY;
         }
 
         return BASE_RUNE_MANA_COST * 95 * efficiency();
     }
 
     @Override
-    public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public void applyActionOnEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
 
-        if(entity instanceof LightningBolt || entity instanceof ItemEntity || action.getActionType() != ActionRune.Action.MANIFEST || runningSequence.intensity < 3) {
+        if(entity instanceof LightningBolt || entity instanceof ItemEntity || action.getActionType() != ActionRune.Action.MANIFEST || block.intensity < 3) {
             return;
         }
 

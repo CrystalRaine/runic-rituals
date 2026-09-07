@@ -1,4 +1,4 @@
-package net.runicrituals.registries.blocks;
+package net.runicrituals.registries.blocks.rune_obelisk;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -20,33 +20,29 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneInlayMaterial;
-import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.RuneSymbol;
-import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import net.runicrituals.registries.components.RuneDataComponent;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class RitualEntity extends BlockEntity implements Container {
+public abstract class SingleBlockRitualEntity extends BlockEntity implements Container {
 
     private final NonNullList<ItemStack> items;
     boolean active;
     private double mana;
     private final double manaCap;
-    private RuneSequence sequence;
+    private RuneObeliskRuneSequence sequence;
 
     // cache block -> block costs so that client can read them.
     private final Map<Integer, Double> blockCostMap = new HashMap<>();
     private boolean blockCacheDirty = false;
 
-    public RitualEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, int runeSlots, double manaCap) {
+    public SingleBlockRitualEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, int runeSlots, double manaCap) {
         super(type, worldPosition, blockState);
         items = NonNullList.withSize(runeSlots, ItemStack.EMPTY);
         this.manaCap = manaCap;
@@ -58,7 +54,7 @@ public abstract class RitualEntity extends BlockEntity implements Container {
     public double getManaCap() {
         return manaCap;
     }
-    public RuneSequence getSequence() {
+    public RuneObeliskRuneSequence getSequence() {
         return sequence;
     }
     public boolean getActive() {
@@ -76,22 +72,22 @@ public abstract class RitualEntity extends BlockEntity implements Container {
         mana = Math.clamp(mana + amount, 0, manaCap);
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, RitualEntity blockEntity) {
-        if(level.getBlockEntity(pos) instanceof RitualEntity ritualEntity) {
-            if(ritualEntity.sequence == null) {
-                ritualEntity.sequence = new RuneSequence(ritualEntity, level, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
+    public static void tick(Level level, BlockPos pos, BlockState state, SingleBlockRitualEntity blockEntity) {
+        if(level.getBlockEntity(pos) instanceof SingleBlockRitualEntity singleBlockRitualEntity) {
+            if(singleBlockRitualEntity.sequence == null) {
+                singleBlockRitualEntity.sequence = new RuneObeliskRuneSequence(singleBlockRitualEntity, level, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
             }
-            ritualEntity.sequence.clearRunes();
+            singleBlockRitualEntity.sequence.clearRunes();
 
-            getSequence(ritualEntity.sequence, ritualEntity.items);
+            getSequence(singleBlockRitualEntity.sequence, singleBlockRitualEntity.items);
 
-            if(ritualEntity.active) {
-                ritualEntity.sequence.tick();
+            if(singleBlockRitualEntity.active) {
+                singleBlockRitualEntity.sequence.tick();
             }
         }
     }
 
-    public static void getSequence(RuneSequence sequence, NonNullList<ItemStack> items){
+    public static void getSequence(RuneObeliskRuneSequence sequence, NonNullList<ItemStack> items){
         sequence.clearRunes();
         for (ItemStack stack : items) {
             if (stack.has(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE)) {
@@ -115,7 +111,7 @@ public abstract class RitualEntity extends BlockEntity implements Container {
     @Override
     protected void loadAdditional(@NonNull ValueInput input) {
         super.loadAdditional(input);
-        setActive(input.getBooleanOr("active", true));
+        setActive(input.getBooleanOr("active", false));
         mana = input.getDoubleOr("mana", 0);
 
         // This one line... is not in the goddamn docs on block containers and is required for the entity renderer

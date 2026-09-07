@@ -15,7 +15,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.runicrituals.logic.RuneSequence;
+import net.runicrituals.RunicRituals;
+import net.runicrituals.logic.runes.CastingBlock;
+import net.runicrituals.registries.RunicRitualsBlocks;
+import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskRuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;
 import net.runicrituals.registries.RunicRitualsDamageTypes;
@@ -43,35 +46,35 @@ public class Matter extends ElementRune {
     }
 
     @Override
-    public double proposeCostForBlock(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForBlock(Level level, FormRune form, BlockPos position, ActionRune action, CastingBlock block) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
-                if(canDestroyBlock(level, position, runningSequence.intensity)) {
+                if(canDestroyBlock(level, position, block.intensity)) {
                     return BASE_RUNE_MANA_COST * invertEfficiency() * 5;
                 }
-                return 0;
+                return Double.POSITIVE_INFINITY;
             }
             case MANIFEST -> {
                 if(level.getBlockState(position).canBeReplaced()){
                     return BASE_RUNE_MANA_COST * efficiency() * 5;
                 } else {
-                    return 0;
+                    return Double.POSITIVE_INFINITY;
                 }
             }
             default -> {
 //                do nothing
             }
         }
-        return 0;
+        return Double.POSITIVE_INFINITY;
     }
 
     @Override
-    public void applyAction(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence){
+    public void applyActionOnBlock(Level level, FormRune form, BlockPos position, ActionRune action, CastingBlock block){
         switch (action.getActionType()) {
             case SACRIFICE -> {
                 BlockState old = level.getBlockState(position);
 
-                if(canDestroyBlock(level, position, runningSequence.intensity)) {
+                if(canDestroyBlock(level, position, block.intensity) && !old.getBlock().defaultBlockState().is(RunicRitualsBlocks.RUNESLATE)) {
                     level.destroyBlock(position, false);
                     level.sendBlockUpdated(position, old, Blocks.AIR.defaultBlockState(), 3);
                 }
@@ -83,11 +86,11 @@ public class Matter extends ElementRune {
                     List<Block> aggregateOptions = new ArrayList<>();
                     HolderGetter<Block> lookup = level.registryAccess().lookupOrThrow(Registries.BLOCK);
 
-                    for (int i = 0; i < Math.min(runningSequence.intensity, tagSet.size()); i++) {
+                    for (int i = 0; i < Math.min(block.intensity, tagSet.size()); i++) {
                         aggregateOptions.addAll(lookup.get(tagSet.get(i)).stream().flatMap(holderSet -> holderSet.stream().map(Holder::value)).toList());
                     }
 
-                    if(runningSequence.intensity >= tagSet.size()) {
+                    if(block.intensity >= tagSet.size()) {
                         aggregateOptions.add(Blocks.DEEPSLATE_DIAMOND_ORE);
                     }
 
@@ -101,17 +104,17 @@ public class Matter extends ElementRune {
     }
 
     @Override
-    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
         if (Objects.requireNonNull(action.getActionType()) == ActionRune.Action.SACRIFICE) {
             if (entity instanceof LivingEntity && level instanceof ServerLevel serverLevel) {
                 return defaultCosts(action) * 3;
             }
         }
-        return 0;
+        return Double.POSITIVE_INFINITY;
     }
 
     @Override
-    public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public void applyActionOnEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
         if (Objects.requireNonNull(action.getActionType()) == ActionRune.Action.SACRIFICE) {
             if (entity instanceof LivingEntity && level instanceof ServerLevel serverLevel) {
                 DamageSource disintegrationDamage = new DamageSource(
@@ -121,7 +124,7 @@ public class Matter extends ElementRune {
                                 .get(RunicRitualsDamageTypes.DISINTEGRATION_DAMAGE)
                                 .orElseThrow()
                 );
-                entity.hurtServer(serverLevel, disintegrationDamage, (int) runningSequence.intensity);
+                entity.hurtServer(serverLevel, disintegrationDamage, (int) block.intensity);
             }
         }
     }

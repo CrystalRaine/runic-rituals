@@ -18,7 +18,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.ticks.LevelChunkTicks;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraft.world.ticks.ScheduledTick;
-import net.runicrituals.logic.RuneSequence;
+import net.runicrituals.logic.runes.CastingBlock;
+import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskRuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;
 import net.runicrituals.mixin_hooks.*;
@@ -45,14 +46,14 @@ public class Time extends ElementRune {
     }
 
     @Override
-    public void applyAction(Level level, FormRune form, Position ritualCenter, ActionRune action, RuneSequence runningSequence) {
+    public void applyActionOnVolume(Level level, FormRune form, ActionRune action, CastingBlock block) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
                 Set<BlockPos> positions = new HashSet<>();
 
-                form.getAllBlocks(level, new BlockPos((int)ritualCenter.x(), (int)ritualCenter.y(), (int)ritualCenter.z()))
+                form.getAllBlocks()
                     .forEach(b -> {
-                        if(level.getGameTime() % (runningSequence.intensity + 1) != 0) {
+                        if(level.getGameTime() % (block.intensity + 1) != 0) {
                             positions.add(new BlockPos(b.getX(), b.getY(), b.getZ()));
 
                             BlockEntity be = level.getBlockEntity(b);
@@ -66,7 +67,7 @@ public class Time extends ElementRune {
                     }
                 );
 
-                if(level.getGameTime() % (runningSequence.intensity + 1) != 0) {
+                if(level.getGameTime() % (block.intensity + 1) != 0) {
 
                     modifyScheduledBlockTicks(level, positions, 1);
                     modifyScheduledFluidTicks(level, positions, 1);
@@ -75,18 +76,18 @@ public class Time extends ElementRune {
             case MANIFEST -> {
                 Set<BlockPos> positions = new HashSet<>();
 
-                form.getAllBlocks(level, new BlockPos((int)ritualCenter.x(), (int)ritualCenter.y(), (int)ritualCenter.z()))
+                form.getAllBlocks()
                     .forEach(b -> {
                         positions.add(new BlockPos(b.getX(), b.getY(), b.getZ()));
 
                         BlockEntity be = level.getBlockEntity(b);
                         if(be != null && !(be instanceof RuneObeliskEntity)) {
-                            ((BlockEntityAdditions) be).runic_rituals$setExtraTicks((int)runningSequence.intensity);
+                            ((BlockEntityAdditions) be).runic_rituals$setExtraTicks((int)block.intensity);
                         }
                     });
 
-                modifyScheduledBlockTicks(level, positions, (int)(-1 * runningSequence.intensity));
-                modifyScheduledFluidTicks(level, positions, (int)(-1 * runningSequence.intensity));
+                modifyScheduledBlockTicks(level, positions, (int)(-1 * block.intensity));
+                modifyScheduledFluidTicks(level, positions, (int)(-1 * block.intensity));
             }
         }
     };
@@ -170,7 +171,7 @@ public class Time extends ElementRune {
     }
 
     @Override
-    public double proposeCostForBlock(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForBlock(Level level, FormRune form, BlockPos position, ActionRune action, CastingBlock block) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
                 return -BASE_RUNE_MANA_COST * invertEfficiency();
@@ -183,7 +184,7 @@ public class Time extends ElementRune {
     }
 
     @Override
-    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
                 return -BASE_RUNE_MANA_COST * invertEfficiency();
@@ -196,7 +197,7 @@ public class Time extends ElementRune {
     }
 
     @Override
-    public void applyAction(Level level, FormRune form, Position ritualCenter, BlockPos actAt, ActionRune action, RuneSequence runningSequence) {
+    public void applyActionOnBlock(Level level, FormRune form, BlockPos actAt, ActionRune action, CastingBlock block) {
 //        accelerate/decelerate random ticks
         switch (action.getActionType()) {
             case SACRIFICE -> {
@@ -213,14 +214,14 @@ public class Time extends ElementRune {
     }
 
     @Override
-    public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public void applyActionOnEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
-                if(level.getGameTime() % (runningSequence.intensity + 1) != 0) {
+                if(level.getGameTime() % (block.intensity + 1) != 0) {
                     ((EntityAdditions)entity).runic_rituals$suppressNextTick();
                 }
                 if(entity instanceof Player) {
-                    scaleEntityMotion((EntityAdditions)entity, action, runningSequence);
+                    scaleEntityMotion((EntityAdditions)entity, action, block);
                 }
             }
             case MANIFEST -> entity.tick();

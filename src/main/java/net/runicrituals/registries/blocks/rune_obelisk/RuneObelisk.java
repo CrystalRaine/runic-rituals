@@ -97,7 +97,6 @@ public class RuneObelisk extends BaseEntityBlock {
         return InteractionResult.SUCCESS;
     }
 
-
     private RuneObeliskEntity getBlockEntity(Level level, BlockPos pos, BlockState state) {
 //        Double block container, so always use the bottom block's inventory so they aren't different
 //        depending on which part of the block you click on.

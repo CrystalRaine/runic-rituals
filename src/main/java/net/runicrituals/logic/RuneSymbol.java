@@ -26,15 +26,16 @@ public enum RuneSymbol  {
     SACRIFICE(9, ChatFormatting.BLUE, "Sacrifice Action",  RunicRitualsItems.SACRIFICE_RUNE),
 
 //    Form Runes
-    SPHERE(12, ChatFormatting.GOLD, "Sphere Form",  RunicRitualsItems.SPHERE_RUNE),
-    CUBE(13, ChatFormatting.GOLD, "Cube Form",  RunicRitualsItems.CUBE_RUNE),
+    CUBE(13, ChatFormatting.GOLD, "Prism Form",  RunicRitualsItems.PRISM_RUNE),
+    SHEET(20, ChatFormatting.GOLD, "Sheet Form", RunicRitualsItems.SHEET_RUNE),
 
 //    Logical Runes
     CONTROL(15, ChatFormatting.WHITE, "Control Logic",  RunicRitualsItems.CONTROL_RUNE),
     BIND(10, ChatFormatting.WHITE, "Bind Logic",  RunicRitualsItems.BIND_RUNE),
     BOLT(11, ChatFormatting.WHITE, "Bolt Logic",  RunicRitualsItems.BOLT_RUNE),
-    ;
-
+    GROW(16, ChatFormatting.WHITE, "Grow Logic",  RunicRitualsItems.GROW_RUNE),
+    SHRINK(17, ChatFormatting.WHITE, "Shrink Logic",  RunicRitualsItems.SHRINK_RUNE),
+;
     private final int id;
     private final String name;
     private final ChatFormatting formatting;

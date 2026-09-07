@@ -12,7 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.runicrituals.logic.RuneSequence;
+import net.runicrituals.logic.runes.CastingBlock;
+import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskRuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;
 
@@ -33,39 +34,39 @@ public class Thermal extends ElementRune{
     }
 
     @Override
-    public double proposeCostForBlock(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForBlock(Level level, FormRune form, BlockPos position, ActionRune action, CastingBlock block) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
-                if (runningSequence.intensity >= 2 && level.getBlockState(position).is(Blocks.PACKED_ICE)) return defaultCosts(action);
-                if (runningSequence.intensity >= 1 && level.getBlockState(position).is(Blocks.ICE)) return defaultCosts(action);
-                if (runningSequence.intensity >= 3 && level.getBlockState(position).is(Blocks.LAVA)) return defaultCosts(action);
+                if (block.intensity >= 2 && level.getBlockState(position).is(Blocks.PACKED_ICE)) return defaultCosts(action);
+                if (block.intensity >= 1 && level.getBlockState(position).is(Blocks.ICE)) return defaultCosts(action);
+                if (block.intensity >= 3 && level.getBlockState(position).is(Blocks.LAVA)) return defaultCosts(action);
                 if (level.getBlockState(position).is(Blocks.WATER)) return defaultCosts(action);
             }
             case MANIFEST -> {
-                if (runningSequence.intensity >= 1 && level.getBlockState(position).is(Blocks.PACKED_ICE)) return defaultCosts(action);
-                if (runningSequence.intensity >= 2 && level.getBlockState(position).is(Blocks.BLUE_ICE)) return defaultCosts(action);
-                if (runningSequence.intensity >= 3 && level.getBlockState(position).is(Blocks.LAVA)) return defaultCosts(action);
+                if (block.intensity >= 1 && level.getBlockState(position).is(Blocks.PACKED_ICE)) return defaultCosts(action);
+                if (block.intensity >= 2 && level.getBlockState(position).is(Blocks.BLUE_ICE)) return defaultCosts(action);
+                if (block.intensity >= 3 && level.getBlockState(position).is(Blocks.LAVA)) return defaultCosts(action);
                 if (level.getBlockState(position).is(Blocks.ICE)) return defaultCosts(action);
             }
         }
-        return 0;
+        return Double.POSITIVE_INFINITY;
     }
 
     @Override
-    public void applyAction(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence){
+    public void applyActionOnBlock(Level level, FormRune form, BlockPos position, ActionRune action, CastingBlock block){
         switch (action.getActionType()) {
             case SACRIFICE -> {
-                if(runningSequence.intensity >= 2) replaceBlock(level, position, Blocks.PACKED_ICE, Blocks.BLUE_ICE);
-                if(runningSequence.intensity >= 1) replaceBlock(level, position, Blocks.ICE, Blocks.PACKED_ICE);
+                if(block.intensity >= 2) replaceBlock(level, position, Blocks.PACKED_ICE, Blocks.BLUE_ICE);
+                if(block.intensity >= 1) replaceBlock(level, position, Blocks.ICE, Blocks.PACKED_ICE);
                 replaceBlock(level, position, Blocks.WATER, Blocks.ICE);
-                if(runningSequence.intensity >= 3) replaceBlock(level, position, Blocks.LAVA, Blocks.OBSIDIAN, false);
-                if(runningSequence.intensity >= 3) replaceBlock(level, position, Blocks.LAVA, Blocks.COBBLESTONE, true);
+                if(block.intensity >= 3) replaceBlock(level, position, Blocks.LAVA, Blocks.OBSIDIAN, false);
+                if(block.intensity >= 3) replaceBlock(level, position, Blocks.LAVA, Blocks.COBBLESTONE, true);
             }
             case MANIFEST -> {
                 replaceBlock(level, position, Blocks.ICE, Blocks.WATER);
-                if(runningSequence.intensity >= 1) replaceBlock(level, position, Blocks.PACKED_ICE, Blocks.ICE);
-                if(runningSequence.intensity >= 2) replaceBlock(level, position, Blocks.BLUE_ICE, Blocks.PACKED_ICE);
-                if(runningSequence.intensity >= 3) replaceBlock(level, position, ConventionalBlockTags.STONES, Blocks.LAVA);
+                if(block.intensity >= 1) replaceBlock(level, position, Blocks.PACKED_ICE, Blocks.ICE);
+                if(block.intensity >= 2) replaceBlock(level, position, Blocks.BLUE_ICE, Blocks.PACKED_ICE);
+                if(block.intensity >= 3) replaceBlock(level, position, ConventionalBlockTags.STONES, Blocks.LAVA);
             }
             default -> {
 //                do nothing
@@ -74,37 +75,37 @@ public class Thermal extends ElementRune{
     }
 
     @Override
-    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
-        if(entity instanceof ItemEntity) return 0;
+    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
+        if(entity instanceof ItemEntity) return Double.POSITIVE_INFINITY;
         switch (action.getActionType()) {
             case SACRIFICE -> {
-                if(entity.getType().fireImmune()) return 0;
+                if(entity.getType().fireImmune()) return Double.POSITIVE_INFINITY;
                 return defaultCosts(action);
             }
             case MANIFEST -> {
-                if(!entity.canFreeze()) return 0;
+                if(!entity.canFreeze()) return Double.POSITIVE_INFINITY;
                 return defaultCosts(action);
             }
         }
-        return 0;
+        return Double.POSITIVE_INFINITY;
     }
 
     @Override
-    public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public void applyActionOnEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
         if(entity instanceof ItemEntity) return;
         switch (action.getActionType()) {
             case SACRIFICE -> {
                 if(entity.getType().fireImmune()) return;
-                if (entity instanceof LivingEntity && level instanceof ServerLevel serverLevel && entity.getTicksFrozen() < 160) {
-                    entity.setTicksFrozen(entity.getTicksFrozen() + (int)(runningSequence.intensity));
+                if (entity instanceof LivingEntity && !level.isClientSide() && entity.getTicksFrozen() < 160) {
+                    entity.setTicksFrozen(entity.getTicksFrozen() + (int)(block.intensity));
                 }
             }
             case MANIFEST -> {
                 if(!entity.canFreeze()) return;
-                if (entity instanceof LivingEntity && level instanceof ServerLevel serverLevel) {
+                if (entity instanceof LivingEntity && !level.isClientSide()) {
                     entity.setTicksFrozen(0); // no freezing while on fire, unless you set up a 140+ effective intensity ritual : )
-                    if(runningSequence.intensity > 1) {
-                        entity.setRemainingFireTicks((int)runningSequence.intensity * 20);
+                    if(block.intensity > 1) {
+                        entity.setRemainingFireTicks((int)block.intensity * 20);
                     }
                 }
             }

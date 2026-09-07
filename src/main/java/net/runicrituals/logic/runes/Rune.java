@@ -5,8 +5,9 @@ import net.runicrituals.logic.RuneSymbol;
 import net.runicrituals.logic.runes.action.Manifest;
 import net.runicrituals.logic.runes.action.Sacrifice;
 import net.runicrituals.logic.runes.element.*;
-import net.runicrituals.logic.runes.form.Cube;
-import net.runicrituals.logic.runes.form.Sphere;
+import net.runicrituals.logic.runes.form.*;
+import net.runicrituals.logic.runes.logic.Grow;
+import net.runicrituals.logic.runes.logic.Shrink;
 
 public abstract class Rune {
 
@@ -81,17 +82,23 @@ public abstract class Rune {
             case BIND -> {
                 createdRune = new VoidRune();
             }
-            case BOLT -> {
-                createdRune =  new VoidRune();
-            }
-            case SPHERE -> {
-                createdRune =  new Sphere(8);
-            }
             case CUBE -> {
-                createdRune =  new Cube(8);
+                createdRune =  new Prism();
+            }
+            case SHEET -> {
+                createdRune =  new Sheet();
             }
             case CONTROL -> {
                 createdRune =  new VoidRune();
+            }
+            case BOLT -> {
+                createdRune =  new VoidRune();
+            }
+            case GROW -> {
+                createdRune =  new Grow();
+            }
+            case SHRINK -> {
+                createdRune =  new Shrink();
             }
         }
 

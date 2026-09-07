@@ -6,7 +6,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.runicrituals.logic.RuneSequence;
+import net.runicrituals.logic.runes.CastingBlock;
+import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskRuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.mixin_hooks.EntityAdditions;
 
@@ -17,14 +18,14 @@ public class Kinetic extends ElementRune {
     }
 
     @Override
-    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
         return defaultCosts(action);
     }
 
     @Override
-    public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public void applyActionOnEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
 
-        scaleEntityMotion((EntityAdditions) entity, action, runningSequence);
+        scaleEntityMotion((EntityAdditions) entity, action, block);
     }
 
     @Override

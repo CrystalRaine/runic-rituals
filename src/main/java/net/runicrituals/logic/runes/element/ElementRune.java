@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.runicrituals.logic.RuneSequence;
+import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.Rune;
 import net.runicrituals.logic.runes.RuneType;
 import net.runicrituals.logic.runes.action.ActionRune;
@@ -42,11 +42,10 @@ public abstract class ElementRune extends Rune {
      *
      * @param level           current level
      * @param form
-     * @param ritualCenter    center of the ritual
      * @param action          the action to take
-     * @param runningSequence currently running rune sequence
+     * @param block currently running casting block
      */
-    public void applyAction(Level level, FormRune form, Position ritualCenter, ActionRune action, RuneSequence runningSequence) {
+    public void applyActionOnVolume(Level level, FormRune form, ActionRune action, CastingBlock block) {
     };
 
     /**
@@ -54,12 +53,11 @@ public abstract class ElementRune extends Rune {
      *
      * @param level           current level
      * @param form
-     * @param ritualCenter    center of the ritual
      * @param actAt           the block position to act on
      * @param action          the action to take
-     * @param runningSequence currently running rune sequence
+     * @param block  currently running casting block
      */
-    public void applyAction(Level level, FormRune form, Position ritualCenter, BlockPos actAt, ActionRune action, RuneSequence runningSequence) {
+    public void applyActionOnBlock(Level level, FormRune form, BlockPos actAt, ActionRune action, CastingBlock block) {
     };
 
     /**
@@ -67,9 +65,9 @@ public abstract class ElementRune extends Rune {
      * @param level current level
      * @param entity the entity to act on
      * @param action the action to take
-     * @param runningSequence currently running rune sequence
+     * @param block  currently running casting block
      */
-    public void applyAction(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public void applyActionOnEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
     };
 
     /**
@@ -77,13 +75,12 @@ public abstract class ElementRune extends Rune {
      *
      * @param level           current level
      * @param form
-     * @param initialPos      position of the ritual's center
      * @param position        the block position to act on
      * @param action          the action to take
-     * @param runningSequence currently running rune sequence
+     * @param block currently running casting block
      * @return cost to act on this block
      */
-    public double proposeCostForBlock(Level level, FormRune form, Position initialPos, BlockPos position, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForBlock(Level level, FormRune form, BlockPos position, ActionRune action, CastingBlock block) {
         return 0;
     };
 
@@ -92,20 +89,20 @@ public abstract class ElementRune extends Rune {
      * @param level current level
      * @param entity the entity to act on
      * @param action the action to take
-     * @param runningSequence currently running rune sequence
+     * @param block currently running casting block
      * @return cost to act on this entity
      */
-    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
         return 0;
     };
 
     /**
      * propose a cost to change this ritual's intensity
      * @param action action being taken
-     * @param runningSequence the current running rune sequence
+     * @param block the current running casting block
      * @return cost to update the rune sequence's intensity
      */
-    public double proposeCostForIntensityChange(ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForIntensityChange(ActionRune action, CastingBlock block) {
         return 0;
     }
 
@@ -211,11 +208,11 @@ public abstract class ElementRune extends Rune {
         return Double.POSITIVE_INFINITY;
     }
 
-    static void scaleEntityMotion(EntityAdditions entity, ActionRune action, RuneSequence runningSequence) {
+    static void scaleEntityMotion(EntityAdditions entity, ActionRune action, CastingBlock block) {
 
         switch (action.getActionType()) {
-            case MANIFEST -> entity.runic_rituals$setDeltaScale(runningSequence.intensity + 1);
-            case SACRIFICE -> entity.runic_rituals$setDeltaScale(1 / (runningSequence.intensity + 1));
+            case MANIFEST -> entity.runic_rituals$setDeltaScale(block.intensity + 1);
+            case SACRIFICE -> entity.runic_rituals$setDeltaScale(1 / (block.intensity + 1));
         }
     }
 }

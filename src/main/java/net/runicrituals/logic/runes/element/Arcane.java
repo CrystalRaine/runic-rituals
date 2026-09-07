@@ -5,7 +5,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.runicrituals.logic.RuneSequence;
+import net.runicrituals.logic.runes.CastingBlock;
+import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskRuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 
 /** <pre>
@@ -33,7 +34,7 @@ public class Arcane extends ElementRune {
     }
 
     @Override
-    public double proposeCostForIntensityChange(ActionRune action, RuneSequence runningSequence) {
+    public double proposeCostForIntensityChange(ActionRune action, CastingBlock block) {
         return defaultCosts(action) / 3;
     }
 

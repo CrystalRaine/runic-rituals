@@ -4,5 +4,5 @@ public enum RuneType {
     ACTION,
     ELEMENT,
     FORM,
-    LOGIC,
+    MODIFIER,
 }

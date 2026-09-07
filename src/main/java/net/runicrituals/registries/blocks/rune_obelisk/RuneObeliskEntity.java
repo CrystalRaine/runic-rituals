@@ -8,14 +8,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.state.BlockState;
-import net.runicrituals.RunicRituals;
-import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
-import net.runicrituals.registries.blocks.RitualEntity;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public class RuneObeliskEntity extends RitualEntity implements MenuProvider {
+public class RuneObeliskEntity extends SingleBlockRitualEntity implements MenuProvider {
 
     static final int SLOTS_COUNT = 12;
     static final int DATA_SLOT_COUNT = 4;
@@ -23,7 +20,7 @@ public class RuneObeliskEntity extends RitualEntity implements MenuProvider {
     private final ContainerData dataAccess = new ContainerData() {
         @Override
         public int get(final int dataId) {
-            final RuneSequence seq = RuneObeliskEntity.super.getSequence();
+            final RuneObeliskRuneSequence seq = RuneObeliskEntity.super.getSequence();
             return switch (dataId) {
                 case 0 -> RuneObeliskEntity.super.getActive() ? 1 : 0;
                 case 1 -> {
@@ -32,8 +29,8 @@ public class RuneObeliskEntity extends RitualEntity implements MenuProvider {
                     }
                     yield 0;
                 }
-                case 2 -> (int)RuneObeliskEntity.super.getMana();
-                case 3 -> (int)RuneObeliskEntity.super.getManaCap();
+                case 2 -> (int) RuneObeliskEntity.super.getMana();
+                case 3 -> (int) RuneObeliskEntity.super.getManaCap();
                 default -> 0;
             };
         }
