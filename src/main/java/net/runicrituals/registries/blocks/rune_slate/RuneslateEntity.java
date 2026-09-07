@@ -28,6 +28,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RuneslateEntity extends BlockEntity {
 
@@ -88,6 +89,20 @@ public class RuneslateEntity extends BlockEntity {
         }
         nextPos = rse.getBlockPos();
     }
+
+    public void setRemoved() {
+        assert level != null;
+        if(!(!level.isClientSide() && Objects.requireNonNull(level.getServer()).isCurrentlySaving())) {
+            if(getAnchor() != null) {
+                getAnchor().delink();
+            }
+            if(!isAnchor) {
+                this.delink();
+            }
+        }
+        super.setRemoved();
+    }
+
 
     // this is... not particularly performant lol
     // only want to run this once when the loop is linked initially, then save result off.
@@ -191,9 +206,7 @@ public class RuneslateEntity extends BlockEntity {
     }
 
     public void delink() {
-        if(getAnchor() == null) return;
-
-        RuneslateEntity rse = getAnchor();
+        RuneslateEntity rse = this;
         rse.base = null;
         rse.runeComponents = null;
         rse.mana = new ManaStorage();
@@ -245,10 +258,10 @@ public class RuneslateEntity extends BlockEntity {
                 componentList.add(currentRse.components().get(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE));
             }
             currentRse = currentRse.getNext();
-        } while (currentRse.getNext() != null && !currentRse.isAnchor);
+        } while (currentRse != null && currentRse.getNext() != null && !currentRse.isAnchor);
 
         // only update list if whole circle is consumed
-        if(!currentRse.isAnchor) return;
+        if(currentRse == null || !currentRse.isAnchor) return;
 
         runeComponents = componentList;
     }

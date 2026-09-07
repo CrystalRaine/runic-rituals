@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import net.runicrituals.registries.RunicRitualsItems;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
@@ -50,14 +52,14 @@ public class Runeslate extends BaseEntityBlock {
 
                     rse.link();
                     if(rse.chainIndex == 0) {
-                        rse.delink();
+                        rse.getAnchor().delink();
                         player.sendOverlayMessage(Component.literal("Linking Ritual: Failed due to incomplete loop"));
                         return InteractionResult.SUCCESS;
                     }
 
                     boolean validBase = rse.getBase();
                     if(!validBase) {
-                        rse.delink();
+                        rse.getAnchor().delink();
                         player.sendOverlayMessage(Component.literal("Linking Ritual: Failed due to being unable to validate contained volume"));
                         return InteractionResult.SUCCESS;
                     }
@@ -66,7 +68,7 @@ public class Runeslate extends BaseEntityBlock {
                         player.sendOverlayMessage(Component.literal("Completed Ritual Circle, Size: " + (rse.chainIndex)));
                     }
                 } else if(rse.getAnchor() != null){
-                    rse.delink();
+                    rse.getAnchor().delink();
                 }
             }
         }

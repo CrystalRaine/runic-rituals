@@ -1,12 +1,13 @@
 package net.runicrituals.logic;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.RunicRitualsItems;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public enum RuneSymbol  {
 //    Elemental Runes
@@ -40,6 +41,8 @@ public enum RuneSymbol  {
     private final String name;
     private final ChatFormatting formatting;
     private final Item symbolItem;
+
+    private static final Map<String, Identifier> identifiers = new HashMap<>();
 
     RuneSymbol(int id, ChatFormatting formatting, String name, Item symbolItem){
         this.id = id;
@@ -88,5 +91,24 @@ public enum RuneSymbol  {
 
     public static ChatFormatting getFormattingFromElementId(int id) {
         return getSymbolFromId(id).getFormatting();
+    }
+
+    public String getIdentifierName(){
+        return name.toLowerCase(Locale.ROOT).replace(" ", "_");
+    }
+
+    /**
+     * get the Identifier for the rune's image. this caches all rune images in a map to avoid re-creating identifiers with the same path/name
+     * @return rune image Identifier
+     */
+    public Identifier getImageIdentifier() {
+
+        Identifier id = identifiers.get(getIdentifierName());
+        if(id != null) {
+            return id;
+        }
+        id = Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "textures/item/" + getIdentifierName() + "_rune.png");
+        identifiers.put(getIdentifierName(), id);
+        return id;
     }
 }

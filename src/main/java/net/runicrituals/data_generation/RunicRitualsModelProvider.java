@@ -9,8 +9,10 @@ import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.RangeSelectItemModel;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneSymbol;
+import net.runicrituals.registries.RunicRitualsBlocks;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import net.runicrituals.registries.RunicRitualsItems;
 import net.runicrituals.registries.components.RuneSymbolItemModelProperty;
@@ -40,39 +42,47 @@ public class RunicRitualsModelProvider extends FabricModelProvider {
     public void generateItemModels(@NonNull ItemModelGenerators itemModelGenerator) {
 
         ItemModel.Unbaked runestone = ItemModelUtils.plainModel(itemModelGenerator.createFlatItemModel(RunicRitualsItems.RUNESTONE, ModelTemplates.FLAT_ITEM));
+//        ItemModel.Unbaked runeslate = ItemModelUtils.plainModel(itemModelGenerator.createFlatItemModel(RunicRitualsBlocks.RUNESLATE.asItem(), ModelTemplates.FLAT_ITEM));
+        generateItemWithRuneOverlay(itemModelGenerator, runestone, true);
+//        generateItemWithRuneOverlay(itemModelGenerator, runeslate, false);
+    }
 
-//        create list of runesymbols entries from the enum
+    private void generateItemWithRuneOverlay(ItemModelGenerators itemModelGenerator, ItemModel.Unbaked item, boolean scaled) {
         List<RangeSelectItemModel.Entry> unbakedRuneSymbols = new ArrayList<>();
-        for(RuneSymbol symbol : RuneSymbol.values()) {
-            Identifier halfScaleId = Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "item/rune_overlay/" + symbol.name().toLowerCase());
-            Identifier halfScaleModel = HALF_SCALE.create(
-                    halfScaleId,
-                    TextureMapping.singleSlot(TextureSlot.LAYER0, new Material(ModelLocationUtils.getModelLocation(symbol.getSymbolItem()))),
-                    itemModelGenerator.modelOutput
-            );
-            unbakedRuneSymbols.add(ItemModelUtils.override(ItemModelUtils.plainModel(halfScaleModel), symbol.getId()));
+        if(scaled) {
+            //        create list of runesymbols entries from the enum
+            for (RuneSymbol symbol : RuneSymbol.values()) {
+                Identifier halfScaleId = Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "item/rune_overlay/" + symbol.name().toLowerCase());
+                Identifier halfScaleModel = HALF_SCALE.create(
+                        halfScaleId,
+                        TextureMapping.singleSlot(TextureSlot.LAYER0, new Material(ModelLocationUtils.getModelLocation(symbol.getSymbolItem()))),
+                        itemModelGenerator.modelOutput
+                );
+                unbakedRuneSymbols.add(ItemModelUtils.override(ItemModelUtils.plainModel(halfScaleModel), symbol.getId()));
+            }
         }
 
 //        add the entries to a rangeselect
         ItemModel.Unbaked runeSelect = ItemModelUtils.rangeSelect(
-            new RuneSymbolItemModelProperty(),
-            unbakedRuneSymbols
+                new RuneSymbolItemModelProperty(),
+                unbakedRuneSymbols
         );
 
 //        choose the rangeselect (composite on blank stone) or blank runestone depending on data
         itemModelGenerator.generateBooleanDispatch(
-            RunicRitualsItems.RUNESTONE,
-            ItemModelUtils.hasComponent(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE),
-            ItemModelUtils.composite(
-                runestone,
-                runeSelect
-            ),
-            runestone
+                RunicRitualsItems.RUNESTONE,
+                ItemModelUtils.hasComponent(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE),
+                ItemModelUtils.composite(
+                        item,
+                        runeSelect
+                ),
+                item
         );
 
         for(RuneSymbol symbol : RuneSymbol.values()) {
             itemModelGenerator.generateFlatItem(symbol.getSymbolItem(), ModelTemplates.FLAT_ITEM);
         }
+
     }
 
     @Override

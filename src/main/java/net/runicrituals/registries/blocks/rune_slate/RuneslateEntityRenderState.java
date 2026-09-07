@@ -22,11 +22,11 @@ public class RuneslateEntityRenderState extends BlockEntityRenderState {
         this.active = active;
     }
 
-    private ItemStackRenderState runeSymbol = null;
-    public void setRuneSymbol(ItemStackRenderState symbol) {
+    private RuneSymbol runeSymbol = null;
+    public void setRuneSymbol(RuneSymbol symbol) {
         this.runeSymbol = symbol;
     }
-    public ItemStackRenderState getRuneSymbol() {
+    public RuneSymbol getRuneSymbol() {
         return runeSymbol;
     }
 
