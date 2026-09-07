@@ -48,7 +48,6 @@ public class CastingBlock {
 
 
     public double proposeManaCost(Level level) {
-
         if(!this.isCastable()) return Double.POSITIVE_INFINITY;
 
         double actionCostSum = 0;
@@ -59,7 +58,7 @@ public class CastingBlock {
             for (ElementRune element : actionNode.elements) {
                 if(!level.isClientSide()) {
                     for (int i = 0; i < intensity; i++) {
-
+                        //TODO: reimplement server/client target sync
                         BlockPos targetBlock = form.getTargetBlock();
 
                         if (targetBlock != null) {

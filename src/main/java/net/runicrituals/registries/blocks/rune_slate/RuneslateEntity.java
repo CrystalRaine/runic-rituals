@@ -243,9 +243,6 @@ public class RuneslateEntity extends BlockEntity {
         do {
             if(currentRse.components().has(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE)) {
                 componentList.add(currentRse.components().get(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE));
-
-                if(!level.isClientSide())
-                    RunicRituals.LOGGER.info(RuneSymbol.getSymbolFromId(componentList.getLast().runeSymbol()).getName());
             }
             currentRse = currentRse.getNext();
         } while (currentRse.getNext() != null && !currentRse.isAnchor);

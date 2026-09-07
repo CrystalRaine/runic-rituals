@@ -17,7 +17,7 @@ public class Sheet extends FormRune {
 
     @Override
     public List<Entity> getTargetEntities() {
-
+        // TODO: this doesn't seem to work
         AABB bb = new AABB(blockPosToVec3(min), blockPosToVec3(max));
         List<Entity> entities = level.getEntities(null, bb);
         return entities.stream().filter(e -> base.contains(getBlockPosition(e.position()))).toList();

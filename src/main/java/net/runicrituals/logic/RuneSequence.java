@@ -31,14 +31,12 @@ public class RuneSequence {
             double cost;
 
             if(!level.isClientSide()) {
+                //TODO: reimplement block cost sync
                 cost = castingBlock.proposeManaCost(level);
             } else {
                 cost = Double.POSITIVE_INFINITY;
             }
 
-//            if(!level.isClientSide()) {
-//                RunicRituals.LOGGER.info("Cost/Available: {}/{}/{}", (int) cost, (int)mana.getMana(), mana.applyManaValue((int) cost));
-//            }
             if(mana.applyManaValue((int) cost)) {
                 castingBlock.cast(level);
             }

@@ -1,7 +1,6 @@
 package net.runicrituals.logic.runes.element;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Position;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -19,11 +18,11 @@ import net.minecraft.world.ticks.LevelChunkTicks;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraft.world.ticks.ScheduledTick;
 import net.runicrituals.logic.runes.CastingBlock;
-import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskRuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;
 import net.runicrituals.mixin_hooks.*;
 import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskEntity;
+import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
 
 import java.util.*;
 
@@ -57,7 +56,7 @@ public class Time extends ElementRune {
                             positions.add(new BlockPos(b.getX(), b.getY(), b.getZ()));
 
                             BlockEntity be = level.getBlockEntity(b);
-                            if (be != null && !(be instanceof RuneObeliskEntity)) {
+                            if (be != null && !(be instanceof RuneObeliskEntity) && !(be instanceof RuneslateEntity)) {
                                 ((BlockEntityAdditions) be).runic_rituals$setExtraTicks(-1);
                             }
                         }
@@ -81,7 +80,7 @@ public class Time extends ElementRune {
                         positions.add(new BlockPos(b.getX(), b.getY(), b.getZ()));
 
                         BlockEntity be = level.getBlockEntity(b);
-                        if(be != null && !(be instanceof RuneObeliskEntity)) {
+                        if(be != null && !(be instanceof RuneObeliskEntity) && !(be instanceof RuneslateEntity)) {
                             ((BlockEntityAdditions) be).runic_rituals$setExtraTicks((int)block.intensity);
                         }
                     });

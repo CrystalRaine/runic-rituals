@@ -16,6 +16,7 @@ public class Prism extends FormRune {
 
     @Override
     public List<Entity> getTargetEntities() {
+        // TODO: this doesn't seem to work
         int rad = Math.max(max.getX() - min.getX(), max.getZ() - min.getZ()) / 2;
         BlockPos maxPlusRad = new BlockPos(max.getX(), max.getY() + rad, max.getZ());
         BlockPos minMinusRad = new BlockPos(min.getX(), min.getY() - rad, min.getZ());
