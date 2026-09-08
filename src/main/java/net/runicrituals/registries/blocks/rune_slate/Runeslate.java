@@ -4,14 +4,15 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -20,15 +21,22 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
+import net.runicrituals.registries.RunicRitualsBlocks;
 import net.runicrituals.registries.RunicRitualsItems;
+import net.runicrituals.registries.components.RuneDataComponent;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.List;
 
 public class Runeslate extends BaseEntityBlock {
 
@@ -38,6 +46,21 @@ public class Runeslate extends BaseEntityBlock {
     public Runeslate(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected @NonNull List<ItemStack> getDrops(final @NonNull BlockState state, LootParams.Builder params) {
+        BlockEntity blockEntity = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (blockEntity instanceof RuneslateEntity runeslateEntity) {
+            Item item = RunicRitualsBlocks.RUNESLATE.asItem();
+            ItemStack is = new ItemStack(item, 1);
+            RuneDataComponent c = runeslateEntity.components().get(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE);
+            if(c != null) {
+                is.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, c);
+            }
+            return Collections.singletonList(is);
+        }
+        return super.getDrops(state, params);
     }
 
     @Override

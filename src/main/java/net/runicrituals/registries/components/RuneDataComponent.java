@@ -38,5 +38,4 @@ public record RuneDataComponent(int runeSymbol, int inlay) implements TooltipPro
         consumer.accept(Component.translatable("item.runic-rituals.element.rune_type_tooltip", RuneSymbol.getNameFromElementId(runeSymbol)).withStyle(RuneSymbol.getFormattingFromElementId(runeSymbol)));
         consumer.accept(Component.translatable("item.runic-rituals.element.rune_inlay_tooltip", RuneInlayMaterial.getNameFromElementId(inlay)).withStyle(RuneInlayMaterial.getFormattingFromElementId(inlay)));
     }
-
 }

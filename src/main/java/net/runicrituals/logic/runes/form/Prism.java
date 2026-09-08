@@ -17,7 +17,7 @@ public class Prism extends FormRune {
     @Override
     public List<Entity> getTargetEntities() {
         // TODO: this doesn't seem to work
-        int rad = Math.max(max.getX() - min.getX(), max.getZ() - min.getZ()) / 2;
+        int rad = (Math.max((max.getX() - min.getX()), (max.getZ() - min.getZ())) / 2);
         BlockPos maxPlusRad = new BlockPos(max.getX(), max.getY() + rad, max.getZ());
         BlockPos minMinusRad = new BlockPos(min.getX(), min.getY() - rad, min.getZ());
 
@@ -38,8 +38,11 @@ public class Prism extends FormRune {
 
     @Override
     public BlockPos getTargetBlock() {
+        if(base.size() == 1) {
+            return base.getFirst();
+        }
         BlockPos pos = getRandom(level, base).immutable();
-        int rad = Math.max(max.getX() - min.getX(), max.getZ() - min.getZ());
+        int rad = (Math.max((max.getX() - min.getX()), (max.getZ() - min.getZ()))) - 1;
         rad = level.getRandom().nextInt(rad) - (rad / 2);
 
         return new BlockPos(pos.getX(), pos.getY() + rad, pos.getZ());
@@ -47,7 +50,7 @@ public class Prism extends FormRune {
 
     @Override
     public boolean isPositionInVolume(BlockPos pos) {
-        int rad = Math.max(max.getX() - min.getX(), max.getZ() - min.getZ()) / 2;
+        int rad = (Math.max((max.getX() - min.getX()), (max.getZ() - min.getZ())) / 2);
         BlockPos maxPlusRad = new BlockPos(max.getX(), max.getY() + rad, max.getZ());
         BlockPos minMinusRad = new BlockPos(min.getX(), min.getY() - rad, min.getZ());
 
@@ -65,7 +68,7 @@ public class Prism extends FormRune {
 
     @Override
     public Stream<BlockPos> getAllBlocks() {
-        int rad = Math.max(max.getX() - min.getX(), max.getZ() - min.getZ()) / 2;
+        int rad = (Math.max((max.getX() - min.getX()), (max.getZ() - min.getZ())) / 2);
         BlockPos maxPlusRad = new BlockPos(max.getX(), max.getY() + rad, max.getZ());
         BlockPos minMinusRad = new BlockPos(min.getX(), min.getY() - rad, min.getZ());
 

@@ -5,14 +5,18 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.*;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.RangeSelectItemModel;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.ItemOwner;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneSymbol;
-import net.runicrituals.registries.RunicRitualsBlocks;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import net.runicrituals.registries.RunicRitualsItems;
 import net.runicrituals.registries.components.RuneSymbolItemModelProperty;
@@ -42,9 +46,7 @@ public class RunicRitualsModelProvider extends FabricModelProvider {
     public void generateItemModels(@NonNull ItemModelGenerators itemModelGenerator) {
 
         ItemModel.Unbaked runestone = ItemModelUtils.plainModel(itemModelGenerator.createFlatItemModel(RunicRitualsItems.RUNESTONE, ModelTemplates.FLAT_ITEM));
-//        ItemModel.Unbaked runeslate = ItemModelUtils.plainModel(itemModelGenerator.createFlatItemModel(RunicRitualsBlocks.RUNESLATE.asItem(), ModelTemplates.FLAT_ITEM));
         generateItemWithRuneOverlay(itemModelGenerator, runestone, true);
-//        generateItemWithRuneOverlay(itemModelGenerator, runeslate, false);
     }
 
     private void generateItemWithRuneOverlay(ItemModelGenerators itemModelGenerator, ItemModel.Unbaked item, boolean scaled) {

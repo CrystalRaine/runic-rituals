@@ -29,6 +29,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class RuneslateEntity extends BlockEntity {
 
@@ -36,6 +37,7 @@ public class RuneslateEntity extends BlockEntity {
     private static final int RITUAL_SIZE_MAX = 50 * 3 * 4;
 
     int chainIndex = 0;
+    UUID chainUUID = null;
     ManaStorage mana = new ManaStorage();
 
     boolean isAnchor = false;
@@ -96,9 +98,7 @@ public class RuneslateEntity extends BlockEntity {
             if(getAnchor() != null) {
                 getAnchor().delink();
             }
-            if(!isAnchor) {
-                this.delink();
-            }
+            this.delink();
         }
         super.setRemoved();
     }
@@ -175,8 +175,7 @@ public class RuneslateEntity extends BlockEntity {
 
             // fill edge (TBD make sure is part of the ritual)
             // this is necessary to be added, since we want rituals in a "B" shape to contain all encapsulated blocks
-            if(be instanceof RuneslateEntity) {
-                positions.add(grabbed);
+            if((be instanceof RuneslateEntity) && ((RuneslateEntity) be).chainUUID == chainUUID) {
                 edgesTouched++;
                 continue;
             }
@@ -212,6 +211,8 @@ public class RuneslateEntity extends BlockEntity {
         rse.mana = new ManaStorage();
         rse.baseMax = null;
         rse.baseMin = null;
+        rse.chainIndex = 0;
+        rse.chainUUID = null;
 
         while(rse != null) {
             RuneslateEntity tmpNext = rse.getNext();
@@ -234,6 +235,7 @@ public class RuneslateEntity extends BlockEntity {
         RuneslateEntity currentRse = this;
 
         isAnchor = true;
+        chainUUID = UUID.randomUUID();
         setAnchor(this);
 
         do {
@@ -301,6 +303,7 @@ public class RuneslateEntity extends BlockEntity {
     private void link(RuneslateEntity next) {
         this.setNext(next);
         next.anchorPos = anchorPos;
+        next.chainUUID = chainUUID;
         next.isLinked = true;
         next.chainIndex = chainIndex + 1;
         setChanged();
@@ -381,6 +384,10 @@ public class RuneslateEntity extends BlockEntity {
             output.putLong("next", nextPos.asLong());
         }
 
+        if(chainUUID != null){
+            output.putString("UUID", chainUUID.toString());
+        }
+
         if(anchorPos != null) {
             output.putLong("anchor", anchorPos.asLong());
         }
@@ -416,6 +423,7 @@ public class RuneslateEntity extends BlockEntity {
         Long anchor = input.getLong("anchor").orElse(null);
         Long baseMax = input.getLong("baseMax").orElse(null);
         Long baseMin = input.getLong("baseMin").orElse(null);
+        String uuid = input.getString("UUID").orElse(null);
         long[] longs = input.getOptionalLongArray("baseBlocks").orElse(null);
 
         this.mana = new ManaStorage(m);
@@ -425,6 +433,9 @@ public class RuneslateEntity extends BlockEntity {
         }
         if(anchor != null) {
             this.anchorPos = BlockPos.of(anchor);
+        }
+        if(uuid != null) {
+            this.chainUUID = UUID.fromString(uuid);
         }
         if(baseMax != null) {
             this.baseMax = BlockPos.of(baseMax);

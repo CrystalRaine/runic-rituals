@@ -2,7 +2,6 @@ package net.runicrituals.logic;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.ManaStorage;
 import net.runicrituals.logic.runes.Rune;
@@ -25,13 +24,12 @@ public class RuneSequence {
         List<CastingBlock> castingBlocks = createCastingBlocks(runes, level, areaBase, min, max);
 
         for(CastingBlock castingBlock : castingBlocks) {
-            if(!castingBlock.isCastable()) continue;
+            if(castingBlock.isUncastable()) continue;
 
             castingBlock.applyModifiers();
             double cost;
 
             if(!level.isClientSide()) {
-                //TODO: reimplement block cost sync
                 cost = castingBlock.proposeManaCost(level);
             } else {
                 cost = Double.POSITIVE_INFINITY;
