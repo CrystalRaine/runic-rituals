@@ -34,6 +34,15 @@ public class GuiGraphicsExtractorMixin {
             GuiGraphicsExtractor extractor = (GuiGraphicsExtractor) (Object)this;
 
             if(itemStack.is(RunicRitualsBlocks.RUNESLATE.asItem())) {
+
+                float centerX = x + 8.0f;
+                float centerY = y + 8.0f;
+                float scale = 0.9f;
+                extractor.pose().pushMatrix();
+                extractor.pose().translate(centerX, centerY);
+                extractor.pose().scale(scale);
+                extractor.pose().translate(-centerX, -centerY);
+
                 extractor.blit(
                         RenderPipelines.GUI_TEXTURED,
                         sprite,
@@ -46,32 +55,7 @@ public class GuiGraphicsExtractorMixin {
                         16,
                         16
                 );
-            }
-        }
-    }
-
-    @Inject(method = "fakeItem(Lnet/minecraft/world/item/ItemStack;III)V", at=@At("TAIL"))
-    public void renderSymbolForRecipe(ItemStack itemStack, int x, int y, int seed, CallbackInfo ci) {
-        if (!itemStack.isEmpty()) {
-            if (itemStack.getComponents().has(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE)) {
-                RuneDataComponent component = itemStack.getComponents().get(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE);
-                Identifier sprite = RuneSymbol.getSymbolFromId(component.runeSymbol()).getImageIdentifier();
-                GuiGraphicsExtractor extractor = (GuiGraphicsExtractor) (Object) this;
-
-                if (itemStack.is(RunicRitualsBlocks.RUNESLATE.asItem())) {
-                    extractor.blit(
-                            RenderPipelines.GUI_TEXTURED,
-                            sprite,
-                            x,
-                            y,
-                            0f,
-                            0f,
-                            16,
-                            16,
-                            16,
-                            16
-                    );
-                }
+                extractor.pose().popMatrix();
             }
         }
     }
