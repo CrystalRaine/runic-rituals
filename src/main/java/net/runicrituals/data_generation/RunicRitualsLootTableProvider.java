@@ -16,6 +16,5 @@ public class RunicRitualsLootTableProvider extends FabricBlockLootSubProvider {
     public void generate() {
         dropSelf(RunicRitualsBlocks.RUNESLATE);
         dropSelf(RunicRitualsBlocks.RUNE_ENGRAVER);
-        super.add(RunicRitualsBlocks.RUNE_OBELISK, createDoorTable(RunicRitualsBlocks.RUNE_OBELISK));
     }
 }

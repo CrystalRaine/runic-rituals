@@ -2,11 +2,9 @@ package net.runicrituals.logic.runes.element;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.runes.CastingBlock;
-import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskRuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 
 /** <pre>
@@ -21,16 +19,7 @@ public class Arcane extends ElementRune {
 
     @Override
     public void createParticle(Level level, BlockPos pos, ActionRune action) {
-        RandomSource random = level.getRandom();
-        level.addParticle(
-                ParticleTypes.ENCHANT,
-                pos.getX(),
-                pos.getY(),
-                pos.getZ(),
-                Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F,
-                0.05F,
-                Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F
-        );
+        createParticle(level, pos, ParticleTypes.ENCHANT, new Vec3(0.09, 0.05, 0.09));
     }
 
     @Override

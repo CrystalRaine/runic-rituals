@@ -14,7 +14,7 @@ public class Util {
     }
 
     public static BlockPos getBlockPosition(Position position) {
-        return new BlockPos((int)position.x(), (int)position.y(), (int)position.z());
+        return new BlockPos((int)position.x() - 1, (int)(position.y()), (int)position.z());
     }
 
     public static <T> T getRandom(Level level, List<T> list) {

@@ -2,6 +2,7 @@ package net.runicrituals.logic;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.ManaStorage;
 import net.runicrituals.logic.runes.Rune;
@@ -32,7 +33,7 @@ public class RuneSequence {
             if(!level.isClientSide()) {
                 cost = castingBlock.proposeManaCost(level);
             } else {
-                cost = Double.POSITIVE_INFINITY;
+                cost = 0;
             }
 
             if(mana.applyManaValue((int) cost)) {

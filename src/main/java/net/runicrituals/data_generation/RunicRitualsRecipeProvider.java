@@ -14,6 +14,7 @@ import net.runicrituals.registries.RunicRitualsItems;
 import net.runicrituals.registries.blocks.rune_engraver.RuneEngravingRecipe;
 import org.jspecify.annotations.NonNull;
 
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
 public class RunicRitualsRecipeProvider extends FabricRecipeProvider {
@@ -27,7 +28,6 @@ public class RunicRitualsRecipeProvider extends FabricRecipeProvider {
         return new RecipeProvider(registries, output) {
             @Override
             public void buildRecipes() {
-                HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
 
                 shaped(RecipeCategory.MISC, RunicRitualsItems.BASIC_WAND)
                         .pattern(" #o")
@@ -50,27 +50,26 @@ public class RunicRitualsRecipeProvider extends FabricRecipeProvider {
                         .save(output);
 
                 shaped(RecipeCategory.MISC, RunicRitualsBlocks.RUNESLATE, 3)
-                        .pattern("###")
-                        .define('#', RunicRitualsItems.RUNESTONE)
-                        .unlockedBy(getHasName(RunicRitualsItems.RUNESTONE), has(RunicRitualsItems.RUNESTONE))
-                        .save(output);
-
-                shapeless(RecipeCategory.MISC, RunicRitualsItems.RUNESTONE, 8)
-                        .requires(Items.POLISHED_DEEPSLATE)
-                        .unlockedBy(getHasName(Items.POLISHED_DEEPSLATE), has(Items.POLISHED_DEEPSLATE))
+                        .pattern("##")
+                        .define('#', Items.COBBLED_DEEPSLATE)
+                        .unlockedBy(getHasName(Items.COBBLED_DEEPSLATE), has(Items.COBBLED_DEEPSLATE))
                         .save(output);
 
                 for(RuneSymbol symbol : RuneSymbol.values() ) {
-                    RuneEngravingRecipeBuilder.engraving(registries, RecipeCategory.MISC, symbol.getSymbolItem())
+                    String symbolName = symbol.getName().toLowerCase(Locale.ROOT).replace(" ", "_");
+                    RuneEngravingRecipeBuilder.engraving(registries, RecipeCategory.MISC, RunicRitualsBlocks.RUNESLATE.asItem())
+                            .setOutputSymbol(symbol)
+                            .setIdAffix("inlayed_" + symbolName)
                             .runeBase(RuneEngravingRecipe.ENGRAVABLE_ITEMS)
                             .inlayMaterial(RuneEngravingRecipe.INLAYABLE_ITEMS)
-                            .unlockedBy(getHasName(RunicRitualsItems.RUNESTONE), has(RunicRitualsItems.RUNESTONE))
+                            .unlockedBy(getHasName(RunicRitualsBlocks.RUNESLATE), has(RunicRitualsBlocks.RUNESLATE))
                             .save(output);
 
-                    RuneEngravingRecipeBuilder.engraving(registries, RecipeCategory.MISC, symbol.getSymbolItem())
-                            .setIdAffix("etched")
+                    RuneEngravingRecipeBuilder.engraving(registries, RecipeCategory.MISC, RunicRitualsBlocks.RUNESLATE.asItem())
+                            .setOutputSymbol(symbol)
+                            .setIdAffix("etched_" + symbolName)
                             .runeBase(RuneEngravingRecipe.ENGRAVABLE_ITEMS)
-                            .unlockedBy(getHasName(RunicRitualsItems.RUNESTONE), has(RunicRitualsItems.RUNESTONE))
+                            .unlockedBy(getHasName(RunicRitualsBlocks.RUNESLATE), has(RunicRitualsBlocks.RUNESLATE))
                             .save(output);
                 }
             }

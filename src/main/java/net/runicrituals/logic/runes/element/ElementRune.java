@@ -2,12 +2,18 @@ package net.runicrituals.logic.runes.element;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.Rune;
 import net.runicrituals.logic.runes.RuneType;
@@ -123,31 +129,6 @@ public abstract class ElementRune extends Rune {
     public double updateIntensity(ActionRune action, double intensity) {return intensity;}
 
     /**
-     * helper method to destroy a block at a given position. does nothing when run on client, but does update client with server's state.
-     * @param level current level
-     * @param pos blockPos to destroy
-     */
-    public void destroyBlock(Level level, BlockPos pos) {
-        if(!level.isClientSide()) {
-            BlockState old = level.getBlockState(pos);
-            level.destroyBlock(pos, false);
-            level.sendBlockUpdated(pos, old, Blocks.AIR.defaultBlockState(), 3);
-        }
-    }
-
-    /**
-     * Sets a block into the world
-     * @param level current level
-     * @param pos position to place block
-     * @param block block to set
-     */
-    public void setBlock(Level level, BlockPos pos, Block block) {
-        if(!level.isClientSide()){
-            level.setBlockAndUpdate(pos, block.defaultBlockState());
-        }
-    }
-
-    /**
      * replaces a block with new block. `replaced` is the block that can be removed, and replaceWith is what is put in it's place. if `pos` is not `replaced` does nothing.
      * @param level current level
      * @param pos position to replace
@@ -178,7 +159,7 @@ public abstract class ElementRune extends Rune {
      * @param level current level
      * @param pos position to replace
      * @param replaced block tag that can be replaced
-     * @param replaceWith block to set in it's place
+     * @param replaceWith block to set in its place
      */
     public void replaceBlock(Level level, BlockPos pos, TagKey<Block> replaced, Block replaceWith) {
         if(!level.isClientSide() && level.getBlockState(pos).is(replaced)){
@@ -205,7 +186,7 @@ public abstract class ElementRune extends Rune {
                 return BASE_RUNE_MANA_COST * efficiency();
             }
         }
-        return Double.POSITIVE_INFINITY;
+        return 0;
     }
 
     static void scaleEntityMotion(EntityAdditions entity, ActionRune action, CastingBlock block) {
@@ -214,5 +195,18 @@ public abstract class ElementRune extends Rune {
             case MANIFEST -> entity.runic_rituals$setDeltaScale(block.intensity + 1);
             case SACRIFICE -> entity.runic_rituals$setDeltaScale(1 / (block.intensity + 1));
         }
+    }
+
+    static void createParticle(Level level, BlockPos pos, ParticleOptions particleType, Vec3 velocityScaler) {
+        RandomSource random = level.getRandom();
+        level.addParticle(
+                particleType,
+                pos.getX() + Mth.randomBetween(random, 0, 1.0F),
+                pos.getY() + Mth.randomBetween(random, 0, 1.0F),
+                pos.getZ() + Mth.randomBetween(random, 0, 1.0F),
+                Mth.randomBetween(random, -1.0F, 1.0F) * velocityScaler.x(),
+                Mth.randomBetween(random, -1.0F, 1.0F) * velocityScaler.y(),
+                Mth.randomBetween(random, -1.0F, 1.0F) * velocityScaler.z()
+        );
     }
 }

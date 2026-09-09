@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
+import net.runicrituals.RunicRituals;
 
 import java.util.List;
 import java.util.Random;
@@ -17,8 +18,11 @@ public class Sheet extends FormRune {
 
     @Override
     public List<Entity> getTargetEntities() {
-        // TODO: this doesn't seem to work
-        AABB bb = new AABB(blockPosToVec3(min), blockPosToVec3(max));
+        // need to expand aabb, because it is a 2d plane if you have minY = maxY
+        BlockPos maxPos = new BlockPos(max.getX(), max.getY() + 1, max.getZ());
+        BlockPos minPos = new BlockPos(min.getX(), min.getY(), min.getZ());
+
+        AABB bb = new AABB(blockPosToVec3(minPos), blockPosToVec3(maxPos));
         List<Entity> entities = level.getEntities(null, bb);
         return entities.stream().filter(e -> base.contains(getBlockPosition(e.position()))).toList();
     }

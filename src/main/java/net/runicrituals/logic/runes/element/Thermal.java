@@ -4,16 +4,14 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.runes.CastingBlock;
-import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskRuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;
 
@@ -49,7 +47,7 @@ public class Thermal extends ElementRune{
                 if (level.getBlockState(position).is(Blocks.ICE)) return defaultCosts(action);
             }
         }
-        return Double.POSITIVE_INFINITY;
+        return 0;
     }
 
     @Override
@@ -76,18 +74,18 @@ public class Thermal extends ElementRune{
 
     @Override
     public double proposeCostForEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
-        if(entity instanceof ItemEntity) return Double.POSITIVE_INFINITY;
+        if(entity instanceof ItemEntity) return 0;
         switch (action.getActionType()) {
             case SACRIFICE -> {
-                if(entity.getType().fireImmune()) return Double.POSITIVE_INFINITY;
+                if(entity.getType().fireImmune()) return 0;
                 return defaultCosts(action);
             }
             case MANIFEST -> {
-                if(!entity.canFreeze()) return Double.POSITIVE_INFINITY;
+                if(!entity.canFreeze()) return 0;
                 return defaultCosts(action);
             }
         }
-        return Double.POSITIVE_INFINITY;
+        return 0;
     }
 
     @Override
@@ -120,26 +118,10 @@ public class Thermal extends ElementRune{
         RandomSource random = level.getRandom();
         switch (action.getActionType()) {
             case SACRIFICE -> {
-                level.addParticle(
-                        ParticleTypes.SNOWFLAKE,
-                        pos.getX(),
-                        pos.getY(),
-                        pos.getZ(),
-                        Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F,
-                        0.05F,
-                        Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F
-                );
+                createParticle(level, pos, ParticleTypes.SNOWFLAKE, new Vec3(0.09, 0.05, 0.09));
             }
             case MANIFEST -> {
-                level.addParticle(
-                        ParticleTypes.FLAME,
-                        pos.getX(),
-                        pos.getY(),
-                        pos.getZ(),
-                        Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F,
-                        0.05F,
-                        Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F
-                );
+                createParticle(level, pos, ParticleTypes.DUST_PLUME, new Vec3(0.09, 0.05, 0.09));
             }
             default -> {
 //                do nothing

@@ -4,10 +4,10 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
@@ -15,10 +15,15 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SelectableRecipe;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.runicrituals.RunicRituals;
+
+import java.util.Optional;
 
 import static net.minecraft.world.inventory.AbstractContainerMenu.SLOT_SIZE;
 
@@ -99,6 +104,7 @@ public class RuneEngraverScreen extends AbstractContainerScreen<RuneEngraverMenu
                 int itemLeft = edgeLeft + posIndex % 4 * 16;
                 int itemRight = edgeTop + posIndex / 4 * 18 + 2;
                 if (mouseX >= itemLeft && mouseX < itemLeft + 16 && mouseY >= itemRight && mouseY < itemRight + 18) {
+                    assert this.minecraft.level != null;
                     ContextMap context = SlotDisplayContext.fromLevel(this.minecraft.level);
                     SlotDisplay buttonIcon = visibleRecipes.entries().get(index).recipe().optionDisplay();
                     graphics.setTooltipForNextFrame(this.font, buttonIcon.resolveForFirstStack(context), mouseX, mouseY);
@@ -204,6 +210,7 @@ public class RuneEngraverScreen extends AbstractContainerScreen<RuneEngraverMenu
 
     private void extractRecipes(final GuiGraphicsExtractor graphics, final int x, final int y, final int endIndex) {
         SelectableRecipe.SingleInputSet<RuneEngravingRecipe> visibleRecipes = this.menu.getVisibleRecipes();
+        assert this.minecraft.level != null;
         ContextMap context = SlotDisplayContext.fromLevel(this.minecraft.level);
 
         for (int index = this.startIndex; index < endIndex && index < visibleRecipes.size(); index++) {
@@ -212,7 +219,9 @@ public class RuneEngraverScreen extends AbstractContainerScreen<RuneEngraverMenu
             int row = posIndex / 4;
             int posY = y + row * 18 + 2;
             SlotDisplay buttonIcon = visibleRecipes.entries().get(index).recipe().optionDisplay();
-            graphics.item(buttonIcon.resolveForFirstStack(context), posX, posY);
+            ItemStack output = buttonIcon.resolveForFirstStack(context);
+            graphics.item(output, posX, posY);
+            graphics.itemDecorations(Minecraft.getInstance().font, output, posX, posY);
         }
     }
 
@@ -225,12 +234,5 @@ public class RuneEngraverScreen extends AbstractContainerScreen<RuneEngraverMenu
         this.scrollOffs = 0.0F;
         this.startIndex = 0;
     }
-
-//    @Override
-//    public void extractBackground(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-//        super.extractBackground(graphics, mouseX, mouseY, delta);
-//        graphics.blit(RenderPipelines.GUI_TEXTURED, CONTAINER_TEXTURE, this.leftPos, this.topPos, 0.0F, 0.0F, this.imageWidth, this.imageHeight, BACKGROUND_TEXTURE_WIDTH, BACKGROUND_TEXTURE_HEIGHT);
-//    }
-
 
 }

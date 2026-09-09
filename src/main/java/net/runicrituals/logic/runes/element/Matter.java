@@ -15,10 +15,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.runicrituals.RunicRituals;
+import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.registries.RunicRitualsBlocks;
-import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskRuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;
 import net.runicrituals.registries.RunicRitualsDamageTypes;
@@ -52,20 +51,20 @@ public class Matter extends ElementRune {
                 if(canDestroyBlock(level, position, block.intensity)) {
                     return BASE_RUNE_MANA_COST * invertEfficiency() * 5;
                 }
-                return Double.POSITIVE_INFINITY;
+                return 0;
             }
             case MANIFEST -> {
                 if(level.getBlockState(position).canBeReplaced()){
                     return BASE_RUNE_MANA_COST * efficiency() * 5;
                 } else {
-                    return Double.POSITIVE_INFINITY;
+                    return 0;
                 }
             }
             default -> {
 //                do nothing
             }
         }
-        return Double.POSITIVE_INFINITY;
+        return 0;
     }
 
     @Override
@@ -110,7 +109,7 @@ public class Matter extends ElementRune {
                 return defaultCosts(action) * 3;
             }
         }
-        return Double.POSITIVE_INFINITY;
+        return 0;
     }
 
     @Override
@@ -134,26 +133,12 @@ public class Matter extends ElementRune {
         RandomSource random = level.getRandom();
         switch (action.getActionType()) {
             case SACRIFICE -> {
-                level.addParticle(
-                        ParticleTypes.ASH,
-                        pos.getX(),
-                        pos.getY(),
-                        pos.getZ(),
-                        Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F,
-                        0.05F,
-                        Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F
-                );
+                createParticle(level, pos, ParticleTypes.ASH, new Vec3(0.09, 0.05, 0.09));
+
             }
             case MANIFEST -> {
-                level.addParticle(
-                        ParticleTypes.POOF,
-                        pos.getX(),
-                        pos.getY(),
-                        pos.getZ(),
-                        Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F,
-                        0.05F,
-                        Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F
-                );
+                createParticle(level, pos, ParticleTypes.POOF, new Vec3(0.09, 0.05, 0.09));
+
             }
             default -> {
 //                do nothing

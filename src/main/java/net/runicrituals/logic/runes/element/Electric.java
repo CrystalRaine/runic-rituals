@@ -22,7 +22,7 @@ public class Electric extends ElementRune{
     public double proposeCostForBlock(Level level, FormRune form, BlockPos position, ActionRune action, CastingBlock block) {
 
         if(action.getActionType() != ActionRune.Action.MANIFEST) {
-            return Double.POSITIVE_INFINITY;
+            return 0;
         }
 
         BlockPos pos = position;
@@ -35,7 +35,7 @@ public class Electric extends ElementRune{
             return BASE_RUNE_MANA_COST * 100 * efficiency();
         }
 
-        return Double.POSITIVE_INFINITY;
+        return 0;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class Electric extends ElementRune{
     public double proposeCostForEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
 
         if(entity instanceof LightningBolt || entity instanceof ItemEntity || action.getActionType() != ActionRune.Action.MANIFEST || block.intensity < 3) {
-            return Double.POSITIVE_INFINITY;
+            return 0;
         }
 
         return BASE_RUNE_MANA_COST * 95 * efficiency();
@@ -89,15 +89,6 @@ public class Electric extends ElementRune{
 
     @Override
     public void createParticle(Level level, BlockPos pos, ActionRune action) {
-        RandomSource random = level.getRandom();
-        level.addParticle(
-                ParticleTypes.ELECTRIC_SPARK,
-                pos.getX(),
-                pos.getY(),
-                pos.getZ(),
-                Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F,
-                0.05F,
-                Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F
-        );
+        createParticle(level, pos, ParticleTypes.ELECTRIC_SPARK, new Vec3(0.09, 0.05, 0.09));
     }
 }

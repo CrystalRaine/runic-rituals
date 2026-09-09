@@ -29,26 +29,24 @@ public class RunicRitualsCreativeTabs {
             .title(Component.translatable("creativeTab.runic_rituals.mod"))
             .displayItems((params, output) -> {
                 output.accept(RunicRitualsItems.BASIC_WAND);
-                output.accept(RunicRitualsItems.RUNESTONE);
                 output.accept(RunicRitualsBlocks.RUNESLATE);
                 output.accept(RunicRitualsBlocks.RUNE_ENGRAVER);
-                output.accept(RunicRitualsBlocks.RUNE_OBELISK);
             })
             .build();
 
     public static final CreativeModeTab RUNES_TAB = FabricCreativeModeTab.builder()
             .icon(() -> {
-                ItemStack creativeTabIcon = new ItemStack(RunicRitualsItems.RUNESTONE);
+                ItemStack creativeTabIcon = new ItemStack(RunicRitualsBlocks.RUNESLATE.asItem());
                 creativeTabIcon.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(RuneSymbol.ARCANE.getId(), RuneInlayMaterial.ETCHED));
                 return creativeTabIcon;
             })
             .title(Component.translatable("creativeTab.runic_rituals_runes.mod"))
             .displayItems((params, output) -> {
-                output.accept(RunicRitualsItems.RUNESTONE);
+                output.accept(RunicRitualsBlocks.RUNESLATE.asItem());
 
                 for(RuneSymbol symbol : RuneSymbol.values()) {
                     for(RuneInlayMaterial material : RuneInlayMaterial.values()) {
-                        ItemStack typedRunestone = new ItemStack(RunicRitualsItems.RUNESTONE);
+                        ItemStack typedRunestone = new ItemStack(RunicRitualsBlocks.RUNESLATE.asItem());
                         typedRunestone.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(symbol,material));
 
                         output.accept(typedRunestone);

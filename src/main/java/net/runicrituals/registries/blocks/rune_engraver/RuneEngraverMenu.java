@@ -144,7 +144,6 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
             output.setRecipeUsed(recipe);
 
             RuneEngravingRecipeInput recipeInput = new RuneEngravingRecipeInput(this.input.getItem(0), this.input.getItem(1));
-            recipeInput.setSymbol(RuneSymbol.getSymbolFromItem(recipe.value().getResult()));
 
             output.setItem(0, recipe.value().assemble(recipeInput));
         }, () -> {
@@ -201,11 +200,11 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
                     // choose which set of recipes to show. (etched recipes, or material recipes)
                     if(recipe.getInlayMaterial().isPresent() && !input.getSlot(1).get().isEmpty()){
                         runeEngravingRecipes.add(
-                                new SelectableRecipe.SingleInputEntry<>(recipe.getRuneBase(), new SelectableRecipe<>(recipe.resultDisplay(), Optional.of(holder)))
+                                new SelectableRecipe.SingleInputEntry<>(recipe.getRuneBase(), new SelectableRecipe<>(recipe.resultDisplay(Objects.requireNonNull(input.getSlot(0)).get().getItem()), Optional.of(holder)))
                         );
                     } else if(recipe.getInlayMaterial().isEmpty() && input.getSlot(1).get().isEmpty()) {
                         runeEngravingRecipes.add(
-                                new SelectableRecipe.SingleInputEntry<>(recipe.getRuneBase(), new SelectableRecipe<>(recipe.resultDisplay(), Optional.of(holder)))
+                                new SelectableRecipe.SingleInputEntry<>(recipe.getRuneBase(), new SelectableRecipe<>(recipe.resultDisplay(Objects.requireNonNull(input.getSlot(0)).get().getItem()), Optional.of(holder)))
                         );
                     }
                 }
@@ -313,7 +312,7 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
     }
 
     public boolean hasInputItem() {
-        return !this.input.getSlot(0).get().isEmpty() && !this.recipesForInput.isEmpty();
+        return !Objects.requireNonNull(this.input.getSlot(0)).get().isEmpty() && !this.recipesForInput.isEmpty();
     }
 
     public void registerUpdateListener(final Runnable slotUpdateListener) {

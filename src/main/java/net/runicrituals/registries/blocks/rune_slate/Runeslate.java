@@ -3,8 +3,8 @@ package net.runicrituals.registries.blocks.rune_slate;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -26,11 +26,9 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import net.runicrituals.registries.RunicRitualsBlocks;
 import net.runicrituals.registries.RunicRitualsItems;
-import net.runicrituals.registries.components.RuneDataComponent;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -54,9 +52,8 @@ public class Runeslate extends BaseEntityBlock {
         if (blockEntity instanceof RuneslateEntity runeslateEntity) {
             Item item = RunicRitualsBlocks.RUNESLATE.asItem();
             ItemStack is = new ItemStack(item, 1);
-            RuneDataComponent c = runeslateEntity.components().get(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE);
-            if(c != null) {
-                is.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, c);
+            for(TypedDataComponent<?> ct : runeslateEntity.components()) {
+                is.set(ct);
             }
             return Collections.singletonList(is);
         }
@@ -135,14 +132,11 @@ public class Runeslate extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(final @NonNull BlockPlaceContext context) {
-        if(context.getItemInHand().has(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE)){
-
-        }
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    protected @Nullable MapCodec<? extends BaseEntityBlock> codec() {
+    protected @NonNull MapCodec<? extends BaseEntityBlock> codec() {
         return simpleCodec(Runeslate::new);
     }
 

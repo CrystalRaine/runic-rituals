@@ -17,5 +17,8 @@
   },
   "overwrites": {
     "requireAnnotations": true
-	}
+  },
+  "client": [
+    "GuiGraphicsExtractorMixin"
+  ]
 }

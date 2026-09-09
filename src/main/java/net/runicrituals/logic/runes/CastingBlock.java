@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.element.ElementRune;

@@ -4,8 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -14,6 +12,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.LevelChunkTicks;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraft.world.ticks.ScheduledTick;
@@ -21,7 +20,6 @@ import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;
 import net.runicrituals.mixin_hooks.*;
-import net.runicrituals.registries.blocks.rune_obelisk.RuneObeliskEntity;
 import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
 
 import java.util.*;
@@ -56,7 +54,7 @@ public class Time extends ElementRune {
                             positions.add(new BlockPos(b.getX(), b.getY(), b.getZ()));
 
                             BlockEntity be = level.getBlockEntity(b);
-                            if (be != null && !(be instanceof RuneObeliskEntity) && !(be instanceof RuneslateEntity)) {
+                            if (be != null && !(be instanceof RuneslateEntity)) {
                                 ((BlockEntityAdditions) be).runic_rituals$setExtraTicks(-1);
                             }
                         }
@@ -80,7 +78,7 @@ public class Time extends ElementRune {
                         positions.add(new BlockPos(b.getX(), b.getY(), b.getZ()));
 
                         BlockEntity be = level.getBlockEntity(b);
-                        if(be != null && !(be instanceof RuneObeliskEntity) && !(be instanceof RuneslateEntity)) {
+                        if(be != null && !(be instanceof RuneslateEntity)) {
                             ((BlockEntityAdditions) be).runic_rituals$setExtraTicks((int)block.intensity);
                         }
                     });
@@ -179,7 +177,7 @@ public class Time extends ElementRune {
                 return BASE_RUNE_MANA_COST * efficiency();
             }
         }
-        return Double.POSITIVE_INFINITY;
+        return 0;
     }
 
     @Override
@@ -192,7 +190,7 @@ public class Time extends ElementRune {
                 return BASE_RUNE_MANA_COST * efficiency();
             }
         }
-        return Double.POSITIVE_INFINITY;
+        return 0;
     }
 
     @Override
@@ -230,15 +228,6 @@ public class Time extends ElementRune {
 
     @Override
     public void createParticle(Level level, BlockPos pos, ActionRune action) {
-        RandomSource random = level.getRandom();
-        level.addParticle(
-            ParticleTypes.DUST_PLUME,
-            pos.getX(),
-            pos.getY(),
-            pos.getZ(),
-            Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F,
-            0.05F,
-            Mth.randomBetween(random, -1.0F, 1.0F) * 0.083333336F
-        );
+        createParticle(level, pos, ParticleTypes.DUST_PLUME, new Vec3(0.09, 0.05, 0.09));
     }
 }

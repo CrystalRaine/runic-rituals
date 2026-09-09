@@ -92,6 +92,7 @@ public class RuneslateEntity extends BlockEntity {
         nextPos = rse.getBlockPos();
     }
 
+    @Override
     public void setRemoved() {
         assert level != null;
         if(!(!level.isClientSide() && Objects.requireNonNull(level.getServer()).isCurrentlySaving())) {
@@ -102,7 +103,6 @@ public class RuneslateEntity extends BlockEntity {
         }
         super.setRemoved();
     }
-
 
     // this is... not particularly performant lol
     // only want to run this once when the loop is linked initially, then save result off.
