@@ -220,17 +220,9 @@ public class RuneEngraverScreen extends AbstractContainerScreen<RuneEngraverMenu
             int posY = y + row * 18 + 2;
             SlotDisplay buttonIcon = visibleRecipes.entries().get(index).recipe().optionDisplay();
             ItemStack output = buttonIcon.resolveForFirstStack(context);
-            float centerX = posX + 8.0f;
-            float centerY = posY + 8.0f;
-            float scale = 0.9f;
+
             graphics.pose().pushMatrix();
-            graphics.pose().translate(centerX, centerY);
-            graphics.pose().scale(scale);
-            graphics.pose().translate(-centerX, -centerY);
-
             graphics.item(output, posX, posY);
-            graphics.itemDecorations(Minecraft.getInstance().font, output, posX, posY);
-
             graphics.pose().popMatrix();
         }
     }

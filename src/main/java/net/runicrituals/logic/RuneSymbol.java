@@ -2,18 +2,14 @@ package net.runicrituals.logic;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.util.StringRepresentable;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.registries.RunicRitualsItems;
 import net.runicrituals.registries.components.RuneDataComponent;
-import net.runicrituals.registries.server_only.RunicRitualsComponents;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 
-public enum RuneSymbol  {
+public enum RuneSymbol implements StringRepresentable {
 //    Elemental Runes
 //    using ids rather than ordinals so that adding new ones can't break things,
 //    as long as you don't update the old ones
@@ -96,12 +92,13 @@ public enum RuneSymbol  {
         if(id != null) {
             return id;
         }
-        id = Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "textures/item/" + getIdentifierName() + "_rune.png");
+        id = Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "textures/block/" + getIdentifierName() + "_rune.png");
         identifiers.put(getIdentifierName(), id);
         return id;
     }
 
-    public RuneDataComponent getEtchComponent() {
-        return new RuneDataComponent(this, RuneInlayMaterial.ETCHED);
+    @Override
+    public @NonNull String getSerializedName() {
+        return getIdentifierName();
     }
 }

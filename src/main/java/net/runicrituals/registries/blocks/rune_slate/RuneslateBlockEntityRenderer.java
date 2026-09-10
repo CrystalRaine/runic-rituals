@@ -1,7 +1,6 @@
 package net.runicrituals.registries.blocks.rune_slate;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.QuadInstance;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -18,11 +17,11 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
-public class RuneslateEntityRenderer implements BlockEntityRenderer<RuneslateEntity, RuneslateEntityRenderState> {
+public class RuneslateBlockEntityRenderer implements BlockEntityRenderer<RuneslateEntity, RuneslateEntityRenderState> {
 
     BlockEntityRendererProvider.Context context;
 
-    public RuneslateEntityRenderer(BlockEntityRendererProvider.Context context) {
+    public RuneslateBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         this.context = context;
     }
 
@@ -61,7 +60,7 @@ public class RuneslateEntityRenderer implements BlockEntityRenderer<RuneslateEnt
         state.setRuneSymbol(RuneSymbol.getSymbolFromId(Objects.requireNonNull(blockEntity.components().get(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE)).runeSymbol()));
     }
 
-    static class QuadRenderer implements SubmitNodeCollector.CustomGeometryRenderer {
+    public static class QuadRenderer implements SubmitNodeCollector.CustomGeometryRenderer {
         public boolean isActive;
 
         @Override

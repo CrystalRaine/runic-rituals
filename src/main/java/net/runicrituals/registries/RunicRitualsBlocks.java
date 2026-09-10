@@ -2,6 +2,7 @@ package net.runicrituals.registries;
 
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.Identifier;
@@ -22,7 +23,6 @@ public class RunicRitualsBlocks {
 
     public static final BlockItemId RUNE_ENGRAVER_KEY = createWithId("rune_engraver");
     public static final BlockItemId RUNESLATE_KEY = createWithId("runeslate");
-    public static final BlockItemId RUNE_OBELISK_KEY = createWithId("rune_obelisk");
 
     public static final Block RUNE_ENGRAVER = register(RUNE_ENGRAVER_KEY, RuneEngraver::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(1.5f).noOcclusion());
     public static final Block RUNESLATE = register(RUNESLATE_KEY, Runeslate::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(0.5f).noOcclusion());

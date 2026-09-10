@@ -25,18 +25,18 @@ public class RunicRitualsItems {
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register((tab)-> {tab.accept(BASIC_WAND);});
     }
 
-    private static Item registerItem(String name, Function<Item.Properties, Item> itemFactory, Item.Properties settings) {
+    public static Item registerItem(String name, Function<Item.Properties, Item> itemFactory, Item.Properties settings) {
         ResourceKey<Item> itemKey = resourceKey(name);
         return registerItem(itemKey, itemFactory, settings);
     }
 
-    private static Item registerItem(ResourceKey<Item> itemKey, Function<Item.Properties, Item> itemFactory, Item.Properties settings) {
+    public static Item registerItem(ResourceKey<Item> itemKey, Function<Item.Properties, Item> itemFactory, Item.Properties settings) {
         Item item = itemFactory.apply(settings.setId(itemKey));
         Registry.register(BuiltInRegistries.ITEM, itemKey, item);
         return item;
     }
 
-    private static ResourceKey<Item> resourceKey(String name) {
+    public static ResourceKey<Item> resourceKey(String name) {
         return ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, name.toLowerCase(Locale.ROOT).replace(" ", "_")));
     }
 }
