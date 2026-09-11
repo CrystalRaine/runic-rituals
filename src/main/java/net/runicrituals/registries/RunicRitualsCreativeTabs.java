@@ -31,6 +31,11 @@ public class RunicRitualsCreativeTabs {
                 output.accept(RunicRitualsItems.BASIC_WAND);
                 output.accept(RunicRitualsBlocks.RUNESLATE);
                 output.accept(RunicRitualsBlocks.RUNE_ENGRAVER);
+
+                // Utility Blocks (created / used by some rune effects)
+                output.accept(RunicRitualsBlocks.SHADOW);
+                output.accept(RunicRitualsBlocks.DECAYING_SHADOW);
+                output.accept(RunicRitualsBlocks.DECAYING_LIGHT);
             })
             .build();
 

@@ -26,18 +26,14 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.runicrituals.logic.RuneSymbol;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import net.runicrituals.registries.RunicRitualsBlocks;
 import net.runicrituals.registries.RunicRitualsItems;
-import net.runicrituals.registries.components.RuneDataComponent;
-import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class Runeslate extends BaseEntityBlock {
 

@@ -23,14 +23,15 @@ public class RunicRitualsEnglishLangProvider extends FabricLanguageProvider {
             translationBuilder.add("item.runic-rituals." + s.getName().toLowerCase(Locale.ROOT).replace(" ", "_") + "_rune", s.getName() + " Rune");
         }
 
-        translationBuilder.add("item.runic-rituals.runestone",                      "Runestone");
         translationBuilder.add("item.runic-rituals.wand",                           "Wand");
         translationBuilder.add("item.runic-rituals.element.rune_type_tooltip",      "Rune: %1$s");
         translationBuilder.add("item.runic-rituals.element.rune_inlay_tooltip",     "Inlay: %1$s");
         
         translationBuilder.add("block.runic-rituals.rune_engraver",                 "Rune Engraver");
         translationBuilder.add("block.runic-rituals.runeslate",                     "Runeslate");
-        translationBuilder.add("block.runic-rituals.rune_obelisk",                  "Rune Obelisk");
+        translationBuilder.add("block.runic-rituals.decaying_light",                "Decaying Light");
+        translationBuilder.add("block.runic-rituals.shadow",                        "Shadow");
+        translationBuilder.add("block.runic-rituals.decaying_shadow",               "Decaying Shadow");
 
         translationBuilder.add("creativeTab.runic_rituals.mod",                     "Runic Rituals");
         translationBuilder.add("creativeTab.runic_rituals_runes.mod",               "Runes");

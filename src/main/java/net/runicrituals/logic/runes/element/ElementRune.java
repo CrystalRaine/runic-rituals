@@ -167,6 +167,11 @@ public abstract class ElementRune extends Rune {
         }
     }
 
+    /**
+     * not actually used for element runes.
+     * @param cost summed cost of all sub-runes
+     * @return cost
+     */
     @Override
     public double applyEfficiencyToCost(double cost) {
         return cost;
@@ -198,15 +203,17 @@ public abstract class ElementRune extends Rune {
     }
 
     static void createParticle(Level level, BlockPos pos, ParticleOptions particleType, Vec3 velocityScaler) {
-        RandomSource random = level.getRandom();
-        level.addParticle(
-                particleType,
-                pos.getX() + Mth.randomBetween(random, 0, 1.0F),
-                pos.getY() + Mth.randomBetween(random, 0, 1.0F),
-                pos.getZ() + Mth.randomBetween(random, 0, 1.0F),
-                Mth.randomBetween(random, -1.0F, 1.0F) * velocityScaler.x(),
-                Mth.randomBetween(random, -1.0F, 1.0F) * velocityScaler.y(),
-                Mth.randomBetween(random, -1.0F, 1.0F) * velocityScaler.z()
-        );
+        if(level.getGameTime() % 5 == 0) {
+            RandomSource random = level.getRandom();
+            level.addParticle(
+                    particleType,
+                    pos.getX() + Mth.randomBetween(random, 0, 1.0F),
+                    pos.getY() + Mth.randomBetween(random, 0, 1.0F),
+                    pos.getZ() + Mth.randomBetween(random, 0, 1.0F),
+                    Mth.randomBetween(random, -1.0F, 1.0F) * velocityScaler.x(),
+                    Mth.randomBetween(random, -1.0F, 1.0F) * velocityScaler.y(),
+                    Mth.randomBetween(random, -1.0F, 1.0F) * velocityScaler.z()
+            );
+        }
     }
 }

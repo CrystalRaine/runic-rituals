@@ -62,7 +62,7 @@ public abstract class Rune {
                 createdRune =  new Electric();
             }
             case LIGHT -> {
-                createdRune =  new VoidRune();
+                createdRune =  new Light();
             }
             case MATTER -> {
                 createdRune =  new Matter();
