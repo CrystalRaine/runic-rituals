@@ -9,22 +9,31 @@ import java.util.List;
 
 public enum RuneInlayMaterial {
 
-    ETCHED(0, ChatFormatting.WHITE, "Etched", null, 0.5f),
-    COPPER(1, ChatFormatting.RED, "Copper", Items.COPPER_INGOT, 0.55f),
-    GOLD(2, ChatFormatting.GOLD, "Gold", Items.GOLD_INGOT, 0.8f),
-    IRON(3, ChatFormatting.GRAY, "Iron", Items.IRON_INGOT, 0.6f),
-    DIAMOND(4, ChatFormatting.AQUA, "Diamond", Items.DIAMOND, 0.9f),
-    GLASS(5, ChatFormatting.GREEN, "Glass", Items.GLASS, 0.55f),
-    OBSIDIAN(6, ChatFormatting.DARK_PURPLE, "Obsidian", Items.OBSIDIAN, 0.7f),
-    NETHERITE(7, ChatFormatting.DARK_RED, "Netherite", Items.NETHERITE_SCRAP, 0.95f),
-    ECHO(8, ChatFormatting.DARK_BLUE, "Echo", Items.ECHO_SHARD, 1f),
-    AMETHYST(9, ChatFormatting.BLUE, "Amethyst", Items.AMETHYST_SHARD, 0.75f),
-    BLAZE(10, ChatFormatting.YELLOW, "Blaze", Items.BLAZE_ROD, 0.95f),
-    REDSTONE(11, ChatFormatting.RED, "Redstone", Items.REDSTONE, 0.95f),
-    ICE(12, ChatFormatting.BLUE, "Ice", Items.BLUE_ICE, 0.95f),
-    BREEZE(13, ChatFormatting.WHITE, "Breeze", Items.BREEZE_ROD, 0.95f),
-    SOUL(14, ChatFormatting.BLUE, "Soul", Items.SOUL_SAND, 0.95f),
-    CHORUS(15, ChatFormatting.LIGHT_PURPLE, "Chorus", Items.CHORUS_FRUIT, 0.95f)
+//    T0
+    ETCHED(0, ChatFormatting.WHITE, "Etched", null, 0),
+
+//    T1
+    GLASS(11, ChatFormatting.GREEN, "Glass", Items.GLASS, 1),
+    AMETHYST(12, ChatFormatting.GREEN, "Amethyst", Items.AMETHYST_SHARD, 1),
+    ICE(13, ChatFormatting.GREEN, "Ice", Items.BLUE_ICE, 1),
+    SOUL(14, ChatFormatting.GREEN, "Soul", Items.SOUL_SAND, 1),
+    REDSTONE(26, ChatFormatting.BLUE, "Redstone", Items.REDSTONE, 2),
+
+//    T2
+    BLAZE(21, ChatFormatting.BLUE, "Blaze", Items.BLAZE_ROD, 2),
+    BREEZE(22, ChatFormatting.BLUE, "Breeze", Items.BREEZE_ROD, 2),
+    COPPER(23, ChatFormatting.BLUE, "Copper", Items.COPPER_INGOT, 2),
+    IRON(25, ChatFormatting.BLUE, "Iron", Items.IRON_INGOT, 2),
+    OBSIDIAN(33, ChatFormatting.DARK_PURPLE, "Obsidian", Items.OBSIDIAN, 3),
+
+//    T3
+    DIAMOND(31, ChatFormatting.DARK_PURPLE, "Diamond", Items.DIAMOND, 3),
+    CHORUS(32, ChatFormatting.DARK_PURPLE, "Chorus", Items.CHORUS_FRUIT, 3),
+    GOLD(24, ChatFormatting.BLUE, "Gold", Items.GOLD_INGOT, 2),
+
+//    T4
+    ECHO(41, ChatFormatting.GOLD, "Echo", Items.ECHO_SHARD, 4),
+    NETHERITE(42, ChatFormatting.GOLD, "Netherite", Items.NETHERITE_SCRAP, 4)
 
     ;
 
@@ -34,12 +43,21 @@ public enum RuneInlayMaterial {
     private final Item associatedItem;
     private final double efficiency;
 
-    RuneInlayMaterial(int id, ChatFormatting formatting, String name, Item item, double efficiency) {
+    RuneInlayMaterial(int id, ChatFormatting formatting, String name, Item item, int tier) {
         this.id = id;
         this.name = name;
         this.formatting = formatting;
         associatedItem = item;
-        this.efficiency = efficiency;
+
+        switch (tier) {
+            case 0 -> this.efficiency = 0.1;
+            case 1 -> this.efficiency = 0.3;
+            case 2 -> this.efficiency = 0.5;
+            case 3 -> this.efficiency = 0.70;
+            case 4 -> this.efficiency = 0.95;
+
+            default -> this.efficiency = 0.99;
+        }
     }
 
     public double getEfficiency() {
