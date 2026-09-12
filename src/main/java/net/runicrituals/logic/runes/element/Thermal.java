@@ -4,10 +4,14 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -61,10 +65,19 @@ public class Thermal extends ElementRune{
                 if(block.intensity >= 3) replaceBlock(level, position, Blocks.LAVA, Blocks.COBBLESTONE, true);
             }
             case MANIFEST -> {
-                replaceBlock(level, position, Blocks.ICE, Blocks.WATER);
+                if(level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, position) && replaceBlock(level, position, Blocks.ICE, Blocks.AIR)) {
+                    RandomSource random = level.getRandom();
+                    for (int i = 0; i < 8; i++) {
+                        level.addParticle(ParticleTypes.LARGE_SMOKE, position.getX() + random.nextFloat(), position.getY() + random.nextFloat(), position.getZ() + random.nextFloat(), 0.0, 0.0, 0.0);
+                    }
+                } else {
+                    replaceBlock(level, position, Blocks.ICE, Blocks.WATER);
+                }
                 if(block.intensity >= 1) replaceBlock(level, position, Blocks.PACKED_ICE, Blocks.ICE);
                 if(block.intensity >= 2) replaceBlock(level, position, Blocks.BLUE_ICE, Blocks.PACKED_ICE);
                 if(block.intensity >= 3) replaceBlock(level, position, ConventionalBlockTags.STONES, Blocks.LAVA);
+                if(block.intensity >= 5) replaceBlock(level, position, Blocks.OBSIDIAN, Blocks.LAVA);
+                if(block.intensity >= 6) replaceBlock(level, position, Blocks.CRYING_OBSIDIAN, Blocks.LAVA);
             }
             default -> {
 //                do nothing

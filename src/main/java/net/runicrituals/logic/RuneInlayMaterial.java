@@ -10,15 +10,23 @@ import java.util.List;
 public enum RuneInlayMaterial {
 
     ETCHED(0, ChatFormatting.WHITE, "Etched", null, 0.5f),
-    GLASS(5, ChatFormatting.GREEN, "Glass", Items.GLASS, 0.55f),
     COPPER(1, ChatFormatting.RED, "Copper", Items.COPPER_INGOT, 0.55f),
-    IRON(3, ChatFormatting.GRAY, "Iron", Items.IRON_INGOT, 0.6f),
-    OBSIDIAN(6, ChatFormatting.DARK_PURPLE, "Obsidian", Items.OBSIDIAN, 0.7f),
-    AMETHYST(9, ChatFormatting.BLUE, "Amethyst", Items.AMETHYST_SHARD, 0.75f),
     GOLD(2, ChatFormatting.GOLD, "Gold", Items.GOLD_INGOT, 0.8f),
+    IRON(3, ChatFormatting.GRAY, "Iron", Items.IRON_INGOT, 0.6f),
     DIAMOND(4, ChatFormatting.AQUA, "Diamond", Items.DIAMOND, 0.9f),
+    GLASS(5, ChatFormatting.GREEN, "Glass", Items.GLASS, 0.55f),
+    OBSIDIAN(6, ChatFormatting.DARK_PURPLE, "Obsidian", Items.OBSIDIAN, 0.7f),
     NETHERITE(7, ChatFormatting.DARK_RED, "Netherite", Items.NETHERITE_SCRAP, 0.95f),
-    ECHO(8, ChatFormatting.DARK_BLUE, "Echo", Items.ECHO_SHARD, 1f);
+    ECHO(8, ChatFormatting.DARK_BLUE, "Echo", Items.ECHO_SHARD, 1f),
+    AMETHYST(9, ChatFormatting.BLUE, "Amethyst", Items.AMETHYST_SHARD, 0.75f),
+    BLAZE(10, ChatFormatting.YELLOW, "Blaze", Items.BLAZE_ROD, 0.95f),
+    REDSTONE(11, ChatFormatting.RED, "Redstone", Items.REDSTONE, 0.95f),
+    ICE(12, ChatFormatting.BLUE, "Ice", Items.BLUE_ICE, 0.95f),
+    BREEZE(13, ChatFormatting.WHITE, "Breeze", Items.BREEZE_ROD, 0.95f),
+    SOUL(14, ChatFormatting.BLUE, "Soul", Items.SOUL_SAND, 0.95f),
+    CHORUS(15, ChatFormatting.LIGHT_PURPLE, "Chorus", Items.CHORUS_FRUIT, 0.95f)
+
+    ;
 
     private final int id;
     private final String name;

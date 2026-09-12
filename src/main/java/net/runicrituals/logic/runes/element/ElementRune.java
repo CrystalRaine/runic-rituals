@@ -135,10 +135,12 @@ public abstract class ElementRune extends Rune {
      * @param replaced block that can be replaced
      * @param replaceWith block to set in it's place
      */
-    public void replaceBlock(Level level, BlockPos pos, Block replaced, Block replaceWith) {
+    public boolean replaceBlock(Level level, BlockPos pos, Block replaced, Block replaceWith) {
         if(!level.isClientSide() && level.getBlockState(pos).is(replaced)){
             level.setBlockAndUpdate(pos, replaceWith.defaultBlockState());
+            return true;
         }
+        return false;
     }
 
     /**

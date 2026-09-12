@@ -128,10 +128,10 @@ public class RuneEngravingRecipe implements Recipe<RuneEngravingRecipeInput> {
         return true;
     }
 
-    public SlotDisplay resultDisplay(Item base) {
+    public SlotDisplay resultDisplay(Item base, RuneInlayMaterial inlay) {
         ItemStackTemplate recipeResult = new ItemStackTemplate(base);
 
-        ItemStack result = recipeResult.apply(DataComponentPatch.builder().set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(RuneSymbol.getSymbolFromId(getSymbolId()), RuneInlayMaterial.ETCHED)).build());
+        ItemStack result = recipeResult.apply(DataComponentPatch.builder().set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(RuneSymbol.getSymbolFromId(getSymbolId()), inlay)).build());
         return new ItemStackSlotDisplayWithComponents(result);
     }
 

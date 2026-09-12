@@ -63,6 +63,11 @@ public class RuneEngravingRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
+    public RuneEngravingRecipeBuilder inlayMaterial(final Ingredient inlayMaterial) {
+        this.inlayMaterial = inlayMaterial;
+        return this;
+    }
+
     @Override
     public @NonNull RecipeBuilder unlockedBy(@NonNull String name, @NonNull Criterion<?> criterion) {
         this.advancementBuilder.unlockedBy(name, criterion);

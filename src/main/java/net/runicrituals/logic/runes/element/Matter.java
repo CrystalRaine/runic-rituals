@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.registries.RunicRitualsBlocks;
 import net.runicrituals.logic.runes.action.ActionRune;
@@ -80,7 +81,6 @@ public class Matter extends ElementRune {
             }
             case MANIFEST -> {
                 if(level.getBlockState(position).canBeReplaced()){
-
                     List<TagKey<Block>> tagSet = List.of(BlockTags.DIRT, BlockTags.DIRT, BlockTags.BASE_STONE_OVERWORLD, BlockTags.BASE_STONE_OVERWORLD, BlockTags.BASE_STONE_NETHER, BlockTags.BASE_STONE_NETHER, BlockTags.COPPER_ORES, BlockTags.COPPER_ORES, BlockTags.IRON_ORES, BlockTags.IRON_ORES, BlockTags.GOLD_ORES);
                     List<Block> aggregateOptions = new ArrayList<>();
                     HolderGetter<Block> lookup = level.registryAccess().lookupOrThrow(Registries.BLOCK);
@@ -105,7 +105,7 @@ public class Matter extends ElementRune {
     @Override
     public double proposeCostForEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
         if (Objects.requireNonNull(action.getActionType()) == ActionRune.Action.SACRIFICE) {
-            if (entity instanceof LivingEntity && level instanceof ServerLevel serverLevel) {
+            if (entity instanceof LivingEntity && level instanceof ServerLevel) {
                 return defaultCosts(action) * 3;
             }
         }
@@ -132,14 +132,8 @@ public class Matter extends ElementRune {
     public void createParticle(Level level, BlockPos pos, ActionRune action) {
         RandomSource random = level.getRandom();
         switch (action.getActionType()) {
-            case SACRIFICE -> {
-                createParticle(level, pos, ParticleTypes.ASH, new Vec3(0.09, 0.05, 0.09));
-
-            }
-            case MANIFEST -> {
-                createParticle(level, pos, ParticleTypes.POOF, new Vec3(0.09, 0.05, 0.09));
-
-            }
+            case SACRIFICE -> createParticle(level, pos, ParticleTypes.ASH, new Vec3(0.09, 0.05, 0.09));
+            case MANIFEST -> createParticle(level, pos, ParticleTypes.POOF, new Vec3(0.09, 0.05, 0.09));
             default -> {
 //                do nothing
             }

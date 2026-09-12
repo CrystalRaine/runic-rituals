@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.runicrituals.RunicRituals;
+import net.runicrituals.logic.RuneInlayMaterial;
 import net.runicrituals.logic.RuneSymbol;
 import net.runicrituals.registries.*;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
@@ -198,13 +199,15 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
                     RunicRituals.LOGGER.warn("Recipe {} can't be placed due to empty ingredients and will be ignored", holder.id().identifier());
                 } else {
                     // choose which set of recipes to show. (etched recipes, or material recipes)
-                    if(recipe.getInlayMaterial().isPresent() && !input.getSlot(1).get().isEmpty()){
+                    ItemStack inlaySlot = Objects.requireNonNull(input.getSlot(1)).get();
+                    ItemStack baseItem = input.getSlot(0).get();
+                    if(recipe.getInlayMaterial().isPresent() && recipe.getInlayMaterial().get().test(inlaySlot) && !inlaySlot.isEmpty()){
                         runeEngravingRecipes.add(
-                                new SelectableRecipe.SingleInputEntry<>(recipe.getRuneBase(), new SelectableRecipe<>(recipe.resultDisplay(Objects.requireNonNull(input.getSlot(0)).get().getItem()), Optional.of(holder)))
+                                new SelectableRecipe.SingleInputEntry<>(recipe.getRuneBase(), new SelectableRecipe<>(recipe.resultDisplay(baseItem.getItem(), RuneInlayMaterial.getByMaterial(inlaySlot.getItem())), Optional.of(holder)))
                         );
-                    } else if(recipe.getInlayMaterial().isEmpty() && input.getSlot(1).get().isEmpty()) {
+                    } else if(recipe.getInlayMaterial().isEmpty() && inlaySlot.isEmpty()) {
                         runeEngravingRecipes.add(
-                                new SelectableRecipe.SingleInputEntry<>(recipe.getRuneBase(), new SelectableRecipe<>(recipe.resultDisplay(Objects.requireNonNull(input.getSlot(0)).get().getItem()), Optional.of(holder)))
+                                new SelectableRecipe.SingleInputEntry<>(recipe.getRuneBase(), new SelectableRecipe<>(recipe.resultDisplay(baseItem.getItem(), RuneInlayMaterial.ETCHED), Optional.of(holder)))
                         );
                     }
                 }

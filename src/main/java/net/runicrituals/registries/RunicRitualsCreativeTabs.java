@@ -50,7 +50,7 @@ public class RunicRitualsCreativeTabs {
                 output.accept(RunicRitualsBlocks.RUNESLATE.asItem());
 
                 for(RuneSymbol symbol : RuneSymbol.values()) {
-                    for(RuneInlayMaterial material : RuneInlayMaterial.values()) {
+                    for(RuneInlayMaterial material : symbol.getMaterialsAllowed()) {
                         ItemStack typedRunestone = new ItemStack(RunicRitualsBlocks.RUNESLATE.asItem());
                         typedRunestone.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(symbol,material));
 
