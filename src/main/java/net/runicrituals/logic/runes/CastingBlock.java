@@ -116,10 +116,7 @@ public class CastingBlock {
                     }
                 } else {
                     BlockPos targetBlock = getTarget(form);
-
-                    if(targetBlock != null) {
-                        element.createParticle(level, targetBlock, actionNode.action);
-                    }
+                    element.createParticle(level, targetBlock, actionNode.action);
                 }
 
                 element.applyActionOnVolume(level, form, actionNode.action, this);
