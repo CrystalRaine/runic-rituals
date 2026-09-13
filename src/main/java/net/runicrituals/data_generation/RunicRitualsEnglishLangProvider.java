@@ -3,6 +3,7 @@ package net.runicrituals.data_generation;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.enchantment.Enchantable;
 import net.runicrituals.logic.RuneSymbol;
 import org.jspecify.annotations.NonNull;
 
@@ -24,9 +25,12 @@ public class RunicRitualsEnglishLangProvider extends FabricLanguageProvider {
         }
 
         translationBuilder.add("item.runic-rituals.wand",                           "Wand");
+        translationBuilder.add("item.runic-rituals.diamond_wand",                   "Diamond Wand");
+        translationBuilder.add("item.runic-rituals.echo_wand",                      "Echo Wand");
         translationBuilder.add("item.runic-rituals.element.rune_type_tooltip",      "Rune: %1$s");
         translationBuilder.add("item.runic-rituals.element.rune_inlay_tooltip",     "Inlay: %1$s");
-        
+        translationBuilder.add("item.runic-rituals.wand.info",                      "What else would a magician use?");
+
         translationBuilder.add("block.runic-rituals.rune_engraver",                 "Rune Engraver");
         translationBuilder.add("block.runic-rituals.runeslate",                     "Runeslate");
         translationBuilder.add("block.runic-rituals.decaying_light",                "Decaying Light");

@@ -40,7 +40,7 @@ public class RuneslateEntity extends BlockEntity {
     UUID chainUUID = null;
     ManaStorage mana = new ManaStorage();
 
-    boolean isAnchor = false;
+    public boolean isAnchor = false;
     boolean isLinked = false;
 
     BlockPos nextPos = null;
@@ -54,6 +54,10 @@ public class RuneslateEntity extends BlockEntity {
 
     public RuneslateEntity(BlockPos worldPosition, BlockState blockState) {
         super(RunicRitualsBlockEntities.RUNESLATE_BLOCK_ENTITY, worldPosition, blockState);
+    }
+
+    public int getChainIndex() {
+        return chainIndex;
     }
 
     public RuneslateEntity getAnchor() {

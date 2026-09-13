@@ -35,9 +35,6 @@ public class RuneEngravingRecipe implements Recipe<RuneEngravingRecipeInput> {
     private final ItemStackTemplate result;
     private final int symbolId;
 
-    public static final TagKey<Item> INLAYABLE_ITEMS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "inlay_items"));
-    public static final TagKey<Item> ENGRAVABLE_ITEMS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "engrave_items"));
-
     public static final MapCodec<RuneEngravingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     Ingredient.CODEC.fieldOf("runeBase").forGetter(RuneEngravingRecipe::getRuneBase),

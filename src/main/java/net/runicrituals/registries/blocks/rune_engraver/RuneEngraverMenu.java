@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.runicrituals.RunicRituals;
+import net.runicrituals.data_generation.RunicRitualsItemTagProvider;
 import net.runicrituals.logic.RuneInlayMaterial;
 import net.runicrituals.logic.RuneSymbol;
 import net.runicrituals.registries.*;
@@ -76,7 +77,7 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
             @Override
             public boolean mayPlace(final ItemStack itemStack) {
 //                only allow unengraved engravable items (runestone, runeslate)
-                return itemStack.is(RuneEngravingRecipe.ENGRAVABLE_ITEMS) && !itemStack.has(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE);
+                return itemStack.is(RunicRitualsItemTagProvider.ENGRAVABLE_ITEMS) && !itemStack.has(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE);
             }
         });
         this.addSlot(new Slot(
@@ -88,7 +89,7 @@ public class RuneEngraverMenu extends AbstractContainerMenu {
             @Override
             public boolean mayPlace(final ItemStack itemStack) {
 
-                return itemStack.is(RuneEngravingRecipe.INLAYABLE_ITEMS);
+                return itemStack.is(RunicRitualsItemTagProvider.INLAYABLE_ITEMS);
             }
         });
 

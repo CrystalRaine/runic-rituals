@@ -28,7 +28,12 @@ public class RunicRitualsCreativeTabs {
             .icon(() -> new ItemStack(RunicRitualsItems.BASIC_WAND))
             .title(Component.translatable("creativeTab.runic_rituals.mod"))
             .displayItems((params, output) -> {
+                // Tools
                 output.accept(RunicRitualsItems.BASIC_WAND);
+                output.accept(RunicRitualsItems.DIAMOND_WAND);
+                output.accept(RunicRitualsItems.ECHO_WAND);
+
+                // General
                 output.accept(RunicRitualsBlocks.RUNESLATE);
                 output.accept(RunicRitualsBlocks.RUNE_ENGRAVER);
 

@@ -39,7 +39,7 @@ public class RunicRitualsBlocks {
     public static final BlockItemId DECAYING_SHADOW_KEY = createWithId("decaying_shadow");
 
     public static final Block RUNE_ENGRAVER = register(RUNE_ENGRAVER_KEY, RuneEngraver::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(1.5f).noOcclusion());
-    public static final Block RUNESLATE = register(RUNESLATE_KEY, Runeslate::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(0.5f).noOcclusion());
+    public static final Block RUNESLATE = register(RUNESLATE_KEY, Runeslate::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(1f).noOcclusion());
     public static final Block DECAYING_LIGHT = register(
         DECAYING_LIGHT_KEY,
         DecayingLightBlock::new,

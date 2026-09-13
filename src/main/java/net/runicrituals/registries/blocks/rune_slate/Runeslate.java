@@ -29,6 +29,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import net.runicrituals.registries.RunicRitualsBlocks;
 import net.runicrituals.registries.RunicRitualsItems;
+import net.runicrituals.registries.items.WandItem;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -57,42 +58,6 @@ public class Runeslate extends BaseEntityBlock {
             return Collections.singletonList(is);
         }
         return super.getDrops(state, params);
-    }
-
-    @Override
-    protected @NonNull InteractionResult useItemOn(@NonNull ItemStack stack, @NonNull BlockState state, @NonNull Level level, @NonNull BlockPos pos, @NonNull Player player, @NonNull InteractionHand hand, @NonNull BlockHitResult hit) {
-        RuneslateEntity rse = getBlockEntity(level, pos);
-
-        if(player.getItemInHand(hand).is(RunicRitualsItems.BASIC_WAND)) {
-            if(rse != null) {
-                if(!rse.isLinked) {
-                    rse.isAnchor = true;
-                    rse.setAnchor(rse);
-
-                    rse.link();
-                    if(rse.chainIndex == 0) {
-                        rse.getAnchor().delink();
-                        player.sendOverlayMessage(Component.literal("Linking Ritual: Failed due to incomplete loop"));
-                        return InteractionResult.SUCCESS;
-                    }
-
-                    boolean validBase = rse.getBase();
-                    if(!validBase) {
-                        rse.getAnchor().delink();
-                        player.sendOverlayMessage(Component.literal("Linking Ritual: Failed due to being unable to validate contained volume"));
-                        return InteractionResult.SUCCESS;
-                    }
-
-                    if(level.isClientSide()) {
-                        player.sendOverlayMessage(Component.literal("Completed Ritual Circle, Size: " + (rse.chainIndex)));
-                    }
-                } else if(rse.getAnchor() != null){
-                    rse.getAnchor().delink();
-                }
-            }
-        }
-
-        return InteractionResult.SUCCESS;
     }
 
     public static RuneslateEntity getBlockEntity(@NonNull Level level, @NonNull BlockPos pos) {

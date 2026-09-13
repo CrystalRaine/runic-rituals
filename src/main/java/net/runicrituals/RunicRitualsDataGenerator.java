@@ -11,8 +11,9 @@ public class RunicRitualsDataGenerator implements DataGeneratorEntrypoint {
 
 		pack.addProvider(RunicRitualsEnglishLangProvider::new);
 		pack.addProvider(RunicRitualsModelProvider::new);
-		pack.addProvider(RunicRitualsTagProvider::new);
+		pack.addProvider(RunicRitualsItemTagProvider::new);
 		pack.addProvider(RunicRitualsRecipeProvider::new);
 		pack.addProvider(RunicRitualsLootTableProvider::new);
+		pack.addProvider(RunicRitualsBlockTagProvider::new);
 	}
 }

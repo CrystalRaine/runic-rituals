@@ -49,14 +49,34 @@ public class RunicRitualsRecipeProvider extends FabricRecipeProvider {
                 );
 
                 shaped(RecipeCategory.MISC, RunicRitualsItems.BASIC_WAND)
-                    .pattern(" #o")
-                    .pattern(" /#")
-                    .pattern("#  ")
-                    .define('#', Items.COPPER_INGOT)
-                    .define('/', Items.STICK)
-                    .define('o', Items.AMETHYST_SHARD)
-                    .unlockedBy(getHasName(Items.AMETHYST_SHARD), has(Items.AMETHYST_SHARD))
-                    .save(output);
+                        .pattern(" #o")
+                        .pattern(" /#")
+                        .pattern("#  ")
+                        .define('#', Items.COPPER_INGOT)
+                        .define('/', Items.STICK)
+                        .define('o', Items.AMETHYST_SHARD)
+                        .unlockedBy(getHasName(Items.AMETHYST_SHARD), has(Items.AMETHYST_SHARD))
+                        .save(output);
+
+                shaped(RecipeCategory.MISC, RunicRitualsItems.DIAMOND_WAND)
+                        .pattern(" #o")
+                        .pattern(" /#")
+                        .pattern("#  ")
+                        .define('#', Items.COPPER_INGOT)
+                        .define('/', Items.STICK)
+                        .define('o', Items.DIAMOND)
+                        .unlockedBy(getHasName(Items.DIAMOND), has(Items.DIAMOND))
+                        .save(output);
+
+                shaped(RecipeCategory.MISC, RunicRitualsItems.ECHO_WAND)
+                        .pattern(" #o")
+                        .pattern(" /#")
+                        .pattern("#  ")
+                        .define('#', Items.COPPER_INGOT)
+                        .define('/', Items.STICK)
+                        .define('o', Items.ECHO_SHARD)
+                        .unlockedBy(getHasName(Items.ECHO_SHARD), has(Items.ECHO_SHARD))
+                        .save(output);
 
                 shaped(RecipeCategory.MISC, RunicRitualsBlocks.RUNE_ENGRAVER)
                     .pattern(" o/")
@@ -92,7 +112,7 @@ public class RunicRitualsRecipeProvider extends FabricRecipeProvider {
         RuneEngravingRecipeBuilder.engraving(registries, RecipeCategory.MISC, RunicRitualsBlocks.RUNESLATE.asItem())
             .setOutputSymbol(symbol)
             .setIdAffix("etched_" + symbolName)
-            .runeBase(RuneEngravingRecipe.ENGRAVABLE_ITEMS)
+            .runeBase(RunicRitualsItemTagProvider.ENGRAVABLE_ITEMS)
             .unlockedBy(getHasName(RunicRitualsBlocks.RUNESLATE), recipeProvider.has(RunicRitualsBlocks.RUNESLATE))
             .save(output);
     }
@@ -110,15 +130,15 @@ public class RunicRitualsRecipeProvider extends FabricRecipeProvider {
             RuneEngravingRecipeBuilder.engraving(registries, RecipeCategory.MISC, RunicRitualsBlocks.RUNESLATE.asItem())
                     .setOutputSymbol(symbol)
                     .setIdAffix("inlayed_" + symbolName)
-                    .runeBase(RuneEngravingRecipe.ENGRAVABLE_ITEMS)
-                    .inlayMaterial(RuneEngravingRecipe.INLAYABLE_ITEMS)
+                    .runeBase(RunicRitualsItemTagProvider.ENGRAVABLE_ITEMS)
+                    .inlayMaterial(RunicRitualsItemTagProvider.INLAYABLE_ITEMS)
                     .unlockedBy(getHasName(RunicRitualsBlocks.RUNESLATE), recipeProvider.has(RunicRitualsBlocks.RUNESLATE))
                     .save(output);
         } else {
             RuneEngravingRecipeBuilder.engraving(registries, RecipeCategory.MISC, RunicRitualsBlocks.RUNESLATE.asItem())
                 .setOutputSymbol(symbol)
                 .setIdAffix("inlayed_" + symbolName)
-                .runeBase(RuneEngravingRecipe.ENGRAVABLE_ITEMS)
+                .runeBase(RunicRitualsItemTagProvider.ENGRAVABLE_ITEMS)
                 .inlayMaterial(Ingredient.of(allowedItems))
                 .unlockedBy(getHasName(RunicRitualsBlocks.RUNESLATE), recipeProvider.has(RunicRitualsBlocks.RUNESLATE))
                 .save(output);
