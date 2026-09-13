@@ -53,7 +53,7 @@ public enum RuneInlayMaterial {
             case 0 -> this.efficiency = 0.1;
             case 1 -> this.efficiency = 0.3;
             case 2 -> this.efficiency = 0.5;
-            case 3 -> this.efficiency = 0.70;
+            case 3 -> this.efficiency = 0.75;
             case 4 -> this.efficiency = 0.95;
 
             default -> this.efficiency = 0.99;
