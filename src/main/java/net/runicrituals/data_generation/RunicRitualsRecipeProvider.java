@@ -2,23 +2,18 @@ package net.runicrituals.data_generation;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.impl.recipe.ingredient.builtin.AllIngredient;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderSet;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.runicrituals.data_generation.recipe_builders.RuneEngravingRecipeBuilder;
 import net.runicrituals.logic.RuneInlayMaterial;
 import net.runicrituals.logic.RuneSymbol;
 import net.runicrituals.registries.RunicRitualsBlocks;
 import net.runicrituals.registries.RunicRitualsItems;
-import net.runicrituals.registries.blocks.rune_engraver.RuneEngravingRecipe;
 import org.jspecify.annotations.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
@@ -146,7 +141,7 @@ public class RunicRitualsRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "RunicRitualsRecipeProvider";
     }
 }
