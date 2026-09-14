@@ -113,7 +113,7 @@ public class Runeslate extends BaseEntityBlock {
     }
 
     @Override
-    protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+    protected @NonNull ItemStack getCloneItemStack(LevelReader level, @NonNull BlockPos pos, @NonNull BlockState state, boolean includeData) {
         ItemStack base = new ItemStack(this, 1);
 
         BlockEntity be = level.getBlockEntity(pos);
