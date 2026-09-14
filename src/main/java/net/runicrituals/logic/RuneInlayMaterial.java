@@ -17,19 +17,19 @@ public enum RuneInlayMaterial {
     AMETHYST(12, ChatFormatting.GREEN, "Amethyst", Items.AMETHYST_SHARD, 1),
     ICE(13, ChatFormatting.GREEN, "Ice", Items.BLUE_ICE, 1),
     SOUL(14, ChatFormatting.GREEN, "Soul", Items.SOUL_SAND, 1),
-    REDSTONE(26, ChatFormatting.BLUE, "Redstone", Items.REDSTONE, 2),
+    REDSTONE(26, ChatFormatting.GREEN, "Redstone", Items.REDSTONE, 2),
 
 //    T2
     BLAZE(21, ChatFormatting.BLUE, "Blaze", Items.BLAZE_ROD, 2),
     BREEZE(22, ChatFormatting.BLUE, "Breeze", Items.BREEZE_ROD, 2),
     COPPER(23, ChatFormatting.BLUE, "Copper", Items.COPPER_INGOT, 2),
     IRON(25, ChatFormatting.BLUE, "Iron", Items.IRON_INGOT, 2),
-    OBSIDIAN(33, ChatFormatting.DARK_PURPLE, "Obsidian", Items.OBSIDIAN, 3),
+    OBSIDIAN(33, ChatFormatting.BLUE, "Obsidian", Items.OBSIDIAN, 3),
 
 //    T3
     DIAMOND(31, ChatFormatting.DARK_PURPLE, "Diamond", Items.DIAMOND, 3),
     CHORUS(32, ChatFormatting.DARK_PURPLE, "Chorus", Items.CHORUS_FRUIT, 3),
-    GOLD(24, ChatFormatting.BLUE, "Gold", Items.GOLD_INGOT, 2),
+    GOLD(24, ChatFormatting.DARK_PURPLE, "Gold", Items.GOLD_INGOT, 2),
 
 //    T4
     ECHO(41, ChatFormatting.GOLD, "Echo", Items.ECHO_SHARD, 4),
