@@ -18,7 +18,7 @@ public enum RuneSymbol implements StringRepresentable {
     THERMAL(2, ChatFormatting.RED, "Thermal", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.COPPER, RuneInlayMaterial.BLAZE, RuneInlayMaterial.ICE)),
     ELECTRIC(3, ChatFormatting.YELLOW, "Electric", List.of(RuneInlayMaterial.GOLD, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.COPPER, RuneInlayMaterial.REDSTONE)),
     LIGHT(4, ChatFormatting.WHITE, "Light", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND, RuneInlayMaterial.OBSIDIAN)),
-    MATTER(5, ChatFormatting.GOLD, "Matter", List.of(RuneInlayMaterial.NETHERITE, RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.ETCHED)),
+    MATTER(5, ChatFormatting.GOLD, "Matter", List.of(RuneInlayMaterial.NETHERITE, RuneInlayMaterial.OBSIDIAN)),
     SPACE(6, ChatFormatting.LIGHT_PURPLE, "Space", List.of(RuneInlayMaterial.ECHO, RuneInlayMaterial.CHORUS)),
     TIME(7, ChatFormatting.GREEN, "Time", List.of(RuneInlayMaterial.ECHO)),
 
