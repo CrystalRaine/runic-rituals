@@ -9,11 +9,14 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.action.ActionRune;
@@ -42,14 +45,27 @@ public class Thermal extends ElementRune{
                 if (block.intensity >= 2 && level.getBlockState(position).is(Blocks.PACKED_ICE)) return defaultCosts(action);
                 if (block.intensity >= 1 && level.getBlockState(position).is(Blocks.ICE)) return defaultCosts(action);
                 if (block.intensity >= 3 && level.getBlockState(position).is(Blocks.LAVA)) return defaultCosts(action);
+                if (block.intensity >= 4 && level.getBlockState(position).is(Blocks.FIRE)) return defaultCosts(action);
                 if (level.getBlockState(position).is(Blocks.WATER)) return defaultCosts(action);
             }
             case MANIFEST -> {
                 if (block.intensity >= 1 && level.getBlockState(position).is(Blocks.PACKED_ICE)) return defaultCosts(action);
                 if (block.intensity >= 2 && level.getBlockState(position).is(Blocks.BLUE_ICE)) return defaultCosts(action);
                 if (block.intensity >= 3 && level.getBlockState(position).is(Blocks.LAVA)) return defaultCosts(action);
-                if (level.getBlockState(position).is(Blocks.ICE)) return defaultCosts(action);
+                if (block.intensity >= 3 && level.getBlockState(position).is(ConventionalBlockTags.STONES)) return defaultCosts(action);
+                if (block.intensity >= 2 && level.getBlockState(position).is(Blocks.COBBLED_DEEPSLATE)) return defaultCosts(action);
+                if (block.intensity >= 2 && level.getBlockState(position).is(Blocks.COBBLESTONE)) return defaultCosts(action);
+                if (block.intensity >= 2 && level.getBlockState(position).is(Blocks.MOSSY_COBBLESTONE)) return defaultCosts(action);
+                if (block.intensity >= 2 && level.getBlockState(position).is(Blocks.INFESTED_COBBLESTONE)) return defaultCosts(action);
+                if (block.intensity >= 5 && level.getBlockState(position).is(Blocks.OBSIDIAN)) return defaultCosts(action);
+                if (block.intensity >= 6 && level.getBlockState(position).is(Blocks.CRYING_OBSIDIAN)) return defaultCosts(action);
+                if (level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, position) && level.getBlockState(position).is(Blocks.ICE)) return defaultCosts(action);
+
+                BlockState fire = BaseFireBlock.getState(level, position);
+                boolean fireCanSurvive = fire.canSurvive(level, position);
+                if (block.intensity >= 2 && level.getBlockState(position).canBeReplaced() && !level.getBlockState(position).is(Blocks.LAVA) && !level.getBlockState(position).is(Blocks.WATER) && fireCanSurvive) return defaultCosts(action);
             }
+            case null, default -> {}
         }
         return 0;
     }
@@ -63,6 +79,7 @@ public class Thermal extends ElementRune{
                 replaceBlock(level, position, Blocks.WATER, Blocks.ICE);
                 if(block.intensity >= 3) replaceBlock(level, position, Blocks.LAVA, Blocks.OBSIDIAN, false);
                 if(block.intensity >= 3) replaceBlock(level, position, Blocks.LAVA, Blocks.COBBLESTONE, true);
+                if(block.intensity >= 4) replaceBlock(level, position, Blocks.FIRE, Blocks.AIR);
             }
             case MANIFEST -> {
                 if(level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, position) && replaceBlock(level, position, Blocks.ICE, Blocks.AIR)) {
@@ -76,8 +93,18 @@ public class Thermal extends ElementRune{
                 if(block.intensity >= 1) replaceBlock(level, position, Blocks.PACKED_ICE, Blocks.ICE);
                 if(block.intensity >= 2) replaceBlock(level, position, Blocks.BLUE_ICE, Blocks.PACKED_ICE);
                 if(block.intensity >= 3) replaceBlock(level, position, ConventionalBlockTags.STONES, Blocks.LAVA);
+                if(block.intensity >= 2) replaceBlock(level, position, Blocks.COBBLED_DEEPSLATE, Blocks.DEEPSLATE);
+                if(block.intensity >= 2) replaceBlock(level, position, Blocks.COBBLESTONE, Blocks.STONE);
+                if(block.intensity >= 2) replaceBlock(level, position, Blocks.MOSSY_COBBLESTONE, Blocks.STONE);
+                if(block.intensity >= 2) replaceBlock(level, position, Blocks.INFESTED_COBBLESTONE, Blocks.INFESTED_STONE);
                 if(block.intensity >= 5) replaceBlock(level, position, Blocks.OBSIDIAN, Blocks.LAVA);
                 if(block.intensity >= 6) replaceBlock(level, position, Blocks.CRYING_OBSIDIAN, Blocks.LAVA);
+
+                BlockState fire = BaseFireBlock.getState(level, position);
+                boolean fireCanSurvive = fire.canSurvive(level, position);
+                if (block.intensity >= 2 && level.getBlockState(position).canBeReplaced() && !level.getBlockState(position).is(Blocks.LAVA) && !level.getBlockState(position).is(Blocks.WATER) && fireCanSurvive){
+                    level.setBlockAndUpdate(position, fire);
+                }
             }
             default -> {
 //                do nothing
