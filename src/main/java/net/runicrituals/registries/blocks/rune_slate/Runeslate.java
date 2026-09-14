@@ -117,7 +117,7 @@ public class Runeslate extends BaseEntityBlock {
         ItemStack base = new ItemStack(this, 1);
 
         BlockEntity be = level.getBlockEntity(pos);
-        if(be.collectComponents().has(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE)) {
+        if(be != null && be.collectComponents().has(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE)) {
             DataComponentPatch patch = DataComponentPatch.builder().set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, Objects.requireNonNull(be.collectComponents().get(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE))).build();
             base.applyComponents(patch);
         }
