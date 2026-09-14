@@ -111,4 +111,16 @@ public class Runeslate extends BaseEntityBlock {
     public @Nullable BlockEntity newBlockEntity(@NonNull BlockPos worldPosition, @NonNull BlockState blockState) {
         return new RuneslateEntity(worldPosition, blockState);
     }
+
+    @Override
+    protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+        ItemStack base = new ItemStack(this, 1);
+
+        BlockEntity be = level.getBlockEntity(pos);
+        if(be.collectComponents().has(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE)) {
+            DataComponentPatch patch = DataComponentPatch.builder().set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, Objects.requireNonNull(be.collectComponents().get(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE))).build();
+            base.applyComponents(patch);
+        }
+        return base;
+    }
 }
