@@ -48,7 +48,7 @@ public class Time extends ElementRune {
             case SACRIFICE -> {
                 Set<BlockPos> positions = new HashSet<>();
 
-                form.getAllBlocks()
+                form.getAllNonAirBlocks()
                     .forEach(b -> {
                         if(level.getGameTime() % (block.intensity + 1) != 0) {
                             positions.add(new BlockPos(b.getX(), b.getY(), b.getZ()));
@@ -73,7 +73,7 @@ public class Time extends ElementRune {
             case MANIFEST -> {
                 Set<BlockPos> positions = new HashSet<>();
 
-                form.getAllBlocks()
+                form.getAllNonAirBlocks()
                     .forEach(b -> {
                         positions.add(new BlockPos(b.getX(), b.getY(), b.getZ()));
 

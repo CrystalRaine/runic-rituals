@@ -8,11 +8,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.runicrituals.RunicRituals;
+import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchorEntity;
 import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
 
 public class RunicRitualsBlockEntities {
 
     public static final BlockEntityType<RuneslateEntity> RUNESLATE_BLOCK_ENTITY = register("runeslate_type", RuneslateEntity::new, RunicRitualsBlocks.RUNESLATE);
+    public static final BlockEntityType<RitualAnchorEntity> RITUAL_ANCHOR_BLOCK_ENTITY = register("ritual_anchor_type", RitualAnchorEntity::new, RunicRitualsBlocks.RITUAL_ANCHOR);
 
     private static <T extends BlockEntity> BlockEntityType<T> register(
             String name,

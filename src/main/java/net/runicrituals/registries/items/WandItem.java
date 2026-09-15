@@ -4,11 +4,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.runicrituals.RunicRituals;
+import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchor;
+import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchorEntity;
 import net.runicrituals.registries.blocks.rune_slate.Runeslate;
 import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
+import org.jspecify.annotations.NonNull;
 
 public class WandItem extends RunicRitualsItem{
     public WandItem(Properties properties) {
@@ -17,45 +24,43 @@ public class WandItem extends RunicRitualsItem{
 
     // link/unlink a ritual when this is used on it.
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NonNull InteractionResult useOn(UseOnContext context) {
         BlockPos pos = context.getClickedPos();
         Level level = context.getLevel();
         Player player = context.getPlayer();
 
+        RitualAnchorEntity rae = RitualAnchor.getBlockEntity(level, pos);
         RuneslateEntity rse = Runeslate.getBlockEntity(level, pos);
-
-        if(rse != null && player != null) {
-            if(!rse.isLinked()) {
-                rse.isAnchor = true;
-                rse.setAnchor(rse);
-
-                rse.link();
-                if(rse.getChainIndex() == 0) {
-                    rse.getAnchor().delink();
-                    player.sendOverlayMessage(Component.literal("Linking Ritual: Failed due to incomplete loop"));
-                    return InteractionResult.SUCCESS;
-                }
-
-                boolean validBase = rse.getBase();
-                if(!validBase) {
-                    rse.getAnchor().delink();
-                    player.sendOverlayMessage(Component.literal("Linking Ritual: Failed due to being unable to validate contained volume"));
-                    return InteractionResult.SUCCESS;
-                }
-
-                if(level.isClientSide()) {
-                    player.sendOverlayMessage(Component.literal("Completed Ritual Circle, Size: " + (rse.getChainIndex())));
-                }
-            } else if(rse.getAnchor() != null){
-                rse.getAnchor().delink();
+        if(rae != null && player != null) {
+            if(!rae.isLinked()) {
+                rae.link();
+                player.sendOverlayMessage(Component.literal("Linking Ritual: Size " + rae.getRitualSize()));
+            } else {
+                rae.delink();
             }
         }
+
+        if(rse != null && player != null) {
+            rse.delink();
+        }
+
+
         return super.useOn(context);
     }
 
-    // TODO: cast bound ritual
+    /* TODO: cast bound ritual if it exists */
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public @NonNull InteractionResult use(@NonNull Level level, @NonNull Player player, @NonNull InteractionHand hand) {
         return super.use(level, player, hand);
+    }
+
+    @Override
+    public void hurtEnemy(@NonNull ItemStack itemStack, @NonNull LivingEntity mob, @NonNull LivingEntity attacker) {
+        super.hurtEnemy(itemStack, mob, attacker);
+    }
+
+    @Override
+    public boolean mineBlock(@NonNull ItemStack itemStack, @NonNull Level level, @NonNull BlockState state, @NonNull BlockPos pos, @NonNull LivingEntity owner) {
+        return super.mineBlock(itemStack, level, state, pos, owner);
     }
 }

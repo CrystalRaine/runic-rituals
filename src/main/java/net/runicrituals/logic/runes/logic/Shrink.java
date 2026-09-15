@@ -6,18 +6,8 @@ import net.runicrituals.logic.runes.form.FormRune;
 
 public class Shrink extends ModifierRune {
     @Override
-    public void applyModificationToElement(ElementRune rune) {
-
-    }
-
-    @Override
-    public void applyModificationToAction(ActionRune rune) {
-
-    }
-
-    @Override
     public void applyModificationToForm(FormRune rune) {
-        //        TODO: Reimplement
+        rune.setRadius(rune.getRadius() * 0.75f);
     }
 
     @Override

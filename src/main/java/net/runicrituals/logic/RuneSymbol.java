@@ -4,7 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.registries.components.RuneDataComponent;
+import net.runicrituals.logic.runes.RuneType;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;
@@ -13,47 +13,54 @@ public enum RuneSymbol implements StringRepresentable {
 //    Elemental Runes
 //    using ids rather than ordinals so that adding new ones can't break things,
 //    as long as you don't update the old ones
-    ARCANE(0,ChatFormatting.AQUA, "Arcane", List.of(RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND)),
-    KINETIC(1, ChatFormatting.GRAY, "Kinetic", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.ETCHED, RuneInlayMaterial.NETHERITE, RuneInlayMaterial.SOUL, RuneInlayMaterial.BREEZE)),
-    THERMAL(2, ChatFormatting.RED, "Thermal", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.COPPER, RuneInlayMaterial.BLAZE, RuneInlayMaterial.ICE)),
-    ELECTRIC(3, ChatFormatting.YELLOW, "Electric", List.of(RuneInlayMaterial.GOLD, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.COPPER, RuneInlayMaterial.REDSTONE)),
-    LIGHT(4, ChatFormatting.WHITE, "Light", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND, RuneInlayMaterial.OBSIDIAN)),
-    MATTER(5, ChatFormatting.GOLD, "Matter", List.of(RuneInlayMaterial.NETHERITE, RuneInlayMaterial.OBSIDIAN)),
-    SPACE(6, ChatFormatting.LIGHT_PURPLE, "Space", List.of(RuneInlayMaterial.ECHO, RuneInlayMaterial.CHORUS)),
-    TIME(7, ChatFormatting.GREEN, "Time", List.of(RuneInlayMaterial.ECHO)),
+    ARCANE(0, RuneType.ELEMENT, ChatFormatting.AQUA, "Arcane", List.of(RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND)),
+    KINETIC(1, RuneType.ELEMENT, ChatFormatting.GRAY, "Kinetic", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.ETCHED, RuneInlayMaterial.NETHERITE, RuneInlayMaterial.SOUL, RuneInlayMaterial.BREEZE)),
+    THERMAL(2, RuneType.ELEMENT, ChatFormatting.RED, "Thermal", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.COPPER, RuneInlayMaterial.BLAZE, RuneInlayMaterial.ICE)),
+    ELECTRIC(3, RuneType.ELEMENT, ChatFormatting.YELLOW, "Electric", List.of(RuneInlayMaterial.GOLD, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.COPPER, RuneInlayMaterial.REDSTONE)),
+    LIGHT(4, RuneType.ELEMENT, ChatFormatting.WHITE, "Light", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND, RuneInlayMaterial.OBSIDIAN)),
+    MATTER(5, RuneType.ELEMENT, ChatFormatting.GOLD, "Matter", List.of(RuneInlayMaterial.NETHERITE, RuneInlayMaterial.OBSIDIAN)),
+    SPACE(6, RuneType.ELEMENT, ChatFormatting.LIGHT_PURPLE, "Space", List.of(RuneInlayMaterial.ECHO, RuneInlayMaterial.CHORUS)),
+    TIME(7, RuneType.ELEMENT, ChatFormatting.GREEN, "Time", List.of(RuneInlayMaterial.ECHO)),
 
 //    Action Runes
-    MANIFEST(8, ChatFormatting.BLUE, "Manifest Action"),
-    SACRIFICE(9, ChatFormatting.BLUE, "Sacrifice Action"),
+    MANIFEST(8, RuneType.ACTION, ChatFormatting.BLUE, "Manifest Action"),
+    SACRIFICE(9, RuneType.ACTION, ChatFormatting.BLUE, "Sacrifice Action"),
 
 //    Form Runes
-    CUBE(13, ChatFormatting.GOLD, "Prism Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.GOLD, RuneInlayMaterial.DIAMOND, RuneInlayMaterial.GLASS)),
-    SHEET(20, ChatFormatting.GOLD, "Sheet Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.COPPER, RuneInlayMaterial.BLAZE, RuneInlayMaterial.GLASS)),
+    CUBE(13, RuneType.FORM, ChatFormatting.GOLD, "Prism Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.GOLD, RuneInlayMaterial.DIAMOND, RuneInlayMaterial.GLASS)),
+    SHEET(20, RuneType.FORM, ChatFormatting.GOLD, "Sheet Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.COPPER, RuneInlayMaterial.BLAZE, RuneInlayMaterial.GLASS)),
 
 //    Logical Runes
-    CONTROL(15, ChatFormatting.WHITE, "Control Logic", List.of(RuneInlayMaterial.NETHERITE, RuneInlayMaterial.ECHO, RuneInlayMaterial.CHORUS)),
-    BIND(10, ChatFormatting.WHITE, "Bind Logic", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.IRON, RuneInlayMaterial.ICE)),
-    BOLT(11, ChatFormatting.WHITE, "Bolt Logic", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
-    GROW(16, ChatFormatting.WHITE, "Grow Logic", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
-    SHRINK(17, ChatFormatting.WHITE, "Shrink Logic", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.ICE, RuneInlayMaterial.SOUL)),
+    CONTROL(15, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Control Logic", List.of(RuneInlayMaterial.NETHERITE, RuneInlayMaterial.ECHO, RuneInlayMaterial.CHORUS)),
+    BIND(10, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Bind Logic", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.IRON, RuneInlayMaterial.ICE)),
+    BOLT(11, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Bolt Logic", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
+    GROW(16, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Grow Logic", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
+    SHRINK(17, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Shrink Logic", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.ICE, RuneInlayMaterial.SOUL)),
 ;
     private final int id;
+    private final RuneType runeType;
     private final String name;
     private final ChatFormatting formatting;
     private static final Map<String, Identifier> identifiers = new HashMap<>();
     private List<RuneInlayMaterial> materialsAllowed = new ArrayList<>();
 
-    RuneSymbol(int id, ChatFormatting formatting, String name){
+    RuneSymbol(int id, RuneType type, ChatFormatting formatting, String name){
         this.id = id;
         this.name = name;
         this.formatting = formatting;
+        this.runeType = type;
     }
 
-    RuneSymbol(int id, ChatFormatting formatting, String name, List<RuneInlayMaterial> materialsAllowed){
+    RuneSymbol(int id, RuneType type, ChatFormatting formatting, String name, List<RuneInlayMaterial> materialsAllowed){
         this.id = id;
         this.name = name;
         this.formatting = formatting;
         this.materialsAllowed = materialsAllowed;
+        this.runeType = type;
+    }
+
+    public RuneType getRuneType() {
+        return runeType;
     }
 
     public List<RuneInlayMaterial> getMaterialsAllowed() {

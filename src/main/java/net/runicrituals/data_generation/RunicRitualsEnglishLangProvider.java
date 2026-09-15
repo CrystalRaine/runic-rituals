@@ -33,6 +33,7 @@ public class RunicRitualsEnglishLangProvider extends FabricLanguageProvider {
 
         translationBuilder.add("block.runic-rituals.rune_engraver",                 "Rune Engraver");
         translationBuilder.add("block.runic-rituals.runeslate",                     "Runeslate");
+        translationBuilder.add("block.runic-rituals.ritual_anchor",                 "Ritual Anchor");
         translationBuilder.add("block.runic-rituals.decaying_light",                "Decaying Light");
         translationBuilder.add("block.runic-rituals.shadow",                        "Shadow");
         translationBuilder.add("block.runic-rituals.decaying_shadow",               "Decaying Shadow");

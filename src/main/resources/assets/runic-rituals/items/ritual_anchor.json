@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "runic-rituals:block/rune_obelisk"
+    "model": "runic-rituals:block/ritual_anchor"
   }
 }

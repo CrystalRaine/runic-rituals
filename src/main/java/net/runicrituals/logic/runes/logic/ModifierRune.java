@@ -12,7 +12,7 @@ public abstract class ModifierRune extends Rune {
 
     @Override
     public RuneType getType() {
-        return RuneType.MODIFIER;
+        return RuneType.FORM_MODIFIER;
     }
 
     public Rune getRune() {
@@ -21,16 +21,13 @@ public abstract class ModifierRune extends Rune {
 
     public void applyModification(Rune rune) {
         switch (rune.getType()) {
-            case ELEMENT -> applyModificationToElement((ElementRune)rune);
-            case ACTION -> applyModificationToAction((ActionRune) rune);
             case FORM -> applyModificationToForm((FormRune) rune);
-            case MODIFIER -> {
+            case FORM_MODIFIER -> {
                 this.applyModification(((ModifierRune)rune).getRune());
             }
+            default -> {}
         }
     }
 
-    abstract void applyModificationToElement(ElementRune rune);
-    abstract void applyModificationToAction(ActionRune rune);
     abstract void applyModificationToForm(FormRune rune);
 }

@@ -16,12 +16,12 @@ import java.util.List;
 
 public class CastingBlock {
 
-    private List<ModifierRune> formModifiers;
+    private List<ModifierRune> formModifiers = new ArrayList<>();
     private final FormRune form;
     private final List<ActionNode> actions = new ArrayList<>();
     public double intensity = 0;
 
-    private List<BlockPos> targets = new ArrayList<>();
+    private final List<BlockPos> targets = new ArrayList<>();
     private int cursorPos = 0;
     private void resetCursor() {
         cursorPos = 0;
@@ -29,6 +29,7 @@ public class CastingBlock {
     private void resetIntensity() {
         intensity = RuneSequence.BASE_INTENSITY;
     }
+
     private BlockPos getTarget(FormRune form) {
         if(cursorPos >= targets.size()) {
             BlockPos targetBlock = form.getTargetBlock();
@@ -38,13 +39,35 @@ public class CastingBlock {
             return targets.get(cursorPos);
         }
     }
+    
     private void resetTargets(){
         targets.clear();
+    }
+
+    public int runeCount() {
+        if(isUncastable()) return 0;
+        int count = 0;
+
+        count += (form == null ? 0 : 1); // form exists
+        count += formModifiers.size();   // modifier count
+
+        for(ActionNode action : actions) { // count up actions and elements
+            count += action.count();
+        }
+
+        return count;
     }
 
     private static class ActionNode {
         private ActionRune action;
         private final List<ElementRune> elements = new ArrayList<>();
+
+        public int count() {
+            int count = 0;
+            count += action == null ? 0 : 1;
+            count += elements.size();
+            return count;
+        }
     }
 
     public CastingBlock(FormRune form) {
@@ -151,6 +174,11 @@ public class CastingBlock {
         } else {
             return "";
         }
+    }
+
+    @Override
+    public String toString() {
+        return form.name() + actions.stream().map(a -> a.action.getActionType().toString() + (a.elements.stream().map(ElementRune::getType).map(Object::toString).reduce((c,d)->c + " " + d))).reduce((a,b)->a + " " + b);
     }
 
     public boolean isUncastable() {

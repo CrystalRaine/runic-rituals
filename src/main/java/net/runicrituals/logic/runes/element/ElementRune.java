@@ -205,6 +205,9 @@ public abstract class ElementRune extends Rune {
     }
 
     static void createParticle(Level level, BlockPos pos, ParticleOptions particleType, Vec3 velocityScaler) {
+
+        if(pos == null) return;
+
         if(level.getGameTime() % 5 == 0) {
             RandomSource random = level.getRandom();
             level.addParticle(

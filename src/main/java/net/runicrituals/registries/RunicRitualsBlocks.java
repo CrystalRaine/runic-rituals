@@ -23,6 +23,7 @@ import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.blocks.lights.DecayingLightBlock;
 import net.runicrituals.registries.blocks.lights.DecayingShadowBlock;
 import net.runicrituals.registries.blocks.lights.ShadowBlock;
+import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchor;
 import net.runicrituals.registries.blocks.rune_engraver.RuneEngraver;
 import net.runicrituals.registries.blocks.rune_slate.Runeslate;
 
@@ -34,12 +35,14 @@ public class RunicRitualsBlocks {
 
     public static final BlockItemId RUNE_ENGRAVER_KEY = createWithId("rune_engraver");
     public static final BlockItemId RUNESLATE_KEY = createWithId("runeslate");
+    public static final BlockItemId RITUAL_ANCHOR_KEY = createWithId("ritual_anchor");
     public static final BlockItemId DECAYING_LIGHT_KEY = createWithId("decaying_light");
     public static final BlockItemId SHADOW_KEY = createWithId("shadow");
     public static final BlockItemId DECAYING_SHADOW_KEY = createWithId("decaying_shadow");
 
     public static final Block RUNE_ENGRAVER = register(RUNE_ENGRAVER_KEY, RuneEngraver::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(1.5f).noOcclusion());
     public static final Block RUNESLATE = register(RUNESLATE_KEY, Runeslate::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(1f).noOcclusion());
+    public static final Block RITUAL_ANCHOR = register(RITUAL_ANCHOR_KEY, RitualAnchor::new, BlockBehaviour.Properties.of().sound(SoundType.STONE).destroyTime(1.5f).noOcclusion());
     public static final Block DECAYING_LIGHT = register(
         DECAYING_LIGHT_KEY,
         DecayingLightBlock::new,
@@ -79,6 +82,7 @@ public class RunicRitualsBlocks {
 
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register((tab) -> tab.accept(RUNE_ENGRAVER));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.BUILDING_BLOCKS).register((tab) -> tab.accept(RUNESLATE));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.BUILDING_BLOCKS).register((tab) -> tab.accept(RITUAL_ANCHOR));
     }
 
     private static BlockItemId createWithId(String name) {

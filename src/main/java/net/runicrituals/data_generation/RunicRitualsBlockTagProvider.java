@@ -33,6 +33,7 @@ public class RunicRitualsBlockTagProvider extends FabricTagsProvider.BlockTagsPr
 
         builder(MINEABLE_WITH_WAND)
                 .add(RunicRitualsBlocks.RUNESLATE_KEY)
+                .add(RunicRitualsBlocks.RITUAL_ANCHOR_KEY)
                 .add(RunicRitualsBlocks.RUNE_ENGRAVER_KEY)
         ;
     }

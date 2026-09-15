@@ -35,7 +35,7 @@ import java.util.Objects;
 
 public class Runeslate extends BaseEntityBlock {
 
-    private static final VoxelShape SLATE = net.minecraft.world.level.block.Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
+    public static final VoxelShape SLATE = net.minecraft.world.level.block.Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     public Runeslate(BlockBehaviour.Properties properties) {
@@ -58,9 +58,8 @@ public class Runeslate extends BaseEntityBlock {
     }
 
     public static RuneslateEntity getBlockEntity(@NonNull Level level, @NonNull BlockPos pos) {
-        BlockEntity re = level.getBlockEntity(pos);
-        if(re instanceof RuneslateEntity) {
-            return (RuneslateEntity) re;
+        if(level.getBlockEntity(pos) instanceof RuneslateEntity re) {
+            return re;
         }
         return null;
     }
@@ -93,10 +92,8 @@ public class Runeslate extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(final @NonNull BlockPlaceContext context) {
-
         BlockState state = this.defaultBlockState();
         return state.setValue(FACING, context.getHorizontalDirection().getOpposite());
-
     }
 
     @Override

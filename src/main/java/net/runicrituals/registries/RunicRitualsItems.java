@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.components.HoverTextComponent;
+import net.runicrituals.registries.items.ManameterItem;
 import net.runicrituals.registries.items.RunicRitualsItem;
 import net.runicrituals.registries.items.WandItem;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
@@ -30,9 +31,20 @@ import java.util.function.UnaryOperator;
 
 public class RunicRitualsItems {
 
+    public static final ResourceKey<Item> MANAMETER_KEY = resourceKey("manameter");
     public static final ResourceKey<Item> BASIC_WAND_KEY = resourceKey("wand");
     public static final ResourceKey<Item> DIAMOND_WAND_KEY = resourceKey("diamond_wand");
     public static final ResourceKey<Item> ECHO_WAND_KEY = resourceKey("echo_wand");
+
+    public static final Item MANAMETER = registerItem(MANAMETER_KEY,
+            ManameterItem::new,
+            new ManameterItem
+                    .RunicRitualsItemProperties()
+                    .stacksTo(1)
+                    .rarity(Rarity.UNCOMMON)
+                    .repairable(Items.COPPER_INGOT)
+                    .component(RunicRitualsComponents.HOVER_TEXT_COMPONENT, new HoverTextComponent("manameter"))
+    );
 
     public static final Item BASIC_WAND = registerItem(BASIC_WAND_KEY,
             WandItem::new,
@@ -77,6 +89,7 @@ public class RunicRitualsItems {
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register((tab)-> {tab.accept(BASIC_WAND);});
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register((tab)-> {tab.accept(DIAMOND_WAND);});
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register((tab)-> {tab.accept(ECHO_WAND);});
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register((tab)-> {tab.accept(MANAMETER);});
     }
 
     public static Item registerItem(String name, Function<Item.Properties, Item> itemFactory, Item.Properties settings) {

@@ -18,13 +18,13 @@ import java.util.List;
 public class RuneSequence {
 
     public static final int BASE_INTENSITY = 1;
+    public static final int BASE_FORM_RADIUS = 4;
 
-    public static void run(Level level, ManaStorage mana, List<RuneDataComponent> runeData, List<BlockPos> areaBase, BlockPos min, BlockPos max) {
+    List<CastingBlock> castingBlocks = new ArrayList<>();
 
-        List<Rune> runes = runeData.stream().map(rd -> Rune.create(RuneSymbol.getSymbolFromId(rd.runeSymbol()), RuneInlayMaterial.getElementFromId(rd.inlay()))).toList();
-        List<CastingBlock> castingBlocks = createCastingBlocks(runes, level, areaBase, min, max);
+    public void run(Level level, ManaStorage mana) {
 
-        for(CastingBlock castingBlock : castingBlocks) {
+        for(CastingBlock castingBlock : this.castingBlocks) {
             if(castingBlock.isUncastable()) continue;
 
             castingBlock.applyModifiers();
@@ -36,14 +36,20 @@ public class RuneSequence {
                 cost = 0;
             }
 
-            if(mana.applyManaValue((int) cost)) {
+            if(mana.applyManaValue(cost)) {
                 castingBlock.cast(level);
             }
         }
     }
 
-    public static List<CastingBlock> createCastingBlocks(List<Rune> runes, Level level, List<BlockPos> base, BlockPos min, BlockPos max) {
-        List<CastingBlock> castingBlocks = new ArrayList<>();
+    public void createCastingBlocks(Level level, List<RuneDataComponent> runeData, BlockPos ritualPosition) {
+
+        List<Rune> runes = runeData
+                .stream()
+                .map(rd -> Rune.create(RuneSymbol.getSymbolFromId(rd.runeSymbol()), RuneInlayMaterial.getElementFromId(rd.inlay())))
+                .toList();
+
+        castingBlocks = new ArrayList<>();
         List<ModifierRune> modifierRuneBuffer = new ArrayList<>();
 
         for(Rune r : runes) {
@@ -56,18 +62,39 @@ public class RuneSequence {
                     castingBlocks.add(new CastingBlock((FormRune) r));
                     castingBlocks.getLast().setFormModifiers(modifierRuneBuffer);
                     modifierRuneBuffer = new ArrayList<>();
-                    ((FormRune) r).setProperties(level, base, min, max);
+                    ((FormRune) r).setProperties(level, ritualPosition, BASE_FORM_RADIUS);
                 }
-                case MODIFIER -> {
+                case FORM_MODIFIER -> {
                     modifierRuneBuffer.add((ModifierRune) r);
                 }
                 case ELEMENT -> {
                     if(castingBlocks.isEmpty()) continue;
                     castingBlocks.getLast().addElement((ElementRune) r);
                 }
+                default -> {}
             }
         }
+    }
 
-        return castingBlocks;
+    @Override
+    public String toString() {
+        StringBuilder r = new StringBuilder();
+        for(CastingBlock b : castingBlocks){
+            r.append(b);
+        }
+
+        return r.toString();
+    }
+
+    public int size() {
+
+        int count = 0;
+
+        for(CastingBlock block : castingBlocks) {
+            if(block.isUncastable()) continue;
+            count += block.runeCount();
+        }
+
+        return count;
     }
 }

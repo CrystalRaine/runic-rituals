@@ -43,6 +43,16 @@ public class RunicRitualsRecipeProvider extends FabricRecipeProvider {
                     Items.CHISELED_DEEPSLATE
                 );
 
+                shaped(RecipeCategory.MISC, RunicRitualsBlocks.RITUAL_ANCHOR)
+                        .pattern("o/o")
+                        .pattern("/#/")
+                        .pattern("o/o")
+                        .define('#', Items.COPPER_INGOT)
+                        .define('/', Items.AMETHYST_SHARD)
+                        .define('o', Items.QUARTZ_BLOCK)
+                        .unlockedBy(getHasName(Items.AMETHYST_SHARD), has(Items.AMETHYST_SHARD))
+                        .save(output);
+
                 shaped(RecipeCategory.MISC, RunicRitualsItems.BASIC_WAND)
                         .pattern(" #o")
                         .pattern(" /#")
