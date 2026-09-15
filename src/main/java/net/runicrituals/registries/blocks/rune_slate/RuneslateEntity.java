@@ -68,7 +68,7 @@ public class RuneslateEntity extends BlockEntity {
     @Override
     public void setRemoved() {
         assert level != null;
-        if(!(!level.isClientSide() && Objects.requireNonNull(level.getServer()).isCurrentlySaving())) {
+        if(level.isClientSide() || !(Objects.requireNonNull(level.getServer()).isCurrentlySaving())) {
             if(getAnchor() != null) {
                 getAnchor().delink();
 
@@ -201,7 +201,7 @@ public class RuneslateEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, RuneslateEntity runeslateEntity) {
 
-        if(level.getGameTime() % 10 == 0) {
+        if(level.getGameTime() % 5 == 0 && runeslateEntity.isLinked()) {
             for (BlockPos bp : runeslateEntity.arguments) {
                 runeslateEntity.createParticle(bp);
             }
@@ -235,7 +235,7 @@ public class RuneslateEntity extends BlockEntity {
     public void clearOutData() {
         chainUUID = null;
         linked = false;
-        arguments.clear();
+        arguments = new ArrayList<>();
         anchorPos = null;
         prev = null;
 

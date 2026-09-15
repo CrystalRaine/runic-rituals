@@ -5,6 +5,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.mixin_hooks.EntityAdditions;
@@ -22,7 +23,7 @@ public class Kinetic extends ElementRune {
 
     @Override
     public void applyActionOnEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
-
+        RunicRituals.LOGGER.info("Applying Kinetic to: {}", entity.getName());
         scaleEntityMotion((EntityAdditions) entity, action, block);
     }
 

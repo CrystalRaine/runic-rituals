@@ -6,6 +6,8 @@ import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.element.ElementRune;
 import net.runicrituals.logic.runes.form.FormRune;
 
+import java.util.Objects;
+
 public abstract class ModifierRune extends Rune {
 
     Rune targetRune = null;
@@ -20,12 +22,8 @@ public abstract class ModifierRune extends Rune {
     }
 
     public void applyModification(Rune rune) {
-        switch (rune.getType()) {
-            case FORM -> applyModificationToForm((FormRune) rune);
-            case FORM_MODIFIER -> {
-                this.applyModification(((ModifierRune)rune).getRune());
-            }
-            default -> {}
+        if (Objects.requireNonNull(rune.getType()) == RuneType.FORM) {
+            applyModificationToForm((FormRune) rune);
         }
     }
 

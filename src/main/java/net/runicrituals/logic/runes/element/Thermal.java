@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;
@@ -33,6 +34,8 @@ import net.runicrituals.logic.runes.form.FormRune;
  *</pre>
  */
 public class Thermal extends ElementRune{
+
+    private static final int INTENSITY_FOR_BURN = 0;
 
     public Thermal() {
         super();
@@ -62,7 +65,7 @@ public class Thermal extends ElementRune{
                 if (level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, position) && level.getBlockState(position).is(Blocks.ICE)) return defaultCosts(action);
 
                 BlockState fire = BaseFireBlock.getState(level, position);
-                boolean fireCanSurvive = fire.canSurvive(level, position);
+                boolean fireCanSurvive = fire.canSurvive(level, position.below());
                 if (block.intensity >= 2 && level.getBlockState(position).canBeReplaced() && !level.getBlockState(position).is(Blocks.LAVA) && !level.getBlockState(position).is(Blocks.WATER) && fireCanSurvive) return defaultCosts(action);
             }
             case null, default -> {}
@@ -101,7 +104,7 @@ public class Thermal extends ElementRune{
                 if(block.intensity >= 6) replaceBlock(level, position, Blocks.CRYING_OBSIDIAN, Blocks.LAVA);
 
                 BlockState fire = BaseFireBlock.getState(level, position);
-                boolean fireCanSurvive = fire.canSurvive(level, position);
+                boolean fireCanSurvive = fire.canSurvive(level, position.below());
                 if (block.intensity >= 2 && level.getBlockState(position).canBeReplaced() && !level.getBlockState(position).is(Blocks.LAVA) && !level.getBlockState(position).is(Blocks.WATER) && fireCanSurvive){
                     level.setBlockAndUpdate(position, fire);
                 }
@@ -117,11 +120,11 @@ public class Thermal extends ElementRune{
         if(entity instanceof ItemEntity) return 0;
         switch (action.getActionType()) {
             case SACRIFICE -> {
-                if(entity.getType().fireImmune()) return 0;
+                if(!entity.canFreeze()) return 0;
                 return defaultCosts(action);
             }
             case MANIFEST -> {
-                if(!entity.canFreeze()) return 0;
+                if(entity.getType().fireImmune() || block.intensity <= INTENSITY_FOR_BURN) return 0;
                 return defaultCosts(action);
             }
         }
@@ -133,16 +136,17 @@ public class Thermal extends ElementRune{
         if(entity instanceof ItemEntity) return;
         switch (action.getActionType()) {
             case SACRIFICE -> {
+                if(!entity.canFreeze()) return;
                 if(entity.getType().fireImmune()) return;
-                if (entity instanceof LivingEntity && !level.isClientSide() && entity.getTicksFrozen() < 160) {
+                if (entity instanceof LivingEntity && entity.getTicksFrozen() < 160) {
                     entity.setTicksFrozen(entity.getTicksFrozen() + (int)(block.intensity));
                 }
             }
             case MANIFEST -> {
-                if(!entity.canFreeze()) return;
-                if (entity instanceof LivingEntity && !level.isClientSide()) {
+                if(entity.getType().fireImmune()) return;
+                if (entity instanceof LivingEntity) {
                     entity.setTicksFrozen(0); // no freezing while on fire, unless you set up a 140+ effective intensity ritual : )
-                    if(block.intensity > 1) {
+                    if(block.intensity > INTENSITY_FOR_BURN) {
                         entity.setRemainingFireTicks((int)block.intensity * 20);
                     }
                 }

@@ -5,7 +5,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.Rune;
 import net.runicrituals.logic.runes.RuneType;
 import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchor;
@@ -35,6 +34,10 @@ public abstract class FormRune extends Rune {
     BlockPos actionLocation;
     float radius;
 
+    public void setDefaultRadius(){
+        radius = 4;
+    }
+
     public void setProperties(Level level, BlockPos actionLocation, float radius) {
         this.level = level;
         this.actionLocation = actionLocation;
@@ -42,23 +45,23 @@ public abstract class FormRune extends Rune {
     }
 
     public AABB getAABB() {
-        return new AABB(actionLocation).inflate(radius);
+        return new AABB(actionLocation).inflate(Math.max(0, radius - 0.5f));
     }
 
     public Stream<BlockPos> getAllBlocks() {
-        return BlockPos.betweenClosedStream(getAABB()).map(BlockPos::immutable).filter(b -> !level.getBlockState(b).is(Blocks.AIR));
+        return BlockPos.betweenClosedStream(getAABB()).map(BlockPos::immutable);
     }
 
     public Stream<BlockPos> getAllNonAirBlocks() {
         return getAllBlocks().filter(b -> !level.getBlockState(b).is(Blocks.AIR));
     }
 
-    public BlockPos getTargetBlock() {
+    public BlockPos getBlockTarget() {
 
         if(validTargets.isEmpty()) {
             validTargets = getAllBlocks()
-                    .filter(b -> RitualAnchor.getBlockEntity(level, b) == null && Runeslate.getBlockEntity(level, b) == null)
-                    .toList();
+                .filter(b -> RitualAnchor.getBlockEntity(level, b) == null && Runeslate.getBlockEntity(level, b) == null)
+                .toList();
         }
 
         BlockPos pos = getRandom(level.getRandom(), validTargets);

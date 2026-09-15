@@ -13,6 +13,6 @@ public class Shrink extends ModifierRune {
     @Override
     public double applyEfficiencyToCost(double cost) {
 //        yeah, this isn't technically scaled properly, no discount here : (
-        return cost * 0.5f;
+        return cost * 0.95f;
     }
 }

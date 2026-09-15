@@ -187,10 +187,10 @@ public abstract class ElementRune extends Rune {
     protected double defaultCosts(ActionRune action) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
-                return BASE_RUNE_MANA_COST * invertEfficiency();
+                return BASE_RUNE_MANA_COST * efficiency();
             }
             case MANIFEST -> {
-                return BASE_RUNE_MANA_COST * efficiency();
+                return BASE_RUNE_MANA_COST * invertEfficiency();
             }
         }
         return 0;

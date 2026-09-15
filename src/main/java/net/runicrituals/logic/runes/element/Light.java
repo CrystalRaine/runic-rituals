@@ -70,7 +70,7 @@ public class Light extends ElementRune{
     @Override
     public double proposeCostForEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
         if(entity instanceof Player && block.intensity > INTENSITY_FOR_STATUS_EFFECTS) {
-            return defaultCosts(action) / 2;
+            return defaultCosts(action);
         }
         return 0;
     }
@@ -81,10 +81,10 @@ public class Light extends ElementRune{
         if(entity instanceof Player && block.intensity > INTENSITY_FOR_STATUS_EFFECTS) {
             switch(action.getActionType()) {
                 case MANIFEST -> {
-                    ((Player) entity).addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION,  3 * 20 * ((int) block.intensity - INTENSITY_FOR_STATUS_EFFECTS), 0, true, true));
+                    ((Player) entity).addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION,  10 * 20 * ((int) block.intensity - INTENSITY_FOR_STATUS_EFFECTS) + 3, 0, true, true));
                 }
                 case SACRIFICE -> {
-                    ((Player) entity).addEffect(new MobEffectInstance(MobEffects.DARKNESS,  3 * 20 * ((int) block.intensity - INTENSITY_FOR_STATUS_EFFECTS), 0, true, true));
+                    ((Player) entity).addEffect(new MobEffectInstance(MobEffects.DARKNESS,  10 * 20 * ((int) block.intensity - INTENSITY_FOR_STATUS_EFFECTS) + 3, 0, true, true));
                 }
                 default -> {}
             }

@@ -24,7 +24,7 @@ public class Arcane extends ElementRune {
 
     @Override
     public double proposeCostForIntensityChange(ActionRune action, CastingBlock block) {
-        return defaultCosts(action) / 3;
+        return 0;
     }
 
     @Override

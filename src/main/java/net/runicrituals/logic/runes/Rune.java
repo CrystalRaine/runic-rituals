@@ -39,10 +39,10 @@ public abstract class Rune {
     public abstract double applyEfficiencyToCost(double cost);
 
     protected double efficiency() {
-        return 1 + (1 - material.getEfficiency());
+        return 1 - material.getEfficiency();
     }
     protected double invertEfficiency() {
-        return material.getEfficiency();
+        return 1 + efficiency();
     }
 
     public static Rune create(RuneSymbol symbol, RuneInlayMaterial material) {
@@ -67,9 +67,6 @@ public abstract class Rune {
             case MATTER -> {
                 createdRune =  new Matter();
             }
-            case SPACE -> {
-                createdRune =  new VoidRune();
-            }
             case TIME -> {
                 createdRune =  new Time();
             }
@@ -79,26 +76,23 @@ public abstract class Rune {
             case SACRIFICE -> {
                 createdRune =  new Sacrifice();
             }
-            case BIND -> {
-                createdRune = new VoidRune();
-            }
             case CUBE -> {
                 createdRune =  new Prism();
             }
             case SHEET -> {
                 createdRune =  new Sheet();
             }
-            case CONTROL -> {
-                createdRune =  new VoidRune();
-            }
-            case BOLT -> {
-                createdRune =  new VoidRune();
+            case DOME -> {
+                createdRune =  new Dome();
             }
             case GROW -> {
                 createdRune =  new Grow();
             }
             case SHRINK -> {
                 createdRune =  new Shrink();
+            }
+            default -> {
+                createdRune = new VoidRune();
             }
         }
 

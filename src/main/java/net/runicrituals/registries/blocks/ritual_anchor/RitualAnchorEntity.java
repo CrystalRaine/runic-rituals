@@ -16,6 +16,8 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.ManaStorage;
+import net.runicrituals.logic.runes.ManaStoringBlock;
+import net.runicrituals.logic.runes.Rune;
 import net.runicrituals.logic.runes.RuneType;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import net.runicrituals.registries.blocks.rune_slate.Runeslate;
@@ -30,7 +32,7 @@ import java.util.UUID;
 
 import static net.runicrituals.logic.Util.delta;
 
-public class RitualAnchorEntity extends BlockEntity {
+public class RitualAnchorEntity extends BlockEntity implements ManaStoringBlock {
     private static final int RITUAL_SIZE_MAX = 50;
 
     UUID chainUUID = null;
@@ -39,7 +41,7 @@ public class RitualAnchorEntity extends BlockEntity {
     List<BlockPos> chainStarts = new ArrayList<>();
     ManaStorage mana = new ManaStorage();
 
-    RuneSequence sequence = new RuneSequence();
+    RuneSequence sequence = null;
 
     public RitualAnchorEntity(BlockPos worldPosition, BlockState blockState) {
         super(RunicRitualsBlockEntities.RITUAL_ANCHOR_BLOCK_ENTITY, worldPosition, blockState);
@@ -47,12 +49,12 @@ public class RitualAnchorEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, RitualAnchorEntity blockEntity) {
 
-        if(blockEntity.sequence == null && level.getGameTime() % 20 == 0) {
+        if(blockEntity.sequence == null && level.getGameTime() % 20 == 0 && blockEntity.linked) {
             blockEntity.sequence = blockEntity.assembleSequence();
         }
 
-        if(blockEntity.sequence.size() == blockEntity.runeChainSize) {
-            if (level.isClientSide() && blockEntity.isLinked() && level.getGameTime() % 10 == 0) {
+        if(blockEntity.sequence != null && blockEntity.sequence.size() == blockEntity.runeChainSize) {
+            if (level.isClientSide() && blockEntity.isLinked() && level.getGameTime() % 5 == 0) {
                 blockEntity.createParticle();
 
                 for (BlockPos chainStart : blockEntity.chainStarts) {
@@ -67,7 +69,7 @@ public class RitualAnchorEntity extends BlockEntity {
     @Override
     public void setRemoved() {
         assert level != null;
-        if(!(!level.isClientSide() && Objects.requireNonNull(level.getServer()).isCurrentlySaving())) {
+        if(level.isClientSide() || !(Objects.requireNonNull(level.getServer()).isCurrentlySaving())) {
             delink();
         }
         super.setRemoved();
@@ -93,9 +95,9 @@ public class RitualAnchorEntity extends BlockEntity {
         sequence = new RuneSequence();
         buildChains();
 
-//        simple DFS search through tree built in buildChains.
-//        each element touched is added to runeDataComponents,
-//        to be used to create casting blocks in this.sequence
+        // simple DFS search through tree built in buildChains.
+        // each element touched is added to runeDataComponents,
+        // to be used to create casting blocks in this.sequence
         List<RuneDataComponent> runeDataComponents = new ArrayList<>();
         List<BlockPos> runeslateStack = new ArrayList<>(chainStarts);
         while(!runeslateStack.isEmpty()) {
@@ -137,6 +139,7 @@ public class RitualAnchorEntity extends BlockEntity {
      */
     private void buildChains() {
 
+        int size = 0;
         List<BlockPos> posStack = new ArrayList<>();
         posStack.add(getBlockPos());
 
@@ -165,9 +168,14 @@ public class RitualAnchorEntity extends BlockEntity {
                     if (rse == null
                             || rse.isLinked()
                             || !(
-                                    rsePrev == null ?
-                                        RuneType.ANCHOR.isValidChild(rse.getSymbolType()) :
-                                        rsePrev.getSymbolType().isValidChild(rse.getSymbolType())
+                                rsePrev == null ?
+                                    RuneType.ANCHOR.isValidChild(rse.getSymbolType()) :
+                                    rsePrev.getSymbolType().isValidChild(rse.getSymbolType())
+                            )
+                            || rsePrev == rse
+                            || !(
+                                rsePrev == null
+                                || rsePrev.getArguments().size() < rsePrev.getSymbolType().getChildCountMax()
                             )
                     ) {
                         break inner;
@@ -184,6 +192,11 @@ public class RitualAnchorEntity extends BlockEntity {
                     rse.setPrevious(pos);
                     rse.setChanged();
                     posStack.addLast(checkPos);
+                    if(size > RITUAL_SIZE_MAX) {
+                        delink();
+                        return;
+                    }
+                    size++;
                 }
 
                 int tx = x;
@@ -290,6 +303,7 @@ public class RitualAnchorEntity extends BlockEntity {
         return sequence.size();
     }
 
+    @Override
     public ManaStorage getMana() {
         return mana;
     }

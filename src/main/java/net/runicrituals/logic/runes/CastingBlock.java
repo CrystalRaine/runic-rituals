@@ -3,7 +3,6 @@ package net.runicrituals.logic.runes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
@@ -32,7 +31,7 @@ public class CastingBlock {
 
     private BlockPos getTarget(FormRune form) {
         if(cursorPos >= targets.size()) {
-            BlockPos targetBlock = form.getTargetBlock();
+            BlockPos targetBlock = form.getBlockTarget();
             targets.add(targetBlock);
             return targetBlock;
         } else {
@@ -83,6 +82,7 @@ public class CastingBlock {
     }
 
     private void applyFormModifiers() {
+        form.setDefaultRadius();
         for(ModifierRune modifier : formModifiers) {
             modifier.applyModification(form);
         }
@@ -127,12 +127,13 @@ public class CastingBlock {
         resetIntensity();
         resetCursor();
 
-        for(ActionNode actionNode : actions) {
-            for(ElementRune element : actionNode.elements) {
+        // use reversed lists to keep consistent-clockwise order
+        for(ActionNode actionNode : actions.reversed()) {
+            for(ElementRune element : actionNode.elements.reversed()) {
 
                 if(!level.isClientSide()) {
                     for (int i = 0; i < intensity; i++) {
-                        BlockPos targetBlock = form.getTargetBlock();
+                        BlockPos targetBlock = form.getBlockTarget();
                         if (targetBlock != null) {
                             element.applyActionOnBlock(level, form, targetBlock, actionNode.action, this);
                         }

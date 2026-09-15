@@ -24,6 +24,10 @@ public class ManaStorage {
         return mana;
     }
 
+    public void setMana(double val) {
+        mana = Math.clamp(val, 0, MAX_MANA);
+    }
+
     private boolean addMana(double mana) {
         if(mana < 0) return false;
         if((mana + this.mana) > MAX_MANA) return false;

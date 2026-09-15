@@ -25,7 +25,7 @@ public class Sheet extends FormRune {
     @Override
     public AABB getAABB() {
         Vec3 min = blockPosToVec3(actionLocation.offset((int) -radius, -1, (int) -radius));
-        Vec3 max = blockPosToVec3(actionLocation.offset((int) radius, 1, (int) radius));
+        Vec3 max = blockPosToVec3(actionLocation.offset((int) radius, -1, (int) radius));
         return new AABB(min, max);
     }
 

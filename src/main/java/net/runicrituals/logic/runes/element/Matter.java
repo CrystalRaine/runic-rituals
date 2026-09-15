@@ -50,13 +50,13 @@ public class Matter extends ElementRune {
         switch (action.getActionType()) {
             case SACRIFICE -> {
                 if(canDestroyBlock(level, position, block.intensity)) {
-                    return BASE_RUNE_MANA_COST * invertEfficiency() * 5;
+                    return defaultCosts(action) * 20;
                 }
                 return 0;
             }
             case MANIFEST -> {
                 if(level.getBlockState(position).canBeReplaced()){
-                    return BASE_RUNE_MANA_COST * efficiency() * 5;
+                    return defaultCosts(action) * 5;
                 } else {
                     return 0;
                 }
@@ -143,7 +143,7 @@ public class Matter extends ElementRune {
     private boolean canDestroyBlock(Level level, BlockPos pos, double intensity) {
         BlockState block = level.getBlockState(pos);
 
-        if(level.getBlockState(pos).is(Blocks.AIR)) {
+        if(level.getBlockState(pos).canBeReplaced()) {
             return false;
         }
 
