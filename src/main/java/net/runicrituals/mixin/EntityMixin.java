@@ -1,8 +1,12 @@
 package net.runicrituals.mixin;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.mixin_hooks.EntityAdditions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 
 @Mixin(Entity.class)
-public class EntityMixin implements EntityAdditions {
+public abstract class EntityMixin implements EntityAdditions {
 
     @Unique
     double deltaScale = 1;
@@ -26,10 +30,14 @@ public class EntityMixin implements EntityAdditions {
     @Shadow
     private Level level;
 
+    @Shadow
+    public abstract Component getName();
+
     @ModifyVariable(method = "move", at = @At("HEAD"), argsOnly = true, name = "delta")
     private Vec3 scaleDelta(Vec3 delta) {
 
-        if(!level.isClientSide())
+        // LIES! FOUL LIES! (the warning that is)
+        if(!level.isClientSide() && (Object) this instanceof Player)
             return delta;
 
         Vec3 newDelta = delta.scale(deltaScale);
@@ -42,9 +50,19 @@ public class EntityMixin implements EntityAdditions {
     }
 
     @Override
+    public String runic_rituals$getName() {
+        return ((Entity) (Object) this).getName().getString();
+    }
+
+    @Override
     public void runic_rituals$setDeltaScale(double ds) {
         deltaScale = ds;
-        boostEndTimestamp = level.getGameTime() + 1;
+        boostEndTimestamp = level.getGameTime() + 1 ;
+    }
+
+    @Override
+    public double runic_rituals$getDeltaScale() {
+        return deltaScale;
     }
 
     @Override
