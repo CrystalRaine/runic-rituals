@@ -30,11 +30,11 @@ public class RuneSequence {
             castingBlock.applyModifiers();
             double cost;
 
-            if(!level.isClientSide()) {
-                cost = castingBlock.proposeManaCost(level);
-            } else {
+//            if(!level.isClientSide()) {
+//                cost = castingBlock.proposeManaCost(level);
+//            } else {
                 cost = 0;
-            }
+//            }
 
             if(mana.applyManaValue(cost)) {
                 castingBlock.cast(level);

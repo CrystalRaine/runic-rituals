@@ -1,6 +1,7 @@
 package net.runicrituals.mixin;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.runicrituals.mixin_hooks.EntityAdditions;
@@ -29,7 +30,8 @@ public class EntityMixin implements EntityAdditions {
     @ModifyVariable(method = "move", at = @At("HEAD"), argsOnly = true, name = "delta")
     private Vec3 scaleDelta(Vec3 delta) {
 
-        if(!level.isClientSide())
+        // LIES! FOUL LIES! (the warning that is)
+        if(!level.isClientSide() && (Object) this instanceof Player)
             return delta;
 
         Vec3 newDelta = delta.scale(deltaScale);
