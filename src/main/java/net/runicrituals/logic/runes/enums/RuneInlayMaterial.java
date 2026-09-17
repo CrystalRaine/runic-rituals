@@ -1,4 +1,4 @@
-package net.runicrituals.logic;
+package net.runicrituals.logic.runes.enums;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.Item;
@@ -24,7 +24,8 @@ public enum RuneInlayMaterial {
     BREEZE(22, ChatFormatting.BLUE, "Breeze", Items.BREEZE_ROD, 2),
     COPPER(23, ChatFormatting.BLUE, "Copper", Items.COPPER_INGOT, 2),
     IRON(24, ChatFormatting.BLUE, "Iron", Items.IRON_INGOT, 2),
-    OBSIDIAN(25, ChatFormatting.BLUE, "Obsidian", Items.OBSIDIAN, 3),
+    OBSIDIAN(25, ChatFormatting.BLUE, "Obsidian", Items.OBSIDIAN, 2),
+    ENDER(26, ChatFormatting.BLUE, "Ender", Items.ENDER_PEARL, 2),
 
 //    T3
     DIAMOND(31, ChatFormatting.DARK_PURPLE, "Diamond", Items.DIAMOND, 3),

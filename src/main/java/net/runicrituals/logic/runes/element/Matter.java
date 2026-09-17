@@ -140,6 +140,11 @@ public class Matter extends ElementRune {
         }
     }
 
+    @Override
+    public String name() {
+        return "Matter";
+    }
+
     private boolean canDestroyBlock(Level level, BlockPos pos, double intensity) {
         BlockState block = level.getBlockState(pos);
 

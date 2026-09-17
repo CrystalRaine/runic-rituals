@@ -91,4 +91,9 @@ public class Electric extends ElementRune{
     public void createParticle(Level level, BlockPos pos, ActionRune action) {
         createParticle(level, pos, ParticleTypes.ELECTRIC_SPARK, new Vec3(0.09, 0.05, 0.09));
     }
+
+    @Override
+    public String name() {
+        return "Electric";
+    }
 }

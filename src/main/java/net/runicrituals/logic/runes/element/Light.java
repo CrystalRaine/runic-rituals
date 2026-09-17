@@ -51,12 +51,12 @@ public class Light extends ElementRune{
         switch(action.getActionType()) {
             case MANIFEST -> {
                 if(brightness < intensity) {
-                    brightness++;
+                    brightness+= intensity / 3;
                 }
             }
             case SACRIFICE -> {
                 if(brightness > -intensity) {
-                    brightness--;
+                    brightness-= intensity/3;
                 }
             }
             default -> {}
@@ -94,6 +94,11 @@ public class Light extends ElementRune{
     @Override
     public void createParticle(Level level, BlockPos pos, ActionRune action) {
         createParticle(level, pos, ParticleTypes.END_ROD, new Vec3(0.09, 0.05, 0.09));
+    }
+
+    @Override
+    public String name() {
+        return "Light";
     }
 
     private BlockState getDecayingLightBlockWithBrightness(int brightness) {

@@ -1,8 +1,7 @@
 package net.runicrituals.logic.runes.action;
 
-import net.runicrituals.logic.RuneSymbol;
 import net.runicrituals.logic.runes.Rune;
-import net.runicrituals.logic.runes.RuneType;
+import net.runicrituals.logic.runes.enums.RuneType;
 
 public abstract class ActionRune extends Rune {
 
@@ -17,4 +16,9 @@ public abstract class ActionRune extends Rune {
     }
 
     public abstract Action getActionType();
+
+    @Override
+    public String toString() {
+        return name();
+    }
 }

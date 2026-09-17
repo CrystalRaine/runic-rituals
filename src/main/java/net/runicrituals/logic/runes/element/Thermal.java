@@ -172,4 +172,9 @@ public class Thermal extends ElementRune{
             }
         }
     }
+
+    @Override
+    public String name() {
+        return "Thermal";
+    }
 }

@@ -8,8 +8,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.runicrituals.data_generation.recipe_builders.RuneEngravingRecipeBuilder;
-import net.runicrituals.logic.RuneInlayMaterial;
-import net.runicrituals.logic.RuneSymbol;
+import net.runicrituals.logic.runes.enums.RuneInlayMaterial;
+import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.registries.RunicRitualsBlocks;
 import net.runicrituals.registries.RunicRitualsItems;
 import org.jspecify.annotations.NonNull;
@@ -58,6 +58,15 @@ public class RunicRitualsRecipeProvider extends FabricRecipeProvider {
                         .pattern(" /#")
                         .pattern("#  ")
                         .define('#', Items.COPPER_INGOT)
+                        .define('/', Items.STICK)
+                        .define('o', Items.AMETHYST_SHARD)
+                        .unlockedBy(getHasName(Items.AMETHYST_SHARD), has(Items.AMETHYST_SHARD))
+                        .save(output);
+
+                shaped(RecipeCategory.MISC, RunicRitualsItems.BASIC_STAFF)
+                        .pattern(" oo")
+                        .pattern(" /o")
+                        .pattern("/  ")
                         .define('/', Items.STICK)
                         .define('o', Items.AMETHYST_SHARD)
                         .unlockedBy(getHasName(Items.AMETHYST_SHARD), has(Items.AMETHYST_SHARD))

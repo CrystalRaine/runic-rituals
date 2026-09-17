@@ -6,7 +6,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.runicrituals.logic.runes.Rune;
-import net.runicrituals.logic.runes.RuneType;
+import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchor;
 import net.runicrituals.registries.blocks.rune_slate.Runeslate;
 
@@ -38,9 +38,8 @@ public abstract class FormRune extends Rune {
         radius = 4;
     }
 
-    public void setProperties(Level level, BlockPos actionLocation, float radius) {
+    public void setProperties(Level level, float radius) {
         this.level = level;
-        this.actionLocation = actionLocation;
         this.radius = radius;
     }
 
@@ -58,15 +57,11 @@ public abstract class FormRune extends Rune {
 
     public BlockPos getBlockTarget() {
 
-        if(validTargets.isEmpty()) {
-            validTargets = getAllBlocks()
-                .filter(b -> RitualAnchor.getBlockEntity(level, b) == null && Runeslate.getBlockEntity(level, b) == null)
-                .toList();
-        }
+        validTargets = getAllBlocks()
+            .filter(b -> RitualAnchor.getBlockEntity(level, b) == null && Runeslate.getBlockEntity(level, b) == null)
+            .toList();
 
-        BlockPos pos = getRandom(level.getRandom(), validTargets);
-
-        return pos;
+        return getRandom(level.getRandom(), validTargets);
     }
 
     public boolean isPositionInVolume(BlockPos pos) {
@@ -90,5 +85,7 @@ public abstract class FormRune extends Rune {
         return RuneType.FORM;
     }
 
-    public abstract String name();
+    public void setPosition(BlockPos actionLocation) {
+        this.actionLocation = actionLocation;
+    }
 }

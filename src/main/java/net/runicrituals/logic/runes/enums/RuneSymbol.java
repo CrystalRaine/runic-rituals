@@ -1,10 +1,9 @@
-package net.runicrituals.logic;
+package net.runicrituals.logic.runes.enums;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.logic.runes.RuneType;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;
@@ -40,10 +39,13 @@ public enum RuneSymbol implements StringRepresentable {
     DELAY(16, RuneType.CONDITION_MODIFIER, ChatFormatting.WHITE, "Delay Activation", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.SOUL, RuneInlayMaterial.BREEZE)),
 
 //    Position Modifiers
-    BIND(17, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Bind Position", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.IRON, RuneInlayMaterial.ICE)),
+    BOUND(17, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Bind Position", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.IRON, RuneInlayMaterial.ICE)),
     BOLT(18, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Bolt Position", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
     HIT(19, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Hit Position", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.SOUL)),
     STATIC(20, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Static Position", List.of(RuneInlayMaterial.ETCHED, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND)),
+
+//    Mana Binding
+    MANABOUND(23, RuneType.MANA_BOUND, ChatFormatting.WHITE, "Mana Bound", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.ENDER)),
 
 //    Form Modifiers
     GROW(21, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Grow Modification", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),

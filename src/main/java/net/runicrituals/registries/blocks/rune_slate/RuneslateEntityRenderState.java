@@ -3,13 +3,8 @@ package net.runicrituals.registries.blocks.rune_slate;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.core.Direction;
-import net.runicrituals.logic.RuneSymbol;
-import net.runicrituals.logic.runes.RuneType;
-
-import java.util.Collections;
-import java.util.List;
+import net.runicrituals.logic.runes.enums.RuneSymbol;
 
 @Environment(EnvType.CLIENT)
 public class RuneslateEntityRenderState extends BlockEntityRenderState {

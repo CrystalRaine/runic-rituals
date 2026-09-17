@@ -7,7 +7,7 @@ import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.action.ActionRune;
 
-public class VoidRune extends ElementRune {
+public class Void extends ElementRune {
 
     @Override
     public double proposeCostForIntensityChange(ActionRune action, CastingBlock block) {
@@ -18,5 +18,10 @@ public class VoidRune extends ElementRune {
     @Override
     public void createParticle(Level level, BlockPos pos, ActionRune action) {
         createParticle(level, pos, ParticleTypes.END_ROD, new Vec3(0.09, 0.05, 0.09));
+    }
+
+    @Override
+    public String name() {
+        return "Void";
     }
 }

@@ -13,12 +13,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.runicrituals.RunicRituals;
-import net.runicrituals.logic.RuneSequence;
-import net.runicrituals.logic.runes.ManaStorage;
-import net.runicrituals.logic.runes.ManaStoringBlock;
-import net.runicrituals.logic.runes.Rune;
-import net.runicrituals.logic.runes.RuneType;
+import net.runicrituals.logic.ManaStorageHandler;
+import net.runicrituals.logic.runes.enums.CastTriggers;
+import net.runicrituals.logic.runes.RuneSequence;
+import net.runicrituals.logic.ManaStorage;
+import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import net.runicrituals.registries.blocks.rune_slate.Runeslate;
 import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
@@ -32,19 +31,29 @@ import java.util.UUID;
 
 import static net.runicrituals.logic.Util.delta;
 
-public class RitualAnchorEntity extends BlockEntity implements ManaStoringBlock {
+public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
     private static final int RITUAL_SIZE_MAX = 50;
 
     UUID chainUUID = null;
     boolean linked = false;
     int runeChainSize = 0;
     List<BlockPos> chainStarts = new ArrayList<>();
-    ManaStorage mana = new ManaStorage();
+    ManaStorageHandler mana = new ManaStorageHandler();
 
     RuneSequence sequence = null;
 
     public RitualAnchorEntity(BlockPos worldPosition, BlockState blockState) {
         super(RunicRitualsBlockEntities.RITUAL_ANCHOR_BLOCK_ENTITY, worldPosition, blockState);
+    }
+
+    public void setOverridePosition(BlockPos pos) {
+        sequence.setBoundLocation(pos);
+    }
+
+    public static void handleTrigger(Level level, CastTriggers triggerType, RitualAnchorEntity blockEntity) {
+        if(blockEntity.sequence != null && blockEntity.sequence.size() == blockEntity.runeChainSize) {
+            blockEntity.sequence.castTriggeredBlocks(level, blockEntity.mana, triggerType, blockEntity.getBlockPos());
+        }
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, RitualAnchorEntity blockEntity) {
@@ -62,7 +71,7 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStoringBlock 
                 }
             }
 
-            blockEntity.sequence.run(level, blockEntity.mana);
+            blockEntity.sequence.run(level, blockEntity.mana, pos);
         }
     }
 
@@ -91,8 +100,9 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStoringBlock 
 
     private RuneSequence assembleSequence() {
         assert level != null;
+        //TODO: should return null if incomplete ritual is detected
 
-        sequence = new RuneSequence();
+        RuneSequence seq = new RuneSequence();
         buildChains();
 
         // simple DFS search through tree built in buildChains.
@@ -108,8 +118,8 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStoringBlock 
             runeslateStack.addAll(rse.getArguments());
         }
 
-        sequence.createCastingBlocks(level, runeDataComponents, getBlockPos());
-        return sequence;
+        seq.createCastingBlocks(level, runeDataComponents);
+        return seq;
     }
 
     public void delink() {
@@ -126,7 +136,7 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStoringBlock 
         this.runeChainSize = 0;
         this.linked = false;
         this.chainUUID = null;
-        this.mana = new ManaStorage();
+        this.mana = new ManaStorageHandler();
         this.sequence = new RuneSequence();
         this.chainStarts = new ArrayList<>();
         setChanged();
@@ -268,7 +278,7 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStoringBlock 
 
         this.linked = input.getBooleanOr("isLinked", false);
         this.runeChainSize = input.getIntOr("runeChainSize", 0);
-        this.mana = new ManaStorage(input.getDoubleOr("mana", 0));
+        this.mana = new ManaStorageHandler(input.getDoubleOr("mana", 0));
         input.getString("UUID").ifPresent(uuid -> this.chainUUID = UUID.fromString(uuid));
 
         long[] primitiveArray = input.getOptionalLongArray("chainStarts").orElse(new long[]{});
@@ -304,7 +314,7 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStoringBlock 
     }
 
     @Override
-    public ManaStorage getMana() {
+    public ManaStorageHandler getMana() {
         return mana;
     }
 }

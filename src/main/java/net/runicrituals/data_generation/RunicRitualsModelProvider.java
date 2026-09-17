@@ -13,19 +13,16 @@ import net.minecraft.client.renderer.item.RangeSelectItemModel;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.logic.RuneSymbol;
+import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.registries.RunicRitualsBlocks;
 import net.runicrituals.registries.components.RuneSymbolItemModelProperty;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 
 import static net.minecraft.client.data.models.BlockModelGenerators.plainVariant;
 

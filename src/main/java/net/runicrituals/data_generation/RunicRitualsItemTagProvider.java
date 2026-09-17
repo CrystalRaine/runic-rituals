@@ -11,12 +11,9 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.logic.RuneInlayMaterial;
+import net.runicrituals.logic.runes.enums.RuneInlayMaterial;
 import net.runicrituals.registries.RunicRitualsBlocks;
 import net.runicrituals.registries.RunicRitualsItems;
-import net.runicrituals.registries.blocks.rune_engraver.RuneEngravingRecipe;
-import net.runicrituals.registries.items.RunicRitualsItem;
-import net.runicrituals.registries.items.WandItem;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;

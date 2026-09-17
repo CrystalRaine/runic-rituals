@@ -1,4 +1,4 @@
-package net.runicrituals.logic.runes;
+package net.runicrituals.logic.runes.enums;
 
 import java.util.List;
 
@@ -9,10 +9,12 @@ public enum RuneType {
 
     FORM_MODIFIER(List.of(FORM), true, 1),
     POSITION_MODIFIER(List.of(FORM, FORM_MODIFIER), false, 1),
-    CONDITION_MODIFIER(List.of(FORM, FORM_MODIFIER, POSITION_MODIFIER), false, 1),
+    CONDITION_MODIFIER(List.of(FORM, FORM_MODIFIER, POSITION_MODIFIER), true, 1),
+
+    MANA_BOUND(List.of(FORM, FORM_MODIFIER, POSITION_MODIFIER, CONDITION_MODIFIER), true, 1),
 
 //    not actually a rune, just used for RitualAnchorEntity in a logical role
-    ANCHOR(List.of(FORM_MODIFIER, FORM), false, 8);
+    ANCHOR(List.of(FORM_MODIFIER, CONDITION_MODIFIER, POSITION_MODIFIER, FORM, MANA_BOUND), false, 8);
 
     private final List<RuneType> argumentTypes;
     private final boolean selfAsValidChild;

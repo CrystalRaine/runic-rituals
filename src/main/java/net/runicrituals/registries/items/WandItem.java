@@ -17,7 +17,7 @@ import net.runicrituals.registries.blocks.rune_slate.Runeslate;
 import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
 import org.jspecify.annotations.NonNull;
 
-public class WandItem extends RunicRitualsItem{
+public class WandItem extends RunicRitualsItem {
     public WandItem(Properties properties) {
         super(properties);
     }
@@ -44,23 +44,6 @@ public class WandItem extends RunicRitualsItem{
             rse.delink();
         }
 
-
         return super.useOn(context);
-    }
-
-    /* TODO: cast bound ritual if it exists */
-    @Override
-    public @NonNull InteractionResult use(@NonNull Level level, @NonNull Player player, @NonNull InteractionHand hand) {
-        return super.use(level, player, hand);
-    }
-
-    @Override
-    public void hurtEnemy(@NonNull ItemStack itemStack, @NonNull LivingEntity mob, @NonNull LivingEntity attacker) {
-        super.hurtEnemy(itemStack, mob, attacker);
-    }
-
-    @Override
-    public boolean mineBlock(@NonNull ItemStack itemStack, @NonNull Level level, @NonNull BlockState state, @NonNull BlockPos pos, @NonNull LivingEntity owner) {
-        return super.mineBlock(itemStack, level, state, pos, owner);
     }
 }

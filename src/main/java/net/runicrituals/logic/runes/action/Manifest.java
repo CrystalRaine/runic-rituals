@@ -7,6 +7,11 @@ public class Manifest extends ActionRune {
     }
 
     @Override
+    public String name() {
+        return "Manifest";
+    }
+
+    @Override
     public double applyEfficiencyToCost(double cost) {
         return cost * invertEfficiency();
     }

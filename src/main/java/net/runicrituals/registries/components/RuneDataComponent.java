@@ -7,8 +7,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
-import net.runicrituals.logic.RuneInlayMaterial;
-import net.runicrituals.logic.RuneSymbol;
+import net.runicrituals.logic.runes.enums.RuneInlayMaterial;
+import net.runicrituals.logic.runes.enums.RuneSymbol;
 import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;

@@ -1,22 +1,17 @@
 package net.runicrituals.logic.runes.element;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.Rune;
-import net.runicrituals.logic.runes.RuneType;
+import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;
 import net.runicrituals.mixin_hooks.EntityAdditions;
@@ -220,5 +215,10 @@ public abstract class ElementRune extends Rune {
                     Mth.randomBetween(random, -1.0F, 1.0F) * velocityScaler.z()
             );
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.name();
     }
 }

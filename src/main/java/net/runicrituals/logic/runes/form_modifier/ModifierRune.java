@@ -1,9 +1,7 @@
-package net.runicrituals.logic.runes.logic;
+package net.runicrituals.logic.runes.form_modifier;
 
 import net.runicrituals.logic.runes.Rune;
-import net.runicrituals.logic.runes.RuneType;
-import net.runicrituals.logic.runes.action.ActionRune;
-import net.runicrituals.logic.runes.element.ElementRune;
+import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.logic.runes.form.FormRune;
 
 import java.util.Objects;

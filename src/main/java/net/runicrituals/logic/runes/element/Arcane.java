@@ -23,11 +23,6 @@ public class Arcane extends ElementRune {
     }
 
     @Override
-    public double proposeCostForIntensityChange(ActionRune action, CastingBlock block) {
-        return 0;
-    }
-
-    @Override
     public double updateIntensity(ActionRune action, double intensity) {
         switch (action.getActionType()) {
             case SACRIFICE -> {
@@ -41,5 +36,10 @@ public class Arcane extends ElementRune {
             }
         }
         return intensity;
+    }
+
+    @Override
+    public String name() {
+        return "Arcane";
     }
 }

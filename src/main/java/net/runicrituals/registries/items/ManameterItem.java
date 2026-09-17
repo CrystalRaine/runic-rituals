@@ -7,9 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.runicrituals.logic.runes.ManaStoringBlock;
-import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchor;
-import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchorEntity;
+import net.runicrituals.logic.ManaStorage;
 import org.jspecify.annotations.NonNull;
 
 public class ManameterItem extends RunicRitualsItem {
@@ -25,7 +23,7 @@ public class ManameterItem extends RunicRitualsItem {
         Player player = context.getPlayer();
 
         BlockEntity rae = level.getBlockEntity(pos);
-        if(rae instanceof ManaStoringBlock msb && player != null && !level.isClientSide()) {
+        if(rae instanceof ManaStorage msb && player != null && !level.isClientSide()) {
             player.sendOverlayMessage(Component.literal("Mana in ritual: " + String.format("%.3f", (msb.getMana().getMana()))));
         }
         return super.useOn(context);

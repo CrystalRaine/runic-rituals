@@ -1,12 +1,8 @@
 package net.runicrituals.data_generation.recipe_builders;
 
-import com.google.common.collect.ListMultimap;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.Identifier;
@@ -18,17 +14,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.logic.RuneSymbol;
+import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.registries.blocks.rune_engraver.RuneEngravingRecipe;
-import net.runicrituals.registries.components.RuneDataComponent;
-import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public class RuneEngravingRecipeBuilder implements RecipeBuilder {
 

@@ -23,12 +23,16 @@ public class Kinetic extends ElementRune {
 
     @Override
     public void applyActionOnEntity(Level level, Entity entity, ActionRune action, CastingBlock block) {
-        RunicRituals.LOGGER.info("Applying Kinetic to: {}", entity.getName());
         scaleEntityMotion((EntityAdditions) entity, action, block);
     }
 
     @Override
     public void createParticle(Level level, BlockPos pos, ActionRune action) {
         createParticle(level, pos, ParticleTypes.COPPER_FIRE_FLAME, new Vec3(0.9, 0.01, 0.9));
+    }
+
+    @Override
+    public String name() {
+        return "Kinetic";
     }
 }

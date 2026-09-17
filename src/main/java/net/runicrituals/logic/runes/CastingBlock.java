@@ -3,12 +3,11 @@ package net.runicrituals.logic.runes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.runicrituals.RunicRituals;
-import net.runicrituals.logic.RuneSequence;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.element.ElementRune;
 import net.runicrituals.logic.runes.form.FormRune;
-import net.runicrituals.logic.runes.logic.ModifierRune;
+import net.runicrituals.logic.runes.form_modifier.ModifierRune;
+import net.runicrituals.logic.runes.position_modifier.PositionModifierRune;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,7 @@ import java.util.List;
 public class CastingBlock {
 
     private List<ModifierRune> formModifiers = new ArrayList<>();
+    private List<PositionModifierRune> positionModifiers = new ArrayList<>();
     private final FormRune form;
     private final List<ActionNode> actions = new ArrayList<>();
     public double intensity = 0;
@@ -57,6 +57,10 @@ public class CastingBlock {
         return count;
     }
 
+    public void setLocation(BlockPos actionLocation) {
+        form.setPosition(actionLocation);
+    }
+
     private static class ActionNode {
         private ActionRune action;
         private final List<ElementRune> elements = new ArrayList<>();
@@ -76,9 +80,23 @@ public class CastingBlock {
     public void setFormModifiers(List<ModifierRune> formModifiers) {
         this.formModifiers = formModifiers;
     }
+    public void setPositionModifiers(List<PositionModifierRune> positionModifiers) {
+        this.positionModifiers = positionModifiers;
+    }
 
-    public void applyModifiers() {
+    public void applyModifiers(BlockPos overridePos) {
         applyFormModifiers();
+        applyPositionModifiers(overridePos);
+    }
+
+    private void applyPositionModifiers(BlockPos pos) {
+        if(pos == null) return;
+
+        for(PositionModifierRune pmr : positionModifiers) {
+            BlockPos updatePos = pmr.getOverridePosition(pos);
+            if(updatePos == null) return;
+            setLocation(updatePos);
+        }
     }
 
     private void applyFormModifiers() {
@@ -171,7 +189,7 @@ public class CastingBlock {
 
     public String formName() {
         if(form != null) {
-            return form.name();
+            return form.toString();
         } else {
             return "";
         }
@@ -179,7 +197,17 @@ public class CastingBlock {
 
     @Override
     public String toString() {
-        return form.name() + actions.stream().map(a -> a.action.getActionType().toString() + (a.elements.stream().map(ElementRune::getType).map(Object::toString).reduce((c,d)->c + " " + d))).reduce((a,b)->a + " " + b);
+        StringBuilder s = new StringBuilder(formName() + ": ");
+        for(ActionNode an : actions.reversed()) {
+            s.append(an.action.toString()).append(" [ ");
+            for(ElementRune e : an.elements.reversed()) {
+                s.append(e.toString()).append(" ");
+            }
+            s.append("]");
+        }
+
+        return s.toString();
+
     }
 
     public boolean isUncastable() {

@@ -9,10 +9,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.runicrituals.RunicRituals;
-import net.runicrituals.logic.RuneInlayMaterial;
-import net.runicrituals.logic.RuneSymbol;
+import net.runicrituals.logic.runes.enums.RuneInlayMaterial;
+import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.registries.components.RuneDataComponent;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
+
+import java.util.List;
 
 public class RunicRitualsCreativeTabs {
 
@@ -32,6 +34,8 @@ public class RunicRitualsCreativeTabs {
                 output.accept(RunicRitualsItems.BASIC_WAND);
                 output.accept(RunicRitualsItems.DIAMOND_WAND);
                 output.accept(RunicRitualsItems.ECHO_WAND);
+                output.accept(RunicRitualsItems.MANAMETER);
+                output.accept(RunicRitualsItems.BASIC_STAFF);
 
                 // General
                 output.accept(RunicRitualsBlocks.RUNESLATE);
@@ -56,12 +60,19 @@ public class RunicRitualsCreativeTabs {
                 output.accept(RunicRitualsBlocks.RUNESLATE.asItem());
 
                 for(RuneSymbol symbol : RuneSymbol.values()) {
-                    for(RuneInlayMaterial material : symbol.getMaterialsAllowed()) {
+                    List<RuneInlayMaterial> materials = symbol.getMaterialsAllowed();
+                    if(materials.isEmpty()) {
+                        ItemStack typedRunestone = new ItemStack(RunicRitualsBlocks.RUNESLATE.asItem());
+                        typedRunestone.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(symbol, RuneInlayMaterial.ETCHED));
+
+                        output.accept(typedRunestone);
+                    }
+
+                    for(RuneInlayMaterial material : materials) {
                         ItemStack typedRunestone = new ItemStack(RunicRitualsBlocks.RUNESLATE.asItem());
                         typedRunestone.set(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE, new RuneDataComponent(symbol,material));
 
                         output.accept(typedRunestone);
-
                     }
                 }
             })

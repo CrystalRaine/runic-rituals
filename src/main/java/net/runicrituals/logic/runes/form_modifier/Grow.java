@@ -1,7 +1,5 @@
-package net.runicrituals.logic.runes.logic;
+package net.runicrituals.logic.runes.form_modifier;
 
-import net.runicrituals.logic.runes.action.ActionRune;
-import net.runicrituals.logic.runes.element.ElementRune;
 import net.runicrituals.logic.runes.form.FormRune;
 
 public class Grow extends ModifierRune {
@@ -14,5 +12,10 @@ public class Grow extends ModifierRune {
     public double applyEfficiencyToCost(double cost) {
 //        yeah, this isn't technically scaled properly, should scale with 1.5^3 or something, but have a discount : )
         return cost * 1.05f;
+    }
+
+    @Override
+    public String name() {
+        return "Grow";
     }
 }

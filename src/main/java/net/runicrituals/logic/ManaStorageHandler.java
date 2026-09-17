@@ -1,21 +1,21 @@
-package net.runicrituals.logic.runes;
+package net.runicrituals.logic;
 
-public class ManaStorage {
+public class ManaStorageHandler {
     private static final double DEFAULT_MAX_MANA = 1500;
     private final double MAX_MANA;
     private double mana = 0;
 
-    public ManaStorage() {
+    public ManaStorageHandler() {
         mana = 0;
         MAX_MANA = DEFAULT_MAX_MANA;
     }
 
-    public ManaStorage(double mana) {
+    public ManaStorageHandler(double mana) {
         this.mana = mana;
         MAX_MANA = DEFAULT_MAX_MANA;
     }
 
-    public ManaStorage(double mana, double max_mana) {
+    public ManaStorageHandler(double mana, double max_mana) {
         this.mana = mana;
         MAX_MANA = max_mana;
     }

@@ -13,7 +13,7 @@ public class Util {
         return new Vec3(bp.getX(), bp.getY(), bp.getZ());
     }
 
-    public static BlockPos Vec3ToBlockPosition(Position position) {
+    public static BlockPos vec3ToBlockPosition(Position position) {
         return new BlockPos((int)position.x() - 1, (int)(position.y()), (int)position.z());
     }
 

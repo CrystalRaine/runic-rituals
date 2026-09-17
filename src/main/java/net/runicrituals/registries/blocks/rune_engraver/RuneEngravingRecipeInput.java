@@ -2,7 +2,7 @@ package net.runicrituals.registries.blocks.rune_engraver;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.runicrituals.logic.RuneSymbol;
+import net.runicrituals.logic.runes.enums.RuneSymbol;
 
 public class RuneEngravingRecipeInput implements RecipeInput {
 

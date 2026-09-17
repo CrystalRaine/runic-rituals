@@ -7,6 +7,11 @@ public class Sacrifice extends ActionRune {
     }
 
     @Override
+    public String name() {
+        return "Sacrifice";
+    }
+
+    @Override
     public double applyEfficiencyToCost(double cost) {
         return -cost * material.getEfficiency();
     }
