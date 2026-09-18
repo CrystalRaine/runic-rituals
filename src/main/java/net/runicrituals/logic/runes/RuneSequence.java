@@ -7,12 +7,10 @@ import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.condition_modifier.ConditionModifierRune;
 import net.runicrituals.logic.runes.element.ElementRune;
 import net.runicrituals.logic.runes.enums.CastTriggers;
-import net.runicrituals.logic.runes.enums.RuneInlayMaterial;
-import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.logic.runes.form.FormRune;
-import net.runicrituals.logic.runes.form_modifier.ModifierRune;
+import net.runicrituals.logic.runes.form_modifier.FormModifierRune;
 import net.runicrituals.logic.runes.position_modifier.PositionModifierRune;
-import net.runicrituals.registries.components.RuneDataComponent;
+import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
 
 import java.util.*;
 
@@ -22,28 +20,14 @@ public class RuneSequence {
     public static final int BASE_FORM_RADIUS = 4;
 
     List<CastingBlock> castingBlocks = new ArrayList<>();
-    Dictionary<CastTriggers, List<CastingBlock>> triggerCastingBlocks = new Hashtable<>();
-
-    BlockPos overridePos = null;
-
-    public void setBoundLocation(BlockPos position) {
-        overridePos = position;
-    }
-
-    public void castTriggeredBlocks(Level level, ManaStorageHandler mana, CastTriggers triggerType, BlockPos location) {
-        List<CastingBlock> triggeredCastingBlocks = triggerCastingBlocks.get(triggerType);
-        if(triggeredCastingBlocks == null) return;
-
-        for(CastingBlock castingBlock : triggeredCastingBlocks) {
-            tryCastCastingBlock(castingBlock, location, mana, level);
-        }
-    }
 
     public void tryCastCastingBlock(CastingBlock castingBlock, BlockPos ritualPosition, ManaStorageHandler mana, Level level) {
         if(castingBlock.isUncastable()) return;
 
         castingBlock.setLocation(ritualPosition);
-        castingBlock.applyModifiers(overridePos);
+
+        boolean condition = castingBlock.applyModifiers();
+        if(!condition) return;
         double cost;
 
         cost = 0; //TODO: reimplement costs
@@ -59,19 +43,19 @@ public class RuneSequence {
         }
     }
 
-    public void createCastingBlocks(Level level, List<RuneDataComponent> runeData) {
+    public void createCastingBlocks(Level level, List<RuneslateEntity> runeData) {
 
         List<Rune> runes = runeData
                 .stream()
-                .map(rd -> Rune.create(RuneSymbol.getSymbolFromId(rd.runeSymbol()), RuneInlayMaterial.getElementFromId(rd.inlay())))
+                .map(Rune::create)
                 .toList();
 
         castingBlocks = new ArrayList<>();
-        triggerCastingBlocks = new Hashtable<>();
 
         CastingBlock buildingBlock = null;
-        List<ModifierRune> modifierRuneBuffer = new ArrayList<>();
+        List<FormModifierRune> formModifierRunes = new ArrayList<>();
         List<PositionModifierRune> positionModifierRunes = new ArrayList<>();
+        List<ConditionModifierRune> conditionModifierRunes = new ArrayList<>();
         CastTriggers trigger = null;
 
         for(Rune r : runes) {
@@ -86,45 +70,21 @@ public class RuneSequence {
                 }
                 case FORM -> {
                     if(buildingBlock != null){
-                        if(trigger == null) {
-                            castingBlocks.add(buildingBlock);
-                        } else {
-                            if(triggerCastingBlocks.get(trigger) == null) {
-                                triggerCastingBlocks.put(trigger, new ArrayList<>());
-                            }
-                            triggerCastingBlocks.get(trigger).add(buildingBlock);
-                        }
+                        castingBlocks.add(buildingBlock);
                     }
 
                     buildingBlock = new CastingBlock((FormRune) r);
-                    buildingBlock.setFormModifiers(modifierRuneBuffer);
+                    buildingBlock.setFormModifiers(formModifierRunes);
                     buildingBlock.setPositionModifiers(positionModifierRunes);
+                    buildingBlock.setConditionModifiers(conditionModifierRunes);
 
-                    modifierRuneBuffer = new ArrayList<>();
+                    formModifierRunes = new ArrayList<>();
 
                     ((FormRune) r).setProperties(level, BASE_FORM_RADIUS);
                 }
-                case CONDITION_MODIFIER -> {
-                    if(buildingBlock != null){
-                        if(trigger == null) {
-                            castingBlocks.add(buildingBlock);
-                        } else {
-                            if(triggerCastingBlocks.get(trigger) == null) {
-                                triggerCastingBlocks.put(trigger, new ArrayList<>());
-                            }
-                            triggerCastingBlocks.get(trigger).add(buildingBlock);
-                        }
-                        buildingBlock = null;
-                    }
-
-                    trigger = ((ConditionModifierRune) r).getCastTrigger();
-                }
-                case FORM_MODIFIER -> {
-                    modifierRuneBuffer.add((ModifierRune) r);
-                }
-                case POSITION_MODIFIER -> {
-                    positionModifierRunes.add((PositionModifierRune) r);
-                }
+                case CONDITION_MODIFIER -> conditionModifierRunes.add((ConditionModifierRune) r);
+                case FORM_MODIFIER -> formModifierRunes.add((FormModifierRune) r);
+                case POSITION_MODIFIER -> positionModifierRunes.add((PositionModifierRune) r);
                 default -> {}
             }
         }
@@ -132,11 +92,6 @@ public class RuneSequence {
         if(buildingBlock != null){
             if(trigger == null) {
                 castingBlocks.add(buildingBlock);
-            } else {
-                if(triggerCastingBlocks.get(trigger) == null) {
-                    triggerCastingBlocks.put(trigger, new ArrayList<>());
-                }
-                triggerCastingBlocks.get(trigger).add(buildingBlock);
             }
         }
     }

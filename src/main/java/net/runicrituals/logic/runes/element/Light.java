@@ -10,7 +10,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.form.FormRune;

@@ -6,7 +6,7 @@ import net.runicrituals.logic.runes.enums.RuneType;
 
 public abstract class PositionModifierRune extends Rune {
 
-    public abstract BlockPos getOverridePosition(BlockPos position);
+    public abstract BlockPos getOverridePosition();
 
     @Override
     public RuneType getType() {

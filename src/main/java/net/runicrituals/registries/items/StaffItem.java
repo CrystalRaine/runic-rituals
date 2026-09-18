@@ -1,22 +1,26 @@
 package net.runicrituals.registries.items;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.runicrituals.logic.runes.enums.CastTriggers;
-import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchor;
-import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchorEntity;
+import net.runicrituals.logic.runes.enums.RuneSymbol;
+import net.runicrituals.registries.blocks.rune_slate.Runeslate;
+import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
 import net.runicrituals.registries.components.BlockPositionComponent;
+import net.runicrituals.registries.components.ControlRuneStateComponent;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -35,24 +39,17 @@ public class StaffItem extends RunicRitualsItem {
         Level level = context.getLevel();
         Player player = context.getPlayer();
 
-        RitualAnchorEntity rae = RitualAnchor.getBlockEntity(level, pos);
-        if(rae != null && player != null) {
-            if(rae.isLinked()) {
+        RuneslateEntity rse = Runeslate.getBlockEntity(level, pos);
+        if(rse != null && player != null) {
+            if(rse.isLinked() && rse.getRuneDataComponent().runeSymbol() == RuneSymbol.BOUND.getId()) {
 
-                if(context.getItemInHand().has(RunicRitualsComponents.BLOCK_POSITION_COMPONENT_DATA_COMPONENT_TYPE)) {
-                    context.getItemInHand().remove(RunicRitualsComponents.BLOCK_POSITION_COMPONENT_DATA_COMPONENT_TYPE);
-                }
+                context.getItemInHand().set(RunicRitualsComponents.BOUND_POSITION, new BlockPositionComponent(rse.getBlockPos()));
+                player.sendOverlayMessage(Component.literal("Linking Staff To Position Ritual"));
+            }
+            if(rse.isLinked() && rse.getRuneDataComponent().runeSymbol() == RuneSymbol.CONTROL.getId()) {
 
-                DataComponentPatch patch = DataComponentPatch
-                    .builder()
-                    .set(
-                        RunicRitualsComponents.BLOCK_POSITION_COMPONENT_DATA_COMPONENT_TYPE,
-                        new BlockPositionComponent(rae.getBlockPos())
-                    )
-                    .build();
-                context.getItemInHand().applyComponents(patch);
-
-                player.sendOverlayMessage(Component.literal("Linking Staff To Ritual"));
+                context.getItemInHand().set(RunicRitualsComponents.BOUND_CONTROL_POSITION, new BlockPositionComponent(rse.getBlockPos()));
+                player.sendOverlayMessage(Component.literal("Linking Staff to Control Ritual"));
             }
         }
 
@@ -61,19 +58,41 @@ public class StaffItem extends RunicRitualsItem {
 
     @Override
     public void onUseTick(@NonNull Level level, @NonNull LivingEntity livingEntity, ItemStack itemStack, int ticksRemaining) {
-        if(!itemStack.has(RunicRitualsComponents.BLOCK_POSITION_COMPONENT_DATA_COMPONENT_TYPE)) {
+
+        if(itemStack.has(RunicRitualsComponents.BOUND_POSITION)) {
+            RuneslateEntity rse = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_POSITION)).getBlockPosition());
+            if(rse != null) {
+                rse.setComponent(RunicRitualsComponents.BOUND_POSITION, new BlockPositionComponent(vec3ToBlockPosition(livingEntity.position())));
+            }
             super.onUseTick(level, livingEntity, itemStack, ticksRemaining);
             return;
-        }
-
-        RitualAnchorEntity rae = RitualAnchor.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BLOCK_POSITION_COMPONENT_DATA_COMPONENT_TYPE)).getBlockPosition());
-        if(rae != null && rae.isLinked()) {
-            rae.setOverridePosition(vec3ToBlockPosition(livingEntity.position()));
-            RitualAnchorEntity.handleTrigger(level, CastTriggers.USE_BOUND_ITEM, rae);
+        } else if(itemStack.has(RunicRitualsComponents.BOUND_CONTROL_POSITION)) {
+            RuneslateEntity rse2 = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_CONTROL_POSITION)).getBlockPosition());
+            if (rse2 != null) {
+                rse2.setComponent(RunicRitualsComponents.CONTROL_RUNE_STATE_COMPONENT, new ControlRuneStateComponent(true));
+            }
         } else if(livingEntity instanceof Player){
-            ((Player)livingEntity).sendOverlayMessage(Component.literal("Staff is not bound to an active ritual"));
+            ((Player)livingEntity).sendOverlayMessage(Component.literal("Staff is not bound to an active rune"));
         }
         super.onUseTick(level, livingEntity, itemStack, ticksRemaining);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack itemStack, ServerLevel level, Entity owner, @Nullable EquipmentSlot slot) {
+        if(owner instanceof LivingEntity le && le.isUsingItem()) return;
+        if(itemStack.has(RunicRitualsComponents.BOUND_POSITION)) {
+            RuneslateEntity rse = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_POSITION)).getBlockPosition());
+            if (rse != null) {
+                rse.removeControlComponents();
+            }
+        }
+        if(itemStack.has(RunicRitualsComponents.BOUND_CONTROL_POSITION)) {
+            RuneslateEntity rse = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_CONTROL_POSITION)).getBlockPosition());
+            if (rse != null) {
+                rse.removeControlComponents();
+            }
+        }
+        super.inventoryTick(itemStack, level, owner, slot);
     }
 
     /* cast bound ritual if it exists */

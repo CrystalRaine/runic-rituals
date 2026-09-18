@@ -4,8 +4,9 @@ import net.minecraft.core.BlockPos;
 
 public class Bound extends PositionModifierRune {
     @Override
-    public BlockPos getOverridePosition(BlockPos position) {
-        return position;
+    public BlockPos getOverridePosition() {
+
+        return runeslateEntity.getPositionComponentPosition();
     }
 
     @Override

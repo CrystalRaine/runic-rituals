@@ -10,5 +10,7 @@ public abstract class ConditionModifierRune extends Rune {
         return RuneType.CONDITION_MODIFIER;
     }
 
+    public abstract boolean passesCheck();
+
     public abstract CastTriggers getCastTrigger();
 }

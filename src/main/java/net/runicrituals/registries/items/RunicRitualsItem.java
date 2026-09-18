@@ -3,7 +3,6 @@ package net.runicrituals.registries.items;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ToolMaterial;
 import net.runicrituals.data_generation.RunicRitualsBlockTagProvider;
-import net.runicrituals.registries.server_only.RunicRitualsComponents;
 
 public class RunicRitualsItem extends Item {
 

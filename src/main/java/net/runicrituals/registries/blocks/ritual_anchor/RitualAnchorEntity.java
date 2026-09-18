@@ -14,14 +14,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.runicrituals.logic.ManaStorageHandler;
-import net.runicrituals.logic.runes.enums.CastTriggers;
 import net.runicrituals.logic.runes.RuneSequence;
 import net.runicrituals.logic.ManaStorage;
 import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import net.runicrituals.registries.blocks.rune_slate.Runeslate;
 import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
-import net.runicrituals.registries.components.RuneDataComponent;
 import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
@@ -46,22 +44,15 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
         super(RunicRitualsBlockEntities.RITUAL_ANCHOR_BLOCK_ENTITY, worldPosition, blockState);
     }
 
-    public void setOverridePosition(BlockPos pos) {
-        sequence.setBoundLocation(pos);
-    }
-
-    public static void handleTrigger(Level level, CastTriggers triggerType, RitualAnchorEntity blockEntity) {
-        if(blockEntity.sequence != null && blockEntity.sequence.size() == blockEntity.runeChainSize) {
-            blockEntity.sequence.castTriggeredBlocks(level, blockEntity.mana, triggerType, blockEntity.getBlockPos());
-        }
-    }
-
     public static void tick(Level level, BlockPos pos, BlockState state, RitualAnchorEntity blockEntity) {
 
+//        Try to build the sequence 1x per second.
         if(blockEntity.sequence == null && level.getGameTime() % 20 == 0 && blockEntity.linked) {
             blockEntity.sequence = blockEntity.assembleSequence();
         }
 
+//        if the sequence is incomplete or unbuilt, set sequence to null to be rebuilt 1s later.
+//        otherwise, run the sequence / show active particles.
         if(blockEntity.sequence != null && blockEntity.sequence.size() == blockEntity.runeChainSize) {
             if (level.isClientSide() && blockEntity.isLinked() && level.getGameTime() % 5 == 0) {
                 blockEntity.createParticle();
@@ -72,6 +63,8 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
             }
 
             blockEntity.sequence.run(level, blockEntity.mana, pos);
+        } else {
+            blockEntity.sequence = null;
         }
     }
 
@@ -100,25 +93,23 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
 
     private RuneSequence assembleSequence() {
         assert level != null;
-        //TODO: should return null if incomplete ritual is detected
 
         RuneSequence seq = new RuneSequence();
         buildChains();
 
         // simple DFS search through tree built in buildChains.
-        // each element touched is added to runeDataComponents,
-        // to be used to create casting blocks in this.sequence
-        List<RuneDataComponent> runeDataComponents = new ArrayList<>();
+        // basically, we want to build casting blocks in DFS order, but need to grab them in BFS order.
+        List<RuneslateEntity> runeslates = new ArrayList<>();
         List<BlockPos> runeslateStack = new ArrayList<>(chainStarts);
         while(!runeslateStack.isEmpty()) {
             RuneslateEntity rse = Runeslate.getBlockEntity(level, runeslateStack.removeLast());
             if(rse == null) continue;
 
-            runeDataComponents.add(rse.getRuneDataComponent());
+            runeslates.add(rse);
             runeslateStack.addAll(rse.getArguments());
         }
 
-        seq.createCastingBlocks(level, runeDataComponents);
+        seq.createCastingBlocks(level, runeslates);
         return seq;
     }
 
@@ -147,7 +138,7 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
      * RuneslateEntity-s by linking their anchors, arguments, and previous.
      * (where anchor is head, arguments is a list of next elements)
      */
-    private void buildChains() {
+    private int buildChains() {
 
         int size = 0;
         List<BlockPos> posStack = new ArrayList<>();
@@ -204,7 +195,7 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
                     posStack.addLast(checkPos);
                     if(size > RITUAL_SIZE_MAX) {
                         delink();
-                        return;
+                        return 0;
                     }
                     size++;
                 }
@@ -215,6 +206,7 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
                 z = sign(tx + tz);
             }
         }
+        return size;
     }
 
     private static int sign(double i) {

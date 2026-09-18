@@ -3,6 +3,8 @@ package net.runicrituals.registries.blocks.rune_slate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -22,6 +24,8 @@ import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchor;
 import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchorEntity;
+import net.runicrituals.registries.components.BlockPositionComponent;
+import net.runicrituals.registries.components.ControlRuneStateComponent;
 import net.runicrituals.registries.components.RuneDataComponent;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
@@ -239,5 +243,35 @@ public class RuneslateEntity extends BlockEntity {
         prev = null;
 
         setChanged();
+    }
+
+    public BlockPos getPositionComponentPosition() {
+        BlockPositionComponent bpc = this.components().get(RunicRitualsComponents.BOUND_POSITION);
+        if(bpc == null) return null;
+        return bpc.getBlockPosition();
+    }
+
+    public void removeControlComponents() {
+        DataComponentMap.Builder builder = DataComponentMap.builder();
+        builder.addAll(components().filter(d ->
+                !d.equals(RunicRitualsComponents.BOUND_POSITION) &&
+                !d.equals(RunicRitualsComponents.CONTROL_RUNE_STATE_COMPONENT)
+        ));
+        setComponents(builder.build());
+    }
+
+    public <T> void setComponent(DataComponentType<T> type, T dataComponent) {
+        DataComponentMap.Builder builder = DataComponentMap.builder();
+        builder.addAll(components());
+        builder.set(type, dataComponent);
+        setComponents(builder.build());
+
+        setChanged();
+    }
+
+    public boolean getControlComponentValue() {
+        ControlRuneStateComponent bpc = this.components().get(RunicRitualsComponents.CONTROL_RUNE_STATE_COMPONENT);
+        if(bpc == null) return false;
+        return bpc.active();
     }
 }

@@ -4,9 +4,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.runicrituals.logic.runes.action.ActionRune;
+import net.runicrituals.logic.runes.condition_modifier.ConditionModifierRune;
 import net.runicrituals.logic.runes.element.ElementRune;
 import net.runicrituals.logic.runes.form.FormRune;
-import net.runicrituals.logic.runes.form_modifier.ModifierRune;
+import net.runicrituals.logic.runes.form_modifier.FormModifierRune;
 import net.runicrituals.logic.runes.position_modifier.PositionModifierRune;
 
 import java.util.ArrayList;
@@ -14,14 +15,16 @@ import java.util.List;
 
 public class CastingBlock {
 
-    private List<ModifierRune> formModifiers = new ArrayList<>();
+    private List<FormModifierRune> formModifiers = new ArrayList<>();
     private List<PositionModifierRune> positionModifiers = new ArrayList<>();
+    private List<ConditionModifierRune> conditionModifiers = new ArrayList<>();
     private final FormRune form;
     private final List<ActionNode> actions = new ArrayList<>();
     public double intensity = 0;
 
     private final List<BlockPos> targets = new ArrayList<>();
     private int cursorPos = 0;
+
     private void resetCursor() {
         cursorPos = 0;
     }
@@ -77,23 +80,35 @@ public class CastingBlock {
         this.form = form;
     }
 
-    public void setFormModifiers(List<ModifierRune> formModifiers) {
+    public void setFormModifiers(List<FormModifierRune> formModifiers) {
         this.formModifiers = formModifiers;
     }
     public void setPositionModifiers(List<PositionModifierRune> positionModifiers) {
         this.positionModifiers = positionModifiers;
     }
-
-    public void applyModifiers(BlockPos overridePos) {
-        applyFormModifiers();
-        applyPositionModifiers(overridePos);
+    public void setConditionModifiers(List<ConditionModifierRune> conditionModifierRunes) {
+        this.conditionModifiers = conditionModifierRunes;
     }
 
-    private void applyPositionModifiers(BlockPos pos) {
-        if(pos == null) return;
+    public boolean applyModifiers() {
+        applyFormModifiers();
+        applyPositionModifiers();
+        return applyConditionModifiers();
+    }
+
+    private boolean applyConditionModifiers() {
+        for(ConditionModifierRune cmr : conditionModifiers) {
+            if(!cmr.passesCheck()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void applyPositionModifiers() {
 
         for(PositionModifierRune pmr : positionModifiers) {
-            BlockPos updatePos = pmr.getOverridePosition(pos);
+            BlockPos updatePos = pmr.getOverridePosition();
             if(updatePos == null) return;
             setLocation(updatePos);
         }
@@ -101,43 +116,13 @@ public class CastingBlock {
 
     private void applyFormModifiers() {
         form.setDefaultRadius();
-        for(ModifierRune modifier : formModifiers) {
+        for(FormModifierRune modifier : formModifiers) {
             modifier.applyModification(form);
         }
     }
 
     public double proposeManaCost(Level level) {
-        if(this.isUncastable()) return Double.POSITIVE_INFINITY;
-
-        double actionCostSum = 0;
-        resetIntensity();
-        resetCursor();
-
-        for(ActionNode actionNode : actions) {
-            double elementSetCost = 0;
-            for (ElementRune element : actionNode.elements) {
-                if(!level.isClientSide()) {
-                    for (int i = 0; i < intensity; i++) {
-                        BlockPos targetBlock = getTarget(form);
-
-                        if (targetBlock != null) {
-                            elementSetCost += element.proposeCostForBlock(level, form, targetBlock, actionNode.action, this);
-                        }
-                    }
-                }
-
-                elementSetCost += element.proposeCostForIntensityChange(actionNode.action, this);
-                intensity = element.updateIntensity(actionNode.action, intensity);
-
-                List<Entity> selectedEntities = form.getTargetEntities();
-                for (Entity e : selectedEntities) {
-                    elementSetCost += element.proposeCostForEntity(level, e, actionNode.action, this);
-                }
-            }
-            actionCostSum += actionNode.action.applyEfficiencyToCost(elementSetCost);
-        }
-
-        return this.form.applyEfficiencyToCost(actionCostSum);
+        return 0;
     }
 
     public void cast(Level level) {

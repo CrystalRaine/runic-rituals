@@ -13,9 +13,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.RunicRitualsBlocks;
-import net.runicrituals.registries.RunicRitualsItems;
 import org.jspecify.annotations.NonNull;
 
 public class DecayingLightBlock extends LightBlock {

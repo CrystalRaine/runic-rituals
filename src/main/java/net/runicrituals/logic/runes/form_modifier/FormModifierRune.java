@@ -6,7 +6,7 @@ import net.runicrituals.logic.runes.form.FormRune;
 
 import java.util.Objects;
 
-public abstract class ModifierRune extends Rune {
+public abstract class FormModifierRune extends Rune {
 
     Rune targetRune = null;
 

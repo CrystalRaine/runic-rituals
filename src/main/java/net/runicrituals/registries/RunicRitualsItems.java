@@ -2,33 +2,20 @@ package net.runicrituals.registries;
 
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.references.BlockItemId;
-import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.BlockItemStateProperties;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LightBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.components.HoverTextComponent;
 import net.runicrituals.registries.items.ManameterItem;
-import net.runicrituals.registries.items.RunicRitualsItem;
 import net.runicrituals.registries.items.StaffItem;
 import net.runicrituals.registries.items.WandItem;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
 
 import java.util.Locale;
-import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 public class RunicRitualsItems {
 

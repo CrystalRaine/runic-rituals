@@ -2,7 +2,7 @@ package net.runicrituals.logic.runes.form_modifier;
 
 import net.runicrituals.logic.runes.form.FormRune;
 
-public class Grow extends ModifierRune {
+public class Grow extends FormModifierRune {
     @Override
     public void applyModificationToForm(FormRune rune) {
         rune.setRadius(rune.getRadius() * 1.25f);

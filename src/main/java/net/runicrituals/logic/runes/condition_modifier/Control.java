@@ -10,6 +10,11 @@ public class Control extends ConditionModifierRune {
     }
 
     @Override
+    public boolean passesCheck() {
+        return runeslateEntity.getControlComponentValue();
+    }
+
+    @Override
     public CastTriggers getCastTrigger() {
         return CastTriggers.USE_BOUND_ITEM;
     }

@@ -3,8 +3,9 @@ package net.runicrituals.logic.runes.position_modifier;
 import net.minecraft.core.BlockPos;
 
 public class Static extends PositionModifierRune {
+
     @Override
-    public BlockPos getOverridePosition(BlockPos position) {
+    public BlockPos getOverridePosition() {
         return null;
     }
 

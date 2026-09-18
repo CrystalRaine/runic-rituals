@@ -13,12 +13,14 @@ import net.runicrituals.logic.runes.form_modifier.Grow;
 import net.runicrituals.logic.runes.form_modifier.Shrink;
 import net.runicrituals.logic.runes.position_modifier.Bound;
 import net.runicrituals.logic.runes.position_modifier.Static;
+import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
 
 public abstract class Rune {
 
     protected final double BASE_RUNE_MANA_COST = 10;
 
     protected RuneInlayMaterial material;
+    protected RuneslateEntity runeslateEntity;
 
     private boolean canRunClientSide = false;
 
@@ -50,8 +52,11 @@ public abstract class Rune {
         return 1 + efficiency();
     }
 
-    public static Rune create(RuneSymbol symbol, RuneInlayMaterial material) {
-        Rune createdRune = new Void();
+    public static Rune create(RuneslateEntity rse) {
+
+        RuneSymbol symbol = RuneSymbol.getSymbolFromId(rse.getRuneDataComponent().runeSymbol());
+        RuneInlayMaterial material = RuneInlayMaterial.getElementFromId(rse.getRuneDataComponent().inlay());
+        Rune createdRune;
 
         switch (symbol) {
 //            Elements
@@ -88,6 +93,7 @@ public abstract class Rune {
         }
 
         createdRune.material = material;
+        createdRune.runeslateEntity = rse;
 
         return createdRune;
     }

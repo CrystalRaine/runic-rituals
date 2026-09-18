@@ -44,13 +44,14 @@ public enum RuneSymbol implements StringRepresentable {
     HIT(19, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Hit Position", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.SOUL)),
     STATIC(20, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Static Position", List.of(RuneInlayMaterial.ETCHED, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND)),
 
-//    Mana Binding
-    MANABOUND(23, RuneType.MANA_BOUND, ChatFormatting.WHITE, "Mana Bound", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.ENDER)),
-
 //    Form Modifiers
     GROW(21, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Grow Modification", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
     SHRINK(22, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Shrink Modification", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.ICE, RuneInlayMaterial.SOUL)),
+
+//    Mana Binding
+    MANABOUND(23, RuneType.MANA_BOUND, ChatFormatting.WHITE, "Mana Bound", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.ENDER)),
 ;
+
     private final int id;
     private final RuneType runeType;
     private final String name;

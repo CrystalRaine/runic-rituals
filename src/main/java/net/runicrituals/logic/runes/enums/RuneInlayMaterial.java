@@ -10,31 +10,31 @@ import java.util.List;
 public enum RuneInlayMaterial {
 
 //    T0
-    ETCHED(0, ChatFormatting.WHITE, "Etched", null, 0),
+    ETCHED(0, "Etched", null, 0),
 
 //    T1
-    GLASS(11, ChatFormatting.GREEN, "Glass", Items.GLASS, 1),
-    AMETHYST(12, ChatFormatting.GREEN, "Amethyst", Items.AMETHYST_SHARD, 1),
-    ICE(13, ChatFormatting.GREEN, "Ice", Items.BLUE_ICE, 1),
-    SOUL(14, ChatFormatting.GREEN, "Soul", Items.SOUL_SAND, 1),
-    REDSTONE(15, ChatFormatting.GREEN, "Redstone", Items.REDSTONE, 2),
+    GLASS(11, "Glass", Items.GLASS, 1),
+    AMETHYST(12, "Amethyst", Items.AMETHYST_SHARD, 1),
+    ICE(13, "Ice", Items.BLUE_ICE, 1),
+    SOUL(14, "Soul", Items.SOUL_SAND, 1),
+    REDSTONE(15, "Redstone", Items.REDSTONE, 1),
 
 //    T2
-    BLAZE(21, ChatFormatting.BLUE, "Blaze", Items.BLAZE_ROD, 2),
-    BREEZE(22, ChatFormatting.BLUE, "Breeze", Items.BREEZE_ROD, 2),
-    COPPER(23, ChatFormatting.BLUE, "Copper", Items.COPPER_INGOT, 2),
-    IRON(24, ChatFormatting.BLUE, "Iron", Items.IRON_INGOT, 2),
-    OBSIDIAN(25, ChatFormatting.BLUE, "Obsidian", Items.OBSIDIAN, 2),
-    ENDER(26, ChatFormatting.BLUE, "Ender", Items.ENDER_PEARL, 2),
+    BLAZE(21, "Blaze", Items.BLAZE_ROD, 2),
+    BREEZE(22, "Breeze", Items.BREEZE_ROD, 2),
+    COPPER(23, "Copper", Items.COPPER_INGOT, 2),
+    IRON(24, "Iron", Items.IRON_INGOT, 2),
+    OBSIDIAN(25, "Obsidian", Items.OBSIDIAN, 2),
+    ENDER(26, "Ender", Items.ENDER_PEARL, 2),
 
 //    T3
-    DIAMOND(31, ChatFormatting.DARK_PURPLE, "Diamond", Items.DIAMOND, 3),
-    CHORUS(32, ChatFormatting.DARK_PURPLE, "Chorus", Items.CHORUS_FRUIT, 3),
-    GOLD(33, ChatFormatting.DARK_PURPLE, "Gold", Items.GOLD_INGOT, 2),
+    DIAMOND(31, "Diamond", Items.DIAMOND, 3),
+    CHORUS(32, "Chorus", Items.CHORUS_FRUIT, 3),
+    GOLD(33, "Gold", Items.GOLD_INGOT, 3),
 
 //    T4
-    ECHO(41, ChatFormatting.GOLD, "Echo", Items.ECHO_SHARD, 4),
-    NETHERITE(42, ChatFormatting.GOLD, "Netherite", Items.NETHERITE_SCRAP, 4)
+    ECHO(41, "Echo", Items.ECHO_SHARD, 4),
+    NETHERITE(42, "Netherite", Items.NETHERITE_SCRAP, 4)
 
     ;
 
@@ -44,20 +44,36 @@ public enum RuneInlayMaterial {
     private final Item associatedItem;
     private final double efficiency;
 
-    RuneInlayMaterial(int id, ChatFormatting formatting, String name, Item item, int tier) {
+    RuneInlayMaterial(int id, String name, Item item, int tier) {
         this.id = id;
         this.name = name;
-        this.formatting = formatting;
         associatedItem = item;
 
         switch (tier) {
-            case 0 -> this.efficiency = 0.1;
-            case 1 -> this.efficiency = 0.3;
-            case 2 -> this.efficiency = 0.5;
-            case 3 -> this.efficiency = 0.75;
-            case 4 -> this.efficiency = 0.95;
-
-            default -> this.efficiency = 0.99;
+            case 0 -> {
+                this.efficiency = 0.1;
+                this.formatting = ChatFormatting.WHITE;
+            }
+            case 1 -> {
+                this.efficiency = 0.3;
+                this.formatting = ChatFormatting.GREEN;
+            }
+            case 2 -> {
+                this.efficiency = 0.5;
+                this.formatting = ChatFormatting.BLUE;
+            }
+            case 3 -> {
+                this.efficiency = 0.75;
+                this.formatting = ChatFormatting.DARK_PURPLE;
+            }
+            case 4 -> {
+                this.efficiency = 0.95;
+                this.formatting = ChatFormatting.GOLD;
+            }
+            default -> {
+                this.efficiency = 0.99;
+                this.formatting = ChatFormatting.DARK_RED;
+            }
         }
     }
 
