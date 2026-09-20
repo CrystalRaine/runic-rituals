@@ -19,7 +19,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.registries.RunicRitualsBlocks;
+import net.runicrituals.registries.RunicRitualsItems;
 import net.runicrituals.registries.components.RuneSymbolItemModelProperty;
+import net.runicrituals.registries.items.BoundRunestoneItem;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;
@@ -48,6 +50,7 @@ public class RunicRitualsModelProvider extends FabricModelProvider {
 
         generateRuneslateModels(itemModelGenerators);
 
+        itemModelGenerators.generateFlatItem(RunicRitualsItems.BOUND_RUNESTONE.asItem(), ModelTemplates.FLAT_ITEM);
     }
 
     private void createLightBlockModel(Block forBlock, BlockModelGenerators generator) {

@@ -1,5 +1,6 @@
 package net.runicrituals.registries.blocks.rune_slate;
 
+import com.ibm.icu.text.ArabicShaping;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -18,6 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.runicrituals.RunicRituals;
+import net.runicrituals.logic.runes.enums.CastTrigger;
 import net.runicrituals.logic.runes.enums.RuneInlayMaterial;
 import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.logic.runes.enums.RuneType;
@@ -41,6 +44,8 @@ public class RuneslateEntity extends BlockEntity {
     List<BlockPos> arguments = new ArrayList<>();
     BlockPos anchorPos = null;
     BlockPos prev = null;
+
+    List<TriggerTypeAndTime> pendingTriggerTimes = new ArrayList<>();
 
     public RuneslateEntity(BlockPos worldPosition, BlockState blockState) {
         super(RunicRitualsBlockEntities.RUNESLATE_BLOCK_ENTITY, worldPosition, blockState);
@@ -203,11 +208,27 @@ public class RuneslateEntity extends BlockEntity {
     }
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, RuneslateEntity runeslateEntity) {
-
         if(level.getGameTime() % 5 == 0 && runeslateEntity.isLinked()) {
             for (BlockPos bp : runeslateEntity.arguments) {
                 runeslateEntity.createParticle(bp);
             }
+        }
+
+        if(!runeslateEntity.pendingTriggerTimes.isEmpty() && runeslateEntity.getAnchor() != null) {
+            long gameTime = level.getGameTime();
+            List<TriggerTypeAndTime> triggers = runeslateEntity.pendingTriggerTimes
+                    .stream()
+                    .filter(ttt-> ttt.triggerTime == gameTime)
+                    .toList();
+
+            triggers
+                    .forEach(ttt-> runeslateEntity.getAnchor().triggerCastingBlock(ttt.type, blockPos));
+
+            runeslateEntity.pendingTriggerTimes = new ArrayList<>(runeslateEntity.pendingTriggerTimes
+                    .stream()
+                    .filter(ttt-> ttt.triggerTime != gameTime)
+                    .toList()
+            );
         }
     }
 
@@ -265,8 +286,6 @@ public class RuneslateEntity extends BlockEntity {
         builder.addAll(components());
         builder.set(type, dataComponent);
         setComponents(builder.build());
-
-        setChanged();
     }
 
     public boolean getControlComponentValue() {
@@ -274,4 +293,15 @@ public class RuneslateEntity extends BlockEntity {
         if(bpc == null) return false;
         return bpc.active();
     }
+
+    // this should probably use scheduledTicks in some capacity, but it would add complexity, soooo
+    // TODO: save pendingTriggerTimes so they can trigger after a reload
+    public void setTriggerTimeout(CastTrigger castTrigger, int timeoutTicksInFuture) {
+
+        if(level == null) return;
+        long triggerTime = level.getGameTime() + timeoutTicksInFuture;
+        pendingTriggerTimes.add(new TriggerTypeAndTime(triggerTime, castTrigger));
+    }
+
+    private record TriggerTypeAndTime(long triggerTime, CastTrigger type) {}
 }

@@ -3,31 +3,34 @@ package net.runicrituals.logic.runes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.action.ActionRune;
-import net.runicrituals.logic.runes.condition_modifier.ConditionModifierRune;
 import net.runicrituals.logic.runes.element.ElementRune;
+import net.runicrituals.logic.runes.enums.CastTrigger;
 import net.runicrituals.logic.runes.form.FormRune;
-import net.runicrituals.logic.runes.form_modifier.FormModifierRune;
-import net.runicrituals.logic.runes.position_modifier.PositionModifierRune;
+import net.runicrituals.logic.runes.modifier.ModifierRune;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CastingBlock {
+public class CastingBlock implements Cloneable{
 
-    private List<FormModifierRune> formModifiers = new ArrayList<>();
-    private List<PositionModifierRune> positionModifiers = new ArrayList<>();
-    private List<ConditionModifierRune> conditionModifiers = new ArrayList<>();
-    private final FormRune form;
+    private List<ModifierRune> modifierRunes = new ArrayList<>();
+    private FormRune form;
     private final List<ActionNode> actions = new ArrayList<>();
     public double intensity = 0;
 
     private final List<BlockPos> targets = new ArrayList<>();
     private int cursorPos = 0;
 
+    public FormRune getForm() {
+        return form;
+    }
+
     private void resetCursor() {
         cursorPos = 0;
     }
+
     private void resetIntensity() {
         intensity = RuneSequence.BASE_INTENSITY;
     }
@@ -51,7 +54,7 @@ public class CastingBlock {
         int count = 0;
 
         count += (form == null ? 0 : 1); // form exists
-        count += formModifiers.size();   // modifier count
+        count += modifierRunes.size();   // modifier count
 
         for(ActionNode action : actions) { // count up actions and elements
             count += action.count();
@@ -60,8 +63,40 @@ public class CastingBlock {
         return count;
     }
 
-    public void setLocation(BlockPos actionLocation) {
-        form.setPosition(actionLocation);
+    public RuneSequence.CastingBlockTrigger resolveModifiers() {
+
+        CastingBlock cloneTriggerBlock = this.clone();
+        for(ModifierRune modifierRune : modifierRunes) {
+            cloneTriggerBlock.modifierRunes.removeFirst();
+            CastTrigger triggerType = modifierRune.preformModification(this);
+            modifierRune.preformModification(cloneTriggerBlock);
+            if(triggerType != null) {
+                return new RuneSequence.CastingBlockTrigger(triggerType, modifierRune.runeslateEntity.getBlockPos(), cloneTriggerBlock.toString().hashCode(), cloneTriggerBlock);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public CastingBlock clone() {
+        try {
+            CastingBlock clone = (CastingBlock) super.clone();
+
+            clone.modifierRunes = new ArrayList<>(modifierRunes); // modifierRunes are same object, but list is not.
+            clone.form = form.clone();
+
+            // cursorPos, targets, and intensity shouldn't be necessary.
+            // setting intensity & cursorPos anyway, since they are non-final, but the other is final sooo.
+            clone.intensity = intensity;
+            clone.cursorPos = cursorPos;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    public void setLocation(BlockPos ritualPosition) {
+        form.setPosition(ritualPosition);
     }
 
     private static class ActionNode {
@@ -80,45 +115,8 @@ public class CastingBlock {
         this.form = form;
     }
 
-    public void setFormModifiers(List<FormModifierRune> formModifiers) {
-        this.formModifiers = formModifiers;
-    }
-    public void setPositionModifiers(List<PositionModifierRune> positionModifiers) {
-        this.positionModifiers = positionModifiers;
-    }
-    public void setConditionModifiers(List<ConditionModifierRune> conditionModifierRunes) {
-        this.conditionModifiers = conditionModifierRunes;
-    }
-
-    public boolean applyModifiers() {
-        applyFormModifiers();
-        applyPositionModifiers();
-        return applyConditionModifiers();
-    }
-
-    private boolean applyConditionModifiers() {
-        for(ConditionModifierRune cmr : conditionModifiers) {
-            if(!cmr.passesCheck()){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void applyPositionModifiers() {
-
-        for(PositionModifierRune pmr : positionModifiers) {
-            BlockPos updatePos = pmr.getOverridePosition();
-            if(updatePos == null) return;
-            setLocation(updatePos);
-        }
-    }
-
-    private void applyFormModifiers() {
-        form.setDefaultRadius();
-        for(FormModifierRune modifier : formModifiers) {
-            modifier.applyModification(form);
-        }
+    public void setModifierRunes(List<ModifierRune> modifierRunes) {
+        this.modifierRunes = modifierRunes;
     }
 
     public double proposeManaCost(Level level) {
@@ -182,7 +180,13 @@ public class CastingBlock {
 
     @Override
     public String toString() {
-        StringBuilder s = new StringBuilder(formName() + ": ");
+        StringBuilder s = new StringBuilder();
+
+        for(ModifierRune m : modifierRunes) {
+            s.append(m.toString()).append(" ");
+        }
+
+        s.append("| ").append(formName()).append(": ");
         for(ActionNode an : actions.reversed()) {
             s.append(an.action.toString()).append(" [ ");
             for(ElementRune e : an.elements.reversed()) {

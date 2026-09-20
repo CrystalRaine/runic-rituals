@@ -33,20 +33,16 @@ public enum RuneSymbol implements StringRepresentable {
     SHEET(12, RuneType.FORM, ChatFormatting.GOLD, "Sheet Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.COPPER, RuneInlayMaterial.BLAZE, RuneInlayMaterial.GLASS)),
     DOME(13, RuneType.FORM, ChatFormatting.GOLD, "Dome Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.ICE, RuneInlayMaterial.BREEZE, RuneInlayMaterial.GLASS)),
 
-//    Activator Modifiers
-    CONTROL(14, RuneType.CONDITION_MODIFIER, ChatFormatting.WHITE, "Control Activation", List.of(RuneInlayMaterial.NETHERITE, RuneInlayMaterial.ECHO, RuneInlayMaterial.CHORUS)),
-    POWERED(15, RuneType.CONDITION_MODIFIER, ChatFormatting.WHITE, "Redstone Activation", List.of(RuneInlayMaterial.REDSTONE)),
-    DELAY(16, RuneType.CONDITION_MODIFIER, ChatFormatting.WHITE, "Delay Activation", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.SOUL, RuneInlayMaterial.BREEZE)),
-
-//    Position Modifiers
-    BOUND(17, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Bind Position", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.IRON, RuneInlayMaterial.ICE)),
-    BOLT(18, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Bolt Position", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
-    HIT(19, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Hit Position", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.SOUL)),
-    STATIC(20, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Static Position", List.of(RuneInlayMaterial.ETCHED, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND)),
-
-//    Form Modifiers
-    GROW(21, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Grow Modification", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
-    SHRINK(22, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Shrink Modification", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.ICE, RuneInlayMaterial.SOUL)),
+//    Modifiers
+    CONTROL(14, RuneType.MODIFIER, ChatFormatting.WHITE, "Control Activation", List.of(RuneInlayMaterial.NETHERITE, RuneInlayMaterial.ECHO, RuneInlayMaterial.CHORUS)),
+    POWERED(15, RuneType.MODIFIER, ChatFormatting.WHITE, "Redstone Activation", List.of(RuneInlayMaterial.REDSTONE)),
+    DELAY(16, RuneType.MODIFIER, ChatFormatting.WHITE, "Delay Activation", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.SOUL, RuneInlayMaterial.BREEZE)),
+    BOUND(17, RuneType.MODIFIER, ChatFormatting.WHITE, "Bind Position", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.IRON, RuneInlayMaterial.ICE)),
+    BOLT(18, RuneType.MODIFIER, ChatFormatting.WHITE, "Bolt Position", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
+    HIT(19, RuneType.MODIFIER, ChatFormatting.WHITE, "Hit Position", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.SOUL)),
+    STATIC(20, RuneType.MODIFIER, ChatFormatting.WHITE, "Static Position", List.of(RuneInlayMaterial.ETCHED, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND)),
+    GROW(21, RuneType.MODIFIER, ChatFormatting.WHITE, "Grow Modification", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
+    SHRINK(22, RuneType.MODIFIER, ChatFormatting.WHITE, "Shrink Modification", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.ICE, RuneInlayMaterial.SOUL)),
 
 //    Mana Binding
     MANABOUND(23, RuneType.MANA_BOUND, ChatFormatting.WHITE, "Mana Bound", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.ENDER)),

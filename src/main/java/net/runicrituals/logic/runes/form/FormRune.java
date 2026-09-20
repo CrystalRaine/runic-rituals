@@ -26,17 +26,12 @@ import static net.runicrituals.logic.Util.getRandom;
  * non-cubic forms should override getAABB to be the encompassing bounding box, and should then override the above noted
  * methods in order to filter that volume.
  */
-public abstract class FormRune extends Rune {
+public abstract class FormRune extends Rune implements Cloneable{
 
     Level level;
-    private List<BlockPos> validTargets = new ArrayList<>();
 
     BlockPos actionLocation;
     float radius;
-
-    public void setDefaultRadius(){
-        radius = 4;
-    }
 
     public void setProperties(Level level, float radius) {
         this.level = level;
@@ -57,9 +52,9 @@ public abstract class FormRune extends Rune {
 
     public BlockPos getBlockTarget() {
 
-        validTargets = getAllBlocks()
-            .filter(b -> RitualAnchor.getBlockEntity(level, b) == null && Runeslate.getBlockEntity(level, b) == null)
-            .toList();
+        List<BlockPos> validTargets = getAllBlocks()
+                .filter(b -> RitualAnchor.getBlockEntity(level, b) == null && Runeslate.getBlockEntity(level, b) == null)
+                .toList();
 
         return getRandom(level.getRandom(), validTargets);
     }
@@ -87,5 +82,21 @@ public abstract class FormRune extends Rune {
 
     public void setPosition(BlockPos actionLocation) {
         this.actionLocation = actionLocation;
+    }
+
+    public BlockPos getPosition() {
+        return actionLocation;
+    }
+
+    @Override
+    public FormRune clone() {
+        try {
+            FormRune clone = (FormRune) super.clone();
+            clone.actionLocation = new BlockPos(actionLocation.getX(), actionLocation.getY(), actionLocation.getZ());
+            clone.radius = radius;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

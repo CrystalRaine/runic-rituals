@@ -55,7 +55,7 @@ public abstract class EntityMixin implements EntityAdditions {
     @Override
     public void runic_rituals$setDeltaScale(double ds) {
         deltaScale = ds;
-        boostEndTimestamp = level.getGameTime() + 5 ;
+        boostEndTimestamp = level.getGameTime() + 20 ;
     }
 
     @Override

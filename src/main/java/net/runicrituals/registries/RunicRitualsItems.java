@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.*;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.components.HoverTextComponent;
+import net.runicrituals.registries.items.BoundRunestoneItem;
 import net.runicrituals.registries.items.ManameterItem;
 import net.runicrituals.registries.items.StaffItem;
 import net.runicrituals.registries.items.WandItem;
@@ -20,6 +21,7 @@ import java.util.function.Function;
 public class RunicRitualsItems {
 
     public static final ResourceKey<Item> MANAMETER_KEY = resourceKey("manameter");
+    public static final ResourceKey<Item> BOUND_RUNESTONE_KEY = resourceKey("bound_runestone");
     public static final ResourceKey<Item> STAFF_KEY = resourceKey("staff");
     public static final ResourceKey<Item> BASIC_WAND_KEY = resourceKey("wand");
     public static final ResourceKey<Item> DIAMOND_WAND_KEY = resourceKey("diamond_wand");
@@ -42,9 +44,17 @@ public class RunicRitualsItems {
                     .staff(ToolMaterial.IRON, 1f, -2.5f)
                     .stacksTo(1)
                     .rarity(Rarity.COMMON)
-                    .repairable(Items.COPPER_INGOT)
                     .useCooldown(0.75f)
                     .component(RunicRitualsComponents.HOVER_TEXT_COMPONENT, new HoverTextComponent("staff"))
+    );
+
+    public static final Item BOUND_RUNESTONE = registerItem(BOUND_RUNESTONE_KEY,
+            BoundRunestoneItem::new,
+            new BoundRunestoneItem
+                    .RunicRitualsItemProperties()
+                    .stacksTo(1)
+                    .rarity(Rarity.UNCOMMON)
+                    .component(RunicRitualsComponents.HOVER_TEXT_COMPONENT, new HoverTextComponent("bound_runestone"))
     );
 
     public static final Item BASIC_WAND = registerItem(BASIC_WAND_KEY,
@@ -92,6 +102,7 @@ public class RunicRitualsItems {
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register((tab)-> {tab.accept(ECHO_WAND);});
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register((tab)-> {tab.accept(MANAMETER);});
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register((tab)-> {tab.accept(BASIC_STAFF);});
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register((tab)-> {tab.accept(BOUND_RUNESTONE);});
     }
 
     public static Item registerItem(String name, Function<Item.Properties, Item> itemFactory, Item.Properties settings) {

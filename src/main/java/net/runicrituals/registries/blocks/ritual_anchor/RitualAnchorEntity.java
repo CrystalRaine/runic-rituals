@@ -16,6 +16,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.runicrituals.logic.ManaStorageHandler;
 import net.runicrituals.logic.runes.RuneSequence;
 import net.runicrituals.logic.ManaStorage;
+import net.runicrituals.logic.runes.enums.CastTrigger;
 import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import net.runicrituals.registries.blocks.rune_slate.Runeslate;
@@ -68,19 +69,6 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
         }
     }
 
-    @Override
-    public void setRemoved() {
-        assert level != null;
-        if(level.isClientSide() || !(Objects.requireNonNull(level.getServer()).isCurrentlySaving())) {
-            delink();
-        }
-        super.setRemoved();
-    }
-
-    public boolean isLinked() {
-        return linked;
-    }
-
     public void link() {
 
         this.chainUUID = UUID.randomUUID();
@@ -89,6 +77,30 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
         this.linked = true;
         this.mana.applyManaValue(-10);
         setChanged();
+    }
+
+    public void delink() {
+        assert level != null;
+
+        List<RuneslateEntity> delinkQueue = new ArrayList<>(chainStarts.stream().map(p -> Runeslate.getBlockEntity(level, p)).filter(Objects::nonNull).toList());
+
+        while(!delinkQueue.isEmpty()) {
+            RuneslateEntity cursor = delinkQueue.removeFirst();
+            delinkQueue.addAll(cursor.getArguments().stream().map(p -> Runeslate.getBlockEntity(level, p)).filter(Objects::nonNull).toList());
+            cursor.clearOutData();
+        }
+
+        this.runeChainSize = 0;
+        this.linked = false;
+        this.chainUUID = null;
+        this.mana = new ManaStorageHandler();
+        this.sequence = new RuneSequence();
+        this.chainStarts = new ArrayList<>();
+        setChanged();
+    }
+
+    public boolean isLinked() {
+        return linked;
     }
 
     private RuneSequence assembleSequence() {
@@ -113,32 +125,12 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
         return seq;
     }
 
-    public void delink() {
-        assert level != null;
-
-        List<RuneslateEntity> delinkQueue = new ArrayList<>(chainStarts.stream().map(p -> Runeslate.getBlockEntity(level, p)).filter(Objects::nonNull).toList());
-
-        while(!delinkQueue.isEmpty()) {
-            RuneslateEntity cursor = delinkQueue.removeFirst();
-            delinkQueue.addAll(cursor.getArguments().stream().map(p -> Runeslate.getBlockEntity(level, p)).filter(Objects::nonNull).toList());
-            cursor.clearOutData();
-        }
-
-        this.runeChainSize = 0;
-        this.linked = false;
-        this.chainUUID = null;
-        this.mana = new ManaStorageHandler();
-        this.sequence = new RuneSequence();
-        this.chainStarts = new ArrayList<>();
-        setChanged();
-    }
-
     /**
      * technically runs a modified BFS to build a doubly-linked tree out of
      * RuneslateEntity-s by linking their anchors, arguments, and previous.
      * (where anchor is head, arguments is a list of next elements)
      */
-    private int buildChains() {
+    private void buildChains() {
 
         int size = 0;
         List<BlockPos> posStack = new ArrayList<>();
@@ -195,7 +187,7 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
                     posStack.addLast(checkPos);
                     if(size > RITUAL_SIZE_MAX) {
                         delink();
-                        return 0;
+                        return;
                     }
                     size++;
                 }
@@ -206,7 +198,6 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
                 z = sign(tx + tz);
             }
         }
-        return size;
     }
 
     private static int sign(double i) {
@@ -243,6 +234,23 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
         );
     }
 
+    public Object getRitualSize() {
+        return sequence.size();
+    }
+
+    @Override
+    public ManaStorageHandler getMana() {
+        return mana;
+    }
+
+    @Override
+    public void setRemoved() {
+        assert level != null;
+        if(level.isClientSide() || !(Objects.requireNonNull(level.getServer()).isCurrentlySaving())) {
+            delink();
+        }
+        super.setRemoved();
+    }
 
     /* Save and Load */
     @Override
@@ -279,7 +287,6 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
         }
     }
 
-    
     /* Network management */
     @Override
     public @NonNull CompoundTag getUpdateTag(HolderLookup.@NonNull Provider registryLookup) {
@@ -301,12 +308,8 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
         level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
     }
 
-    public Object getRitualSize() {
-        return sequence.size();
-    }
+    public void triggerCastingBlock(CastTrigger castTrigger, BlockPos triggeringRSEPos) {
+        this.sequence.triggeredCastingBlock(castTrigger, triggeringRSEPos, this.mana, this.level);
 
-    @Override
-    public ManaStorageHandler getMana() {
-        return mana;
     }
 }
