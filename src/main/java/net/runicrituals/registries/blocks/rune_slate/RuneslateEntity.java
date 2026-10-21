@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.enums.CastTrigger;
 import net.runicrituals.logic.runes.enums.RuneInlayMaterial;
 import net.runicrituals.logic.runes.enums.RuneSymbol;
@@ -27,8 +26,6 @@ import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchor;
 import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchorEntity;
-import net.runicrituals.registries.components.BlockPositionComponent;
-import net.runicrituals.registries.components.ControlRuneStateComponent;
 import net.runicrituals.registries.components.RuneDataComponent;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
@@ -77,7 +74,10 @@ public class RuneslateEntity extends BlockEntity {
     public void setRemoved() {
         assert level != null;
         if(level.isClientSide() || !(Objects.requireNonNull(level.getServer()).isCurrentlySaving())) {
-            if(getAnchor() != null) {
+
+            boolean isChunkUnloading = level.getBlockState(worldPosition).is(getBlockState().getBlock());
+
+            if(getAnchor() != null && !isChunkUnloading) {
                 getAnchor().delink();
 
                 List<RuneslateEntity> delinkQueue = new ArrayList<>(arguments.stream().map(p -> Runeslate.getBlockEntity(level, p)).filter(Objects::nonNull).toList());
@@ -93,14 +93,6 @@ public class RuneslateEntity extends BlockEntity {
 
     public RuneDataComponent getRuneDataComponent() {
         return this.components().get(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE);
-    }
-
-    public RuneInlayMaterial getSlateInlay() {
-        RuneDataComponent rdc = getRuneDataComponent();
-        if(rdc != null) {
-            return RuneInlayMaterial.getElementFromId(rdc.inlay());
-        }
-        return null;
     }
 
     public RuneSymbol getSlateSymbol() {
@@ -267,16 +259,13 @@ public class RuneslateEntity extends BlockEntity {
     }
 
     public BlockPos getPositionComponentPosition() {
-        BlockPositionComponent bpc = this.components().get(RunicRitualsComponents.BOUND_POSITION);
-        if(bpc == null) return null;
-        return bpc.getBlockPosition();
+        return this.components().get(RunicRitualsComponents.BOUND_POSITION);
     }
 
     public void removeControlComponents() {
         DataComponentMap.Builder builder = DataComponentMap.builder();
         builder.addAll(components().filter(d ->
-                !d.equals(RunicRitualsComponents.BOUND_POSITION) &&
-                !d.equals(RunicRitualsComponents.CONTROL_RUNE_STATE_COMPONENT)
+                !d.equals(RunicRitualsComponents.BOUND_POSITION)
         ));
         setComponents(builder.build());
     }
@@ -286,12 +275,6 @@ public class RuneslateEntity extends BlockEntity {
         builder.addAll(components());
         builder.set(type, dataComponent);
         setComponents(builder.build());
-    }
-
-    public boolean getControlComponentValue() {
-        ControlRuneStateComponent bpc = this.components().get(RunicRitualsComponents.CONTROL_RUNE_STATE_COMPONENT);
-        if(bpc == null) return false;
-        return bpc.active();
     }
 
     // this should probably use scheduledTicks in some capacity, but it would add complexity, soooo

@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.enums.CastTrigger;
 import net.runicrituals.registries.blocks.rune_slate.Runeslate;
 import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
@@ -42,7 +43,7 @@ public class StaffItem extends RunicRitualsItem {
         sendPosition(level, itemStack, livingEntity);
         triggerControlledBlock(level, itemStack, livingEntity, CastTrigger.USE_BOUND_ITEM);
 
-        if(!(itemStack.has(RunicRitualsComponents.BOUND_CONTROL_POSITION) && itemStack.has(RunicRitualsComponents.BOUND_POSITION)) && livingEntity instanceof Player) {
+        if((!itemStack.has(RunicRitualsComponents.BOUND_CONTROL_POSITION)) && (!itemStack.has(RunicRitualsComponents.BOUND_POSITION)) && livingEntity instanceof Player) {
             ((Player)livingEntity).sendOverlayMessage(Component.literal("No runes are bound to this staff"));
         }
 
@@ -53,7 +54,7 @@ public class StaffItem extends RunicRitualsItem {
     public void inventoryTick(@NonNull ItemStack itemStack, @NonNull ServerLevel level, @NonNull Entity owner, @Nullable EquipmentSlot slot) {
         if(owner instanceof LivingEntity le && le.isUsingItem()) return;
         if(itemStack.has(RunicRitualsComponents.BOUND_POSITION)) {
-            RuneslateEntity rse = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_POSITION)).getBlockPosition());
+            RuneslateEntity rse = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_POSITION)));
             if (rse != null) {
                 rse.removeControlComponents();
             }

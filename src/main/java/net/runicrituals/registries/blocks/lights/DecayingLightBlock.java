@@ -5,39 +5,33 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.ticks.TickPriority;
+import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.RunicRitualsBlocks;
 import org.jspecify.annotations.NonNull;
 
 public class DecayingLightBlock extends LightBlock {
-
-    private static final int DECAY_TIME = 20 * 60;
 
     public DecayingLightBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    protected void onPlace(final @NonNull BlockState state, final Level level, final @NonNull BlockPos pos, final @NonNull BlockState oldState, final boolean movedByPiston) {
-        level.scheduleTick(pos, this, DECAY_TIME, TickPriority.EXTREMELY_LOW);
-    }
-
-    @Override
-    protected void tick(BlockState state, @NonNull ServerLevel level, @NonNull BlockPos pos, @NonNull RandomSource random) {
+    protected void randomTick(final @NonNull BlockState state, final ServerLevel level, final BlockPos pos, final RandomSource random) {
         int lightLevel = state.getValue(LEVEL);
-        if(lightLevel == 0) {
-            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        if (lightLevel == 0) {
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             return;
         }
-        level.setBlockAndUpdate(pos, this.defaultBlockState().setValue(LEVEL, lightLevel-1));
-        level.scheduleTick(pos, this, DECAY_TIME, TickPriority.EXTREMELY_LOW);
+        BlockState newState = this.defaultBlockState().setValue(LEVEL, lightLevel - 1);
+        level.setBlock(pos, newState, Block.UPDATE_ALL);
     }
 
     /**
@@ -52,7 +46,7 @@ public class DecayingLightBlock extends LightBlock {
      */
 //    also, the RunicRitualsBlocks.SHADOW != null IS actually required, and can't be simplified to true. the block is null on startup, and crashes if you don't check
     @Override
-    protected VoxelShape getShape(final BlockState state, final BlockGetter level, final BlockPos pos, final CollisionContext context) {
+    protected @NonNull VoxelShape getShape(final @NonNull BlockState state, final @NonNull BlockGetter level, final @NonNull BlockPos pos, final CollisionContext context) {
         return context.isHoldingItem(Items.LIGHT) ||
                 (RunicRitualsBlocks.SHADOW != null && context.isHoldingItem(RunicRitualsBlocks.SHADOW.asItem())) ||
                 (RunicRitualsBlocks.DECAYING_LIGHT != null && context.isHoldingItem(RunicRitualsBlocks.DECAYING_LIGHT.asItem())) ||

@@ -10,13 +10,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.data_generation.RunicRitualsBlockTagProvider;
 import net.runicrituals.logic.runes.enums.CastTrigger;
 import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.registries.blocks.rune_slate.Runeslate;
 import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
-import net.runicrituals.registries.components.BlockPositionComponent;
 import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
 
@@ -52,7 +50,7 @@ public class RunicRitualsItem extends Item {
         if(rse != null && player != null) {
             if(rse.getRuneDataComponent().runeSymbol() == RuneSymbol.BOUND.getId()) {
 
-                context.getItemInHand().set(RunicRitualsComponents.BOUND_POSITION, new BlockPositionComponent(rse.getBlockPos()));
+                context.getItemInHand().set(RunicRitualsComponents.BOUND_POSITION, rse.getBlockPos());
                 player.sendOverlayMessage(Component.literal("Linking " + context.getItemInHand().getItemName().getString() + " to Position Ritual"));
             }
         }
@@ -67,7 +65,7 @@ public class RunicRitualsItem extends Item {
         if(rse != null && player != null) {
             if(rse.getRuneDataComponent().runeSymbol() == RuneSymbol.CONTROL.getId()) {
 
-                context.getItemInHand().set(RunicRitualsComponents.BOUND_CONTROL_POSITION, new BlockPositionComponent(rse.getBlockPos()));
+                context.getItemInHand().set(RunicRitualsComponents.BOUND_CONTROL_POSITION, rse.getBlockPos());
                 player.sendOverlayMessage(Component.literal("Linking " + context.getItemInHand().getItemName().getString() + " to Control Ritual"));
             }
         }
@@ -75,9 +73,9 @@ public class RunicRitualsItem extends Item {
 
     public void sendPosition(Level level, ItemStack itemStack, LivingEntity livingEntity) {
         if(itemStack.has(RunicRitualsComponents.BOUND_POSITION)) {
-            RuneslateEntity rse = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_POSITION)).getBlockPosition());
+            RuneslateEntity rse = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_POSITION)));
             if(rse != null) {
-                rse.setComponent(RunicRitualsComponents.BOUND_POSITION, new BlockPositionComponent(vec3ToBlockPosition(livingEntity.position())));
+                rse.setComponent(RunicRitualsComponents.BOUND_POSITION, vec3ToBlockPosition(livingEntity.position()));
             } else if(livingEntity instanceof Player) {
                 ((Player)livingEntity).sendOverlayMessage(Component.literal("Could not find bound position rune"));
             }
@@ -86,7 +84,7 @@ public class RunicRitualsItem extends Item {
 
     public void triggerControlledBlock(Level level, ItemStack itemStack, LivingEntity livingEntity, CastTrigger triggerType){
         if(itemStack.has(RunicRitualsComponents.BOUND_CONTROL_POSITION)) {
-            RuneslateEntity rse2 = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_CONTROL_POSITION)).getBlockPosition());
+            RuneslateEntity rse2 = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_CONTROL_POSITION)));
             if (rse2 != null && rse2.getAnchor() != null) {
                 rse2.getAnchor().triggerCastingBlock(triggerType, rse2.getBlockPos());
             } else if(livingEntity instanceof Player) {

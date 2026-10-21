@@ -246,8 +246,13 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
     @Override
     public void setRemoved() {
         assert level != null;
-        if(level.isClientSide() || !(Objects.requireNonNull(level.getServer()).isCurrentlySaving())) {
-            delink();
+        if(level.isClientSide()) {
+
+            boolean isChunkUnloading = level.getBlockState(worldPosition).is(getBlockState().getBlock());
+
+            if(!isChunkUnloading) {
+                delink();
+            }
         }
         super.setRemoved();
     }
@@ -288,6 +293,8 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
     }
 
     /* Network management */
+
+
     @Override
     public @NonNull CompoundTag getUpdateTag(HolderLookup.@NonNull Provider registryLookup) {
         return saveWithoutMetadata(registryLookup);

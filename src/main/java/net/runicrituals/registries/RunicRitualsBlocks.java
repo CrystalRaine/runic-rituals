@@ -52,7 +52,8 @@ public class RunicRitualsBlocks {
             .mapColor(waterloggedMapColor(MapColor.NONE))
             .noLootTable()
             .noOcclusion()
-            .lightLevel(LightBlock.LIGHT_EMISSION),
+            .lightLevel(LightBlock.LIGHT_EMISSION)
+            .randomTicks(),
         p -> p.rarity(Rarity.EPIC).component(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY.with(LightBlock.LEVEL, 15))
 
     );
@@ -73,7 +74,8 @@ public class RunicRitualsBlocks {
             .replaceable()
             .strength(-1.0F, 3600000.8F)
             .mapColor(waterloggedMapColor(MapColor.NONE))
-            .noLootTable(),
+            .noLootTable()
+            .randomTicks(),
         p -> p.rarity(Rarity.EPIC).component(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY.with(LightBlock.LEVEL, 15))
     );
 

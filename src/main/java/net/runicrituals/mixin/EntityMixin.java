@@ -35,7 +35,7 @@ public abstract class EntityMixin implements EntityAdditions {
     private Vec3 scaleDelta(Vec3 delta) {
 
         // LIES! FOUL LIES! (the warning that is)
-        if(!level.isClientSide() && (Object) this instanceof Player)
+        if((!level.isClientSide()) && (((Object) this) instanceof Player))
             return delta;
 
         Vec3 newDelta = delta.scale(deltaScale);
@@ -55,7 +55,7 @@ public abstract class EntityMixin implements EntityAdditions {
     @Override
     public void runic_rituals$setDeltaScale(double ds) {
         deltaScale = ds;
-        boostEndTimestamp = level.getGameTime() + 20 ;
+        boostEndTimestamp = level.getGameTime() + 5 ;
     }
 
     @Override
