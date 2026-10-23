@@ -56,6 +56,7 @@ public class RunicRitualsBlocks {
             .randomTicks()
             .pushReaction(PushReaction.DESTROY)
             .replaceable()
+            .sound(SoundType.EMPTY)
             .noCollision(),
         p -> p.rarity(Rarity.EPIC).component(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY.with(LightBlock.LEVEL, 15))
     );
@@ -68,6 +69,7 @@ public class RunicRitualsBlocks {
             .strength(-1.0F, 3600000.8F)
             .mapColor(waterloggedMapColor(MapColor.NONE))
             .noLootTable()
+            .sound(SoundType.EMPTY)
             .pushReaction(PushReaction.DESTROY),
         p -> p.rarity(Rarity.EPIC).component(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY.with(LightBlock.LEVEL, 15))
     );
@@ -81,6 +83,7 @@ public class RunicRitualsBlocks {
             .mapColor(waterloggedMapColor(MapColor.NONE))
             .noLootTable()
             .randomTicks()
+            .sound(SoundType.EMPTY)
             .pushReaction(PushReaction.DESTROY),
         p -> p.rarity(Rarity.EPIC).component(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY.with(LightBlock.LEVEL, 15))
     );
