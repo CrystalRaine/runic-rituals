@@ -2,13 +2,18 @@ package net.runicrituals.registries.blocks.lights;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.runicrituals.registries.RunicRitualsBlocks;
+
+import java.util.Objects;
 
 public class ShadowBlock extends LightBlock {
 
@@ -44,5 +49,12 @@ public class ShadowBlock extends LightBlock {
                 (RunicRitualsBlocks.DECAYING_LIGHT != null && context.isHoldingItem(RunicRitualsBlocks.DECAYING_LIGHT.asItem())) ||
                 (RunicRitualsBlocks.DECAYING_SHADOW != null && context.isHoldingItem(RunicRitualsBlocks.DECAYING_SHADOW.asItem()))
                 ? Shapes.block() : Shapes.empty();
+    }
+
+    @Override
+    public BlockState getStateForPlacement(final BlockPlaceContext context) {
+        FluidState replacedFluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return Objects.requireNonNull(super.getStateForPlacement(context))
+                .setValue(WATERLOGGED, replacedFluidState.is(Fluids.WATER));
     }
 }

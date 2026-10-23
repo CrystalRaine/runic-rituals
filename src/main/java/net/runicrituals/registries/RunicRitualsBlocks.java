@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.blocks.lights.DecayingLightBlock;
 import net.runicrituals.registries.blocks.lights.DecayingShadowBlock;
@@ -47,24 +48,27 @@ public class RunicRitualsBlocks {
         DECAYING_LIGHT_KEY,
         DecayingLightBlock::new,
         BlockBehaviour.Properties.of()
-            .replaceable()
             .strength(-1.0F, 3600000.8F)
             .mapColor(waterloggedMapColor(MapColor.NONE))
             .noLootTable()
             .noOcclusion()
             .lightLevel(LightBlock.LIGHT_EMISSION)
-            .randomTicks(),
+            .randomTicks()
+            .pushReaction(PushReaction.DESTROY)
+            .replaceable()
+            .noCollision(),
         p -> p.rarity(Rarity.EPIC).component(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY.with(LightBlock.LEVEL, 15))
-
     );
     public static final Block SHADOW = register(
         SHADOW_KEY,
         ShadowBlock::new,
         BlockBehaviour.Properties.of()
             .replaceable()
+            .noCollision()
             .strength(-1.0F, 3600000.8F)
             .mapColor(waterloggedMapColor(MapColor.NONE))
-            .noLootTable(),
+            .noLootTable()
+            .pushReaction(PushReaction.DESTROY),
         p -> p.rarity(Rarity.EPIC).component(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY.with(LightBlock.LEVEL, 15))
     );
     public static final Block DECAYING_SHADOW = register(
@@ -72,10 +76,12 @@ public class RunicRitualsBlocks {
         DecayingShadowBlock::new,
         BlockBehaviour.Properties.of()
             .replaceable()
+            .noCollision()
             .strength(-1.0F, 3600000.8F)
             .mapColor(waterloggedMapColor(MapColor.NONE))
             .noLootTable()
-            .randomTicks(),
+            .randomTicks()
+            .pushReaction(PushReaction.DESTROY),
         p -> p.rarity(Rarity.EPIC).component(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY.with(LightBlock.LEVEL, 15))
     );
 

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.runes.CastingBlock;
@@ -44,6 +45,8 @@ public class Light extends ElementRune{
             modifiable = true;
         } else if (beforeState.is(Blocks.AIR)) {
             modifiable = true;
+        } else if (beforeState.is(Blocks.WATER) && beforeState.getFluidState().isSource()) {
+            modifiable = true;
         }
 
         int intensity = (int)castingBlock.intensity;
@@ -62,7 +65,8 @@ public class Light extends ElementRune{
         }
 
         if(modifiable) {
-            level.setBlockAndUpdate(actAt, getDecayingLightBlockWithBrightness(Math.clamp(brightness, -15, 15)));
+            boolean waterlogged = (beforeState.is(Blocks.WATER)) || ((beforeState.is(RunicRitualsBlocks.DECAYING_LIGHT) || beforeState.is(RunicRitualsBlocks.DECAYING_SHADOW)) && beforeState.getValue(LightBlock.WATERLOGGED));
+            level.setBlockAndUpdate(actAt, getDecayingLightBlockWithBrightness(Math.clamp(brightness, -15, 15)).setValue(LightBlock.WATERLOGGED,  waterlogged));
         }
     }
 
