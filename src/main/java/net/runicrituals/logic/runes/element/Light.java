@@ -66,7 +66,7 @@ public class Light extends ElementRune{
 
         if(modifiable) {
             boolean waterlogged = (beforeState.is(Blocks.WATER)) || ((beforeState.is(RunicRitualsBlocks.DECAYING_LIGHT) || beforeState.is(RunicRitualsBlocks.DECAYING_SHADOW)) && beforeState.getValue(LightBlock.WATERLOGGED));
-            level.setBlockAndUpdate(actAt, getDecayingLightBlockWithBrightness(Math.clamp(brightness, -15, 15)).setValue(LightBlock.WATERLOGGED,  waterlogged));
+            level.setBlockAndUpdate(actAt, getDecayingLightBlockWithBrightness(Math.clamp(brightness, -15, 15), waterlogged));
         }
     }
 
@@ -104,13 +104,13 @@ public class Light extends ElementRune{
         return "Light";
     }
 
-    private BlockState getDecayingLightBlockWithBrightness(int brightness) {
+    private BlockState getDecayingLightBlockWithBrightness(int brightness, boolean waterlogged) {
         if(brightness > 0) {
-            return RunicRitualsBlocks.DECAYING_LIGHT.defaultBlockState().setValue(DecayingLightBlock.LEVEL, brightness);
+            return RunicRitualsBlocks.DECAYING_LIGHT.defaultBlockState().setValue(DecayingLightBlock.LEVEL, brightness).setValue(LightBlock.WATERLOGGED,  waterlogged);
         }
 
         if(brightness < 0) {
-            return RunicRitualsBlocks.DECAYING_SHADOW.defaultBlockState().setValue(DecayingShadowBlock.LEVEL, -brightness);
+            return RunicRitualsBlocks.DECAYING_SHADOW.defaultBlockState().setValue(DecayingShadowBlock.LEVEL, -brightness).setValue(LightBlock.WATERLOGGED,  waterlogged);
         }
 
         return Blocks.AIR.defaultBlockState();
