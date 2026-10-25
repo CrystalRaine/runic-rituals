@@ -3,12 +3,9 @@ package net.runicrituals.logic.runes.enums;
 public enum CastTrigger {
 
     USE_BOUND_ITEM(false, true),
-    ENTITY_HIT_WITH_BOUND_ITEM(true, true),
-    DELAY_CONTINUOUS(false, true),
-    DELAY_SINGLE(true, true),
-    REDSTONE_POWERED(false, false),
-    KILL_EXECUTION(false, false)
-    ;
+    DELAY(true, true),
+    KILL_EXECUTION(false, false),
+    BOLT_HIT(true, true);
 
     private final boolean canCreateMultipleTriggers;
     private final boolean willCreateTrigger;

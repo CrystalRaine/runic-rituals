@@ -7,9 +7,9 @@ public class Delay extends ModifierRune{
     @Override
     public CastTrigger preformModification(CastingBlock castingBlock) {
 
-        runeslateEntity.setTriggerTimeout(CastTrigger.DELAY_SINGLE, 10 * 20);
+        runeslateEntity.setTriggerTimeout(CastTrigger.DELAY, 10 * 20);
 
-        return CastTrigger.DELAY_SINGLE;
+        return CastTrigger.DELAY;
     }
 
     @Override

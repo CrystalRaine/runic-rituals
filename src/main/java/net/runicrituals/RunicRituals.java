@@ -24,6 +24,7 @@ public class RunicRituals implements ModInitializer {
 		RunicRitualsRecipes.registerRecipes();
 		RunicRitualsDamageTypes.registerDamageTypes();
 		RunicRitualsComponents.registerComponents();
+		RunicRitualsEntities.registerEntities();
 	}
 
 	public static Identifier id(String path) {
