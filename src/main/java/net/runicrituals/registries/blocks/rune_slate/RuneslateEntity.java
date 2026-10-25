@@ -1,6 +1,5 @@
 package net.runicrituals.registries.blocks.rune_slate;
 
-import com.ibm.icu.text.ArabicShaping;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -20,7 +19,6 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.runicrituals.logic.runes.enums.CastTrigger;
-import net.runicrituals.logic.runes.enums.RuneInlayMaterial;
 import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.registries.RunicRitualsBlockEntities;

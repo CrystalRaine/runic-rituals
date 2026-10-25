@@ -28,7 +28,7 @@ public class DecayingLightBlock extends LightBlock {
     }
 
     @Override
-    protected void randomTick(final @NonNull BlockState state, final ServerLevel level, final BlockPos pos, final RandomSource random) {
+    protected void randomTick(final @NonNull BlockState state, final @NonNull ServerLevel level, final @NonNull BlockPos pos, final @NonNull RandomSource random) {
         int lightLevel = state.getValue(LEVEL);
         boolean waterlogged = state.getValue(WATERLOGGED);
         if (lightLevel == 0) {

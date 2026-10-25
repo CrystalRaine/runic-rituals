@@ -28,6 +28,8 @@ public class RuneSequence {
 
         CastingBlockTrigger potentialTrigger = castingBlock.resolveModifiers();
 
+        if(potentialTrigger != null && potentialTrigger.triggerType == CastTrigger.KILL_EXECUTION) return;
+        
         if(potentialTrigger != null) {
             // check if this exact trigger block already exists, and if so, don't add it
             // alternatively, if the trigger is allowed to create multiple, add anyway
@@ -123,10 +125,10 @@ public class RuneSequence {
         Optional<CastingBlockTrigger> cbt = pendingTriggerBlocks.stream().filter(b -> b.triggerType == castTrigger && b.triggerRSEPos.equals(triggeringRSEPos)).findFirst();
 
         if(cbt.isEmpty()) return;
-        tryCastCastingBlock(cbt.get().castOnTrigger(), cbt.get().castOnTrigger.getForm().getPosition(), mana, level);
+        tryCastCastingBlock(cbt.get().castOnTrigger(), cbt.get().currentFormPos, mana, level);
         pendingTriggerBlocks.remove(cbt.get());
     }
 
-    public record CastingBlockTrigger(CastTrigger triggerType, BlockPos triggerRSEPos, int hash, CastingBlock castOnTrigger){}
+    public record CastingBlockTrigger(CastTrigger triggerType, BlockPos triggerRSEPos, BlockPos currentFormPos, int hash, CastingBlock castOnTrigger){}
 
 }

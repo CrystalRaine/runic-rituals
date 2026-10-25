@@ -10,6 +10,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.runicrituals.RunicRituals;
+import net.runicrituals.registries.components.ActiveHoverTextComponent;
 import net.runicrituals.registries.components.HoverTextComponent;
 import net.runicrituals.registries.components.RuneDataComponent;
 
@@ -33,6 +34,15 @@ public class RunicRitualsComponents {
             .build()
     );
 
+    public static final DataComponentType<ActiveHoverTextComponent> ACTIVE_HOVER_TEXT_COMPONENT = Registry.register(
+        BuiltInRegistries.DATA_COMPONENT_TYPE,
+        Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "active_hover_text"),
+        DataComponentType.<ActiveHoverTextComponent>builder()
+            .persistent(ActiveHoverTextComponent.CODEC)
+            .networkSynchronized(ByteBufCodecs.fromCodec(ActiveHoverTextComponent.CODEC))
+            .build()
+    );
+
     public static final DataComponentType<BlockPos> BOUND_POSITION = Registry.register(
         BuiltInRegistries.DATA_COMPONENT_TYPE,
         Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "position_binding"),
@@ -51,10 +61,20 @@ public class RunicRitualsComponents {
             .build()
     );
 
+    public static final DataComponentType<Boolean> ACTIVE_ITEM = Registry.register(
+        BuiltInRegistries.DATA_COMPONENT_TYPE,
+        Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "active_item"),
+        DataComponentType.<Boolean>builder()
+            .persistent(Codec.BOOL)
+            .networkSynchronized(ByteBufCodecs.fromCodec(Codec.BOOL))
+            .build()
+    );
+
     public static void registerComponents() {
         RunicRituals.LOGGER.info("Registering Components");
 
         ItemComponentTooltipProviderRegistry.addAfter(DataComponents.DAMAGE, RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE);
+        ItemComponentTooltipProviderRegistry.addAfter(DataComponents.DAMAGE, RunicRitualsComponents.ACTIVE_HOVER_TEXT_COMPONENT);
         ItemComponentTooltipProviderRegistry.addAfter(DataComponents.DAMAGE, RunicRitualsComponents.HOVER_TEXT_COMPONENT);
     }
 }

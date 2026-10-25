@@ -37,6 +37,7 @@ public class RunicRitualsEnglishLangProvider extends FabricLanguageProvider {
         translationBuilder.add("item.runic-rituals.manameter.info",                 "This seems a bit anachronistic...");
         translationBuilder.add("item.runic-rituals.bound_runestone",                "Bound Runestone");
         translationBuilder.add("item.runic-rituals.bound_runestone.info",           "Its a magic rock!");
+        translationBuilder.add("item.runic-rituals.active_bound_runestone.info",    "%1$s");
 
         translationBuilder.add("block.runic-rituals.rune_engraver",                 "Rune Engraver");
         translationBuilder.add("block.runic-rituals.runeslate",                     "Runeslate");

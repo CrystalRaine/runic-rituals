@@ -25,6 +25,12 @@ public class Bound extends ModifierRune {
         if(pos != null) {
             castingBlock.getForm().setPosition(pos);
         }
+
+        runeslateEntity.removeControlComponents();
+        
+        if(pos == null) {
+            return CastTrigger.KILL_EXECUTION;
+        }
         return null;
     }
 }

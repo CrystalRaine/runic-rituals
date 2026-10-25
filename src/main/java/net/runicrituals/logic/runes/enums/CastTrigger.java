@@ -6,8 +6,8 @@ public enum CastTrigger {
     ENTITY_HIT_WITH_BOUND_ITEM(true, true),
     DELAY_CONTINUOUS(false, true),
     DELAY_SINGLE(true, true),
-    REDSTONE_POWERED(false, false)
-
+    REDSTONE_POWERED(false, false),
+    KILL_EXECUTION(false, false)
     ;
 
     private final boolean canCreateMultipleTriggers;

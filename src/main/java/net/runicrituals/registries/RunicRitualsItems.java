@@ -8,6 +8,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.*;
 import net.runicrituals.RunicRituals;
+import net.runicrituals.registries.components.ActiveHoverTextComponent;
 import net.runicrituals.registries.components.HoverTextComponent;
 import net.runicrituals.registries.items.BoundRunestoneItem;
 import net.runicrituals.registries.items.ManameterItem;
@@ -28,70 +29,72 @@ public class RunicRitualsItems {
     public static final ResourceKey<Item> ECHO_WAND_KEY = resourceKey("echo_wand");
 
     public static final Item MANAMETER = registerItem(MANAMETER_KEY,
-            ManameterItem::new,
-            new ManameterItem
-                    .RunicRitualsItemProperties()
-                    .stacksTo(1)
-                    .rarity(Rarity.UNCOMMON)
-                    .repairable(Items.COPPER_INGOT)
-                    .component(RunicRitualsComponents.HOVER_TEXT_COMPONENT, new HoverTextComponent("manameter"))
+        ManameterItem::new,
+        new ManameterItem
+            .RunicRitualsItemProperties()
+            .hoverText("manameter")
+            .stacksTo(1)
+            .rarity(Rarity.UNCOMMON)
+            .repairable(Items.COPPER_INGOT)
     );
 
     public static final Item BASIC_STAFF = registerItem(STAFF_KEY,
-            StaffItem::new,
-            new StaffItem
-                    .RunicRitualsItemProperties()
-                    .staff(ToolMaterial.IRON, 1f, -2.5f)
-                    .stacksTo(1)
-                    .rarity(Rarity.COMMON)
-                    .useCooldown(0.75f)
-                    .component(RunicRitualsComponents.HOVER_TEXT_COMPONENT, new HoverTextComponent("staff"))
+        StaffItem::new,
+        new StaffItem
+            .RunicRitualsItemProperties()
+            .staff(ToolMaterial.IRON, 1f, -2.5f)
+            .hoverText("staff")
+            .stacksTo(1)
+            .rarity(Rarity.COMMON)
+            .useCooldown(0.75f)
     );
 
     public static final Item BOUND_RUNESTONE = registerItem(BOUND_RUNESTONE_KEY,
-            BoundRunestoneItem::new,
-            new BoundRunestoneItem
-                    .RunicRitualsItemProperties()
-                    .stacksTo(1)
-                    .rarity(Rarity.UNCOMMON)
-                    .component(RunicRitualsComponents.HOVER_TEXT_COMPONENT, new HoverTextComponent("bound_runestone"))
+        BoundRunestoneItem::new,
+        new BoundRunestoneItem
+            .RunicRitualsItemProperties()
+            .activatable("bound_runestone")
+            .hoverText("bound_runestone")
+            .stacksTo(1)
+            .rarity(Rarity.UNCOMMON)
+            .component(RunicRitualsComponents.ACTIVE_HOVER_TEXT_COMPONENT, new ActiveHoverTextComponent("bound_runestone"))
     );
 
     public static final Item BASIC_WAND = registerItem(BASIC_WAND_KEY,
-            WandItem::new,
-            new WandItem
-                    .RunicRitualsItemProperties()
-                    .wand(ToolMaterial.IRON, 1f, -2.5F)
-                    .stacksTo(1)
-                    .rarity(Rarity.COMMON)
-                    .enchantable(10)
-                    .repairable(Items.COPPER_INGOT)
-                    .component(RunicRitualsComponents.HOVER_TEXT_COMPONENT, new HoverTextComponent("wand_basic"))
+        WandItem::new,
+        new WandItem
+            .RunicRitualsItemProperties()
+            .wand(ToolMaterial.IRON, 1f, -2.5F)
+            .hoverText("wand_basic")
+            .stacksTo(1)
+            .rarity(Rarity.COMMON)
+            .enchantable(10)
+            .repairable(Items.COPPER_INGOT)
     );
 
     public static final Item DIAMOND_WAND = registerItem(DIAMOND_WAND_KEY,
-            WandItem::new,
-            new WandItem
-                    .RunicRitualsItemProperties()
-                    .wand(ToolMaterial.DIAMOND, 1f, -2.8F)
-                    .stacksTo(1)
-                    .rarity(Rarity.UNCOMMON)
-                    .enchantable(20)
-                    .repairable(Items.COPPER_INGOT)
-                    .component(RunicRitualsComponents.HOVER_TEXT_COMPONENT, new HoverTextComponent("wand_diamond"))
+        WandItem::new,
+        new WandItem
+            .RunicRitualsItemProperties()
+            .wand(ToolMaterial.DIAMOND, 1f, -2.8F)
+            .hoverText("wand_diamond")
+            .stacksTo(1)
+            .rarity(Rarity.UNCOMMON)
+            .enchantable(20)
+            .repairable(Items.COPPER_INGOT)
     );
 
     public static final Item ECHO_WAND = registerItem(ECHO_WAND_KEY,
-            WandItem::new,
-            new WandItem
-                    .RunicRitualsItemProperties()
-                    .wand(ToolMaterial.NETHERITE, 1f, -3.0F)
-                    .stacksTo(1)
-                    .rarity(Rarity.RARE)
-                    .enchantable(30)
-                    .repairable(Items.COPPER_INGOT)
-                    .component(RunicRitualsComponents.HOVER_TEXT_COMPONENT, new HoverTextComponent("wand_echo"))
-                    .fireResistant()
+        WandItem::new,
+        new WandItem
+            .RunicRitualsItemProperties()
+            .wand(ToolMaterial.NETHERITE, 1f, -3.0F)
+            .hoverText("wand_echo")
+            .stacksTo(1)
+            .rarity(Rarity.RARE)
+            .enchantable(30)
+            .repairable(Items.COPPER_INGOT)
+            .fireResistant()
     );
 
     public static void registerItems() {

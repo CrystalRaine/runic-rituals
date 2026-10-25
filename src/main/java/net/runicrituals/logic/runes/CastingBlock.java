@@ -71,7 +71,7 @@ public class CastingBlock implements Cloneable{
             CastTrigger triggerType = modifierRune.preformModification(this);
             modifierRune.preformModification(cloneTriggerBlock);
             if(triggerType != null) {
-                return new RuneSequence.CastingBlockTrigger(triggerType, modifierRune.runeslateEntity.getBlockPos(), cloneTriggerBlock.toString().hashCode(), cloneTriggerBlock);
+                return new RuneSequence.CastingBlockTrigger(triggerType, modifierRune.runeslateEntity.getBlockPos(), form.getPosition(), cloneTriggerBlock.toString().hashCode(), cloneTriggerBlock);
             }
         }
         return null;
