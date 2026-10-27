@@ -42,13 +42,22 @@ public class RunicRitualsComponents {
             .networkSynchronized(ByteBufCodecs.fromCodec(ActiveHoverTextComponent.CODEC))
             .build()
     );
-
+    
     public static final DataComponentType<BlockPos> BOUND_POSITION = Registry.register(
         BuiltInRegistries.DATA_COMPONENT_TYPE,
         Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "position_binding"),
         DataComponentType.<BlockPos>builder()
             .persistent(BlockPos.CODEC)
             .networkSynchronized(BlockPos.STREAM_CODEC)
+            .build()
+    );
+    
+    public static final DataComponentType<String> TARGET_ENTITY_REFERENCE = Registry.register(
+        BuiltInRegistries.DATA_COMPONENT_TYPE,
+        Identifier.fromNamespaceAndPath(RunicRituals.MOD_ID, "target_entity_binding"),
+        DataComponentType.<String>builder()
+            .persistent(Codec.STRING)
+            .networkSynchronized(ByteBufCodecs.fromCodec(Codec.STRING))
             .build()
     );
 

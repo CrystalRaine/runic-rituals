@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.runes.enums.CastTrigger;
 import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.logic.runes.enums.RuneType;
@@ -29,6 +31,8 @@ import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;
+
+import static net.runicrituals.logic.Util.blockPosToVec3;
 
 public class RuneslateEntity extends BlockEntity {
 
@@ -256,14 +260,37 @@ public class RuneslateEntity extends BlockEntity {
         setChanged();
     }
 
-    public BlockPos getPositionComponentPosition() {
-        return this.components().get(RunicRitualsComponents.BOUND_POSITION);
+    public Vec3 getPositionComponentPosition() {
+        if(level != null && this.components().has(RunicRitualsComponents.TARGET_ENTITY_REFERENCE)) {
+            String s = this.components().get(RunicRitualsComponents.TARGET_ENTITY_REFERENCE);
+            if(s != null){
+                Entity e = level.getEntity(UUID.fromString(s));
+                if(e != null) {
+                    return e.position();
+                }
+            }
+        }
+        if(level != null && this.components().has(RunicRitualsComponents.BOUND_POSITION)) {
+            return blockPosToVec3(Objects.requireNonNull(this.components().get(RunicRitualsComponents.BOUND_POSITION)));
+        }
+        return null;
+    }
+    
+    public Entity getBoundEntityTarget() {
+        if(level != null && this.components().has(RunicRitualsComponents.TARGET_ENTITY_REFERENCE)) {
+            String s = this.components().get(RunicRitualsComponents.TARGET_ENTITY_REFERENCE);
+            if(s == null) return null;
+            
+            return level.getEntity(UUID.fromString(s));
+        }
+        return null;
     }
 
     public void removeControlComponents() {
         DataComponentMap.Builder builder = DataComponentMap.builder();
         builder.addAll(components().filter(d ->
-                !d.equals(RunicRitualsComponents.BOUND_POSITION)
+            !d.equals(RunicRitualsComponents.BOUND_POSITION) &&
+            !d.equals(RunicRitualsComponents.TARGET_ENTITY_REFERENCE)
         ));
         setComponents(builder.build());
     }

@@ -23,6 +23,7 @@ import net.runicrituals.registries.server_only.RunicRitualsComponents;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import static net.runicrituals.logic.Util.vec3ToBlockPosition;
 import static net.runicrituals.registries.server_only.RunicRitualsComponents.ACTIVE_ITEM;
@@ -100,10 +101,12 @@ public class RunicRitualsItem extends Item {
     }
 
     public boolean sendPosition(Level level, ItemStack itemStack, LivingEntity livingEntity) {
+        ;
+        level.getEntity(UUID.fromString(livingEntity.getStringUUID()));
         if(itemStack.has(RunicRitualsComponents.BOUND_POSITION)) {
             RuneslateEntity rse = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_POSITION)));
             if(rse != null) {
-                rse.setComponent(RunicRitualsComponents.BOUND_POSITION, vec3ToBlockPosition(livingEntity.position()));
+                rse.setComponent(RunicRitualsComponents.TARGET_ENTITY_REFERENCE, livingEntity.getStringUUID());
             } else if(livingEntity instanceof Player) {
                 ((Player)livingEntity).sendOverlayMessage(Component.literal("Could not find bound position rune"));
                 return false;

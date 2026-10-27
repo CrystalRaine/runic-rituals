@@ -2,6 +2,8 @@ package net.runicrituals.logic.runes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.ManaStorageHandler;
 import net.runicrituals.logic.runes.action.ActionRune;
@@ -21,7 +23,7 @@ public class RuneSequence {
     List<CastingBlock> castingBlocks = new ArrayList<>();
     List<CastingBlockTrigger> pendingTriggerBlocks = new ArrayList<>();
 
-    public void tryCastCastingBlock(CastingBlock castingBlock, BlockPos ritualPosition, ManaStorageHandler mana, Level level) {
+    public void tryCastCastingBlock(CastingBlock castingBlock, Vec3 ritualPosition, ManaStorageHandler mana, Level level) {
         if(castingBlock.isUncastable()) return;
 
         castingBlock.setLocation(ritualPosition);
@@ -39,6 +41,7 @@ public class RuneSequence {
                     )
             ) return;
             pendingTriggerBlocks.add(potentialTrigger);
+            RunicRituals.LOGGER.info("Triggers: " + pendingTriggerBlocks.size());
             return;
         }
 
@@ -48,7 +51,7 @@ public class RuneSequence {
         }
     }
 
-    public void run(Level level, ManaStorageHandler mana, BlockPos ritualPosition) {
+    public void run(Level level, ManaStorageHandler mana, Vec3 ritualPosition) {
         for(CastingBlock castingBlock : this.castingBlocks) {
             tryCastCastingBlock(castingBlock, ritualPosition, mana, level);
         }
@@ -117,18 +120,29 @@ public class RuneSequence {
 
         return count;
     }
-
+    
     public void triggeredCastingBlock(CastTrigger castTrigger, BlockPos triggeringRSEPos, ManaStorageHandler mana, Level level) {
         // new pendingTriggerBlock entries can be added as we go through these, but shouldn't ever be removed during execution.
         // additionally, we don't care about trying to process those new blocks (for a couple of reasons really),
         // so we snapshot the filtered ones we should process, then process those
         Optional<CastingBlockTrigger> cbt = pendingTriggerBlocks.stream().filter(b -> b.triggerType == castTrigger && b.triggerRSEPos.equals(triggeringRSEPos)).findFirst();
-
+        
         if(cbt.isEmpty()) return;
         tryCastCastingBlock(cbt.get().castOnTrigger(), cbt.get().currentFormPos, mana, level);
         pendingTriggerBlocks.remove(cbt.get());
     }
+    
+    public void triggeredCastingBlockWithOverridePos(CastTrigger castTrigger, BlockPos triggeringRSEPos, ManaStorageHandler mana, Level level, Vec3 overridePos) {
+        // new pendingTriggerBlock entries can be added as we go through these, but shouldn't ever be removed during execution.
+        // additionally, we don't care about trying to process those new blocks (for a couple of reasons really),
+        // so we snapshot the filtered ones we should process, then process those
+        Optional<CastingBlockTrigger> cbt = pendingTriggerBlocks.stream().filter(b -> b.triggerType == castTrigger && b.triggerRSEPos.equals(triggeringRSEPos)).findFirst();
+        
+        if(cbt.isEmpty()) return;
+        tryCastCastingBlock(cbt.get().castOnTrigger(), overridePos, mana, level);
+        pendingTriggerBlocks.remove(cbt.get());
+    }
 
-    public record CastingBlockTrigger(CastTrigger triggerType, BlockPos triggerRSEPos, BlockPos currentFormPos, int hash, CastingBlock castOnTrigger){}
+    public record CastingBlockTrigger(CastTrigger triggerType, BlockPos triggerRSEPos, Vec3 currentFormPos, int hash, CastingBlock castOnTrigger){}
 
 }

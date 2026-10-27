@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.ManaStorageHandler;
 import net.runicrituals.logic.runes.RuneSequence;
 import net.runicrituals.logic.ManaStorage;
@@ -63,7 +64,7 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
                 }
             }
 
-            blockEntity.sequence.run(level, blockEntity.mana, pos);
+            blockEntity.sequence.run(level, blockEntity.mana, Vec3.atLowerCornerOf(pos));
         } else {
             blockEntity.sequence = null;
         }
@@ -314,9 +315,12 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
         BlockState state = getBlockState();
         level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
     }
-
+    
     public void triggerCastingBlock(CastTrigger castTrigger, BlockPos triggeringRSEPos) {
         this.sequence.triggeredCastingBlock(castTrigger, triggeringRSEPos, this.mana, this.level);
-
+    }
+    
+    public void triggerCastingBlock(CastTrigger castTrigger, BlockPos triggeringRSEPos, Vec3 overridePos) {
+        this.sequence.triggeredCastingBlockWithOverridePos(castTrigger, triggeringRSEPos, this.mana, this.level, overridePos);
     }
 }

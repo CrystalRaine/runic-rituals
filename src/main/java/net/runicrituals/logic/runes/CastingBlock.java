@@ -3,6 +3,7 @@ package net.runicrituals.logic.runes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.runicrituals.RunicRituals;
 import net.runicrituals.logic.runes.action.ActionRune;
 import net.runicrituals.logic.runes.element.ElementRune;
@@ -95,7 +96,7 @@ public class CastingBlock implements Cloneable{
         }
     }
 
-    public void setLocation(BlockPos ritualPosition) {
+    public void setLocation(Vec3 ritualPosition) {
         form.setPosition(ritualPosition);
     }
 
