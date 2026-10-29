@@ -5,6 +5,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.runicrituals.logic.runes.Rune;
 import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.registries.blocks.ritual_anchor.RitualAnchor;
@@ -12,6 +13,7 @@ import net.runicrituals.registries.blocks.rune_slate.Runeslate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static net.runicrituals.logic.Util.blockPosToVec3;
@@ -26,17 +28,13 @@ import static net.runicrituals.logic.Util.getRandom;
  * non-cubic forms should override getAABB to be the encompassing bounding box, and should then override the above noted
  * methods in order to filter that volume.
  */
-public abstract class FormRune extends Rune {
+public abstract class FormRune extends Rune implements Cloneable{
 
     Level level;
-    private List<BlockPos> validTargets = new ArrayList<>();
 
-    BlockPos actionLocation;
+    Vec3 actionLocation;
+    String boundEntity;
     float radius;
-
-    public void setDefaultRadius(){
-        radius = 4;
-    }
 
     public void setProperties(Level level, float radius) {
         this.level = level;
@@ -44,7 +42,7 @@ public abstract class FormRune extends Rune {
     }
 
     public AABB getAABB() {
-        return new AABB(actionLocation).inflate(Math.max(0, radius - 0.5f));
+        return new AABB(BlockPos.containing(actionLocation)).inflate(Math.max(0, radius - 0.5f));
     }
 
     public Stream<BlockPos> getAllBlocks() {
@@ -57,9 +55,9 @@ public abstract class FormRune extends Rune {
 
     public BlockPos getBlockTarget() {
 
-        validTargets = getAllBlocks()
-            .filter(b -> RitualAnchor.getBlockEntity(level, b) == null && Runeslate.getBlockEntity(level, b) == null)
-            .toList();
+        List<BlockPos> validTargets = getAllBlocks()
+                .filter(b -> RitualAnchor.getBlockEntity(level, b) == null && Runeslate.getBlockEntity(level, b) == null)
+                .toList();
 
         return getRandom(level.getRandom(), validTargets);
     }
@@ -85,7 +83,36 @@ public abstract class FormRune extends Rune {
         return RuneType.FORM;
     }
 
-    public void setPosition(BlockPos actionLocation) {
+    public void setPosition(Vec3 actionLocation) {
         this.actionLocation = actionLocation;
+    }
+
+    public void setBoundEntity(Entity e) {
+        if(e == null) {
+            boundEntity = null;
+        } else {
+            boundEntity = e.getStringUUID();
+        }
+    }
+    
+    public Entity getBoundEntity() {
+        if(boundEntity == null) return null;
+        return level.getEntity(UUID.fromString(boundEntity));
+    }
+    
+    public Vec3 getPosition() {
+        return actionLocation;
+    }
+
+    @Override
+    public FormRune clone() {
+        try {
+            FormRune clone = (FormRune) super.clone();
+            clone.actionLocation = new Vec3(actionLocation.x, actionLocation.y, actionLocation.z);
+            clone.radius = radius;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

@@ -1,19 +1,7 @@
 package net.runicrituals.logic.runes.form;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Position;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.runicrituals.RunicRituals;
-
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Stream;
-
 import static net.runicrituals.logic.Util.*;
 
 public class Sheet extends FormRune {
@@ -24,8 +12,8 @@ public class Sheet extends FormRune {
      */
     @Override
     public AABB getAABB() {
-        Vec3 min = blockPosToVec3(actionLocation.offset((int) -radius, -1, (int) -radius));
-        Vec3 max = blockPosToVec3(actionLocation.offset((int) radius, -1, (int) radius));
+        Vec3 min = actionLocation.add((int) -radius, -1, (int) -radius);
+        Vec3 max = actionLocation.add((int) radius, -1, (int) radius);
         return new AABB(min, max);
     }
 

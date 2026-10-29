@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 
 import java.util.function.Consumer;
 

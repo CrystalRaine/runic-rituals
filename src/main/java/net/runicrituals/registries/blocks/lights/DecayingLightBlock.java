@@ -1,45 +1,66 @@
 package net.runicrituals.registries.blocks.lights;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LightBlock;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.ticks.TickPriority;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.RunicRitualsBlocks;
-import net.runicrituals.registries.RunicRitualsItems;
 import org.jspecify.annotations.NonNull;
 
-public class DecayingLightBlock extends LightBlock {
+import java.util.Objects;
 
-    private static final int DECAY_TIME = 20 * 60;
+public class DecayingLightBlock extends LightBlock {
 
     public DecayingLightBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    protected void onPlace(final @NonNull BlockState state, final Level level, final @NonNull BlockPos pos, final @NonNull BlockState oldState, final boolean movedByPiston) {
-        level.scheduleTick(pos, this, DECAY_TIME, TickPriority.EXTREMELY_LOW);
+    protected void randomTick(final @NonNull BlockState state, final @NonNull ServerLevel level, final @NonNull BlockPos pos, final @NonNull RandomSource random) {
+        int lightLevel = state.getValue(LEVEL);
+        boolean waterlogged = state.getValue(WATERLOGGED);
+        if (lightLevel == 0) {
+            if(waterlogged) {
+                level.setBlock(pos, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
+                return;
+            }
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            return;
+        }
+        BlockState newState = this.defaultBlockState().setValue(LEVEL, lightLevel - 1).setValue(WATERLOGGED, waterlogged);
+        level.setBlock(pos, newState, Block.UPDATE_ALL);
     }
 
     @Override
-    protected void tick(BlockState state, @NonNull ServerLevel level, @NonNull BlockPos pos, @NonNull RandomSource random) {
-        int lightLevel = state.getValue(LEVEL);
-        if(lightLevel == 0) {
-            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-            return;
+    protected @NonNull BlockState updateShape(
+            final BlockState state,
+            final @NonNull LevelReader level,
+            final @NonNull ScheduledTickAccess ticks,
+            final @NonNull BlockPos pos,
+            final @NonNull Direction direction,
+            final @NonNull BlockPos neighbourPos,
+            final @NonNull BlockState neighbour,
+            final @NonNull RandomSource random
+    ) {
+        if (!state.getValue(WATERLOGGED)) {
+            FluidState neighborFluid = neighbour.getFluidState();
+            if (!neighborFluid.isEmpty()) {
+                return Blocks.AIR.defaultBlockState();
+            }
         }
-        level.setBlockAndUpdate(pos, this.defaultBlockState().setValue(LEVEL, lightLevel-1));
-        level.scheduleTick(pos, this, DECAY_TIME, TickPriority.EXTREMELY_LOW);
+        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbour, random);
     }
 
     /**
@@ -54,11 +75,19 @@ public class DecayingLightBlock extends LightBlock {
      */
 //    also, the RunicRitualsBlocks.SHADOW != null IS actually required, and can't be simplified to true. the block is null on startup, and crashes if you don't check
     @Override
-    protected VoxelShape getShape(final BlockState state, final BlockGetter level, final BlockPos pos, final CollisionContext context) {
+    protected @NonNull VoxelShape getShape(final @NonNull BlockState state, final @NonNull BlockGetter level, final @NonNull BlockPos pos, final CollisionContext context) {
         return context.isHoldingItem(Items.LIGHT) ||
                 (RunicRitualsBlocks.SHADOW != null && context.isHoldingItem(RunicRitualsBlocks.SHADOW.asItem())) ||
                 (RunicRitualsBlocks.DECAYING_LIGHT != null && context.isHoldingItem(RunicRitualsBlocks.DECAYING_LIGHT.asItem())) ||
                 (RunicRitualsBlocks.DECAYING_SHADOW != null && context.isHoldingItem(RunicRitualsBlocks.DECAYING_SHADOW.asItem()))
                 ? Shapes.block() : Shapes.empty();
     }
+
+    @Override
+    public BlockState getStateForPlacement(final BlockPlaceContext context) {
+        FluidState replacedFluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return Objects.requireNonNull(super.getStateForPlacement(context))
+                .setValue(WATERLOGGED, replacedFluidState.is(Fluids.WATER));
+    }
+
 }

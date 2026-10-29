@@ -35,7 +35,7 @@ public abstract class EntityMixin implements EntityAdditions {
     private Vec3 scaleDelta(Vec3 delta) {
 
         // LIES! FOUL LIES! (the warning that is)
-        if(!level.isClientSide() && (Object) this instanceof Player)
+        if((!level.isClientSide()) && (((Object) this) instanceof Player))
             return delta;
 
         Vec3 newDelta = delta.scale(deltaScale);

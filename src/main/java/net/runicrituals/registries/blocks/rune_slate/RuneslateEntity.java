@@ -3,11 +3,14 @@ package net.runicrituals.registries.blocks.rune_slate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -16,7 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.runicrituals.logic.runes.enums.RuneInlayMaterial;
+import net.minecraft.world.phys.Vec3;
+import net.runicrituals.logic.runes.enums.CastTrigger;
 import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
@@ -28,15 +32,18 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 
+import static net.runicrituals.logic.Util.blockPosToVec3;
+
 public class RuneslateEntity extends BlockEntity {
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
-    UUID chainUUID = null;
     boolean linked = false;
     List<BlockPos> arguments = new ArrayList<>();
     BlockPos anchorPos = null;
     BlockPos prev = null;
+
+    List<TriggerTypeAndTime> pendingTriggerTimes = new ArrayList<>();
 
     public RuneslateEntity(BlockPos worldPosition, BlockState blockState) {
         super(RunicRitualsBlockEntities.RUNESLATE_BLOCK_ENTITY, worldPosition, blockState);
@@ -68,7 +75,10 @@ public class RuneslateEntity extends BlockEntity {
     public void setRemoved() {
         assert level != null;
         if(level.isClientSide() || !(Objects.requireNonNull(level.getServer()).isCurrentlySaving())) {
-            if(getAnchor() != null) {
+
+            boolean isChunkUnloading = level.getBlockState(worldPosition).is(getBlockState().getBlock());
+
+            if(getAnchor() != null && !isChunkUnloading) {
                 getAnchor().delink();
 
                 List<RuneslateEntity> delinkQueue = new ArrayList<>(arguments.stream().map(p -> Runeslate.getBlockEntity(level, p)).filter(Objects::nonNull).toList());
@@ -84,14 +94,6 @@ public class RuneslateEntity extends BlockEntity {
 
     public RuneDataComponent getRuneDataComponent() {
         return this.components().get(RunicRitualsComponents.RUNE_DATA_COMPONENT_TYPE);
-    }
-
-    public RuneInlayMaterial getSlateInlay() {
-        RuneDataComponent rdc = getRuneDataComponent();
-        if(rdc != null) {
-            return RuneInlayMaterial.getElementFromId(rdc.inlay());
-        }
-        return null;
     }
 
     public RuneSymbol getSlateSymbol() {
@@ -117,9 +119,6 @@ public class RuneslateEntity extends BlockEntity {
 
         output.putLongArray("argumentArray", primitiveLongArray);
 
-        if(chainUUID != null){
-            output.putString("UUID", chainUUID.toString());
-        }
         if(anchorPos != null) {
             output.putLong("anchor", anchorPos.asLong());
         }
@@ -136,7 +135,6 @@ public class RuneslateEntity extends BlockEntity {
         this.linked = input.getBooleanOr("isLinked", false);
         Long anchor = input.getLong("anchor").orElse(null);
         Long previous = input.getLong("previous").orElse(null);
-        String uuid = input.getString("UUID").orElse(null);
 
         long[] primitiveArray = input.getOptionalLongArray("argumentArray").orElse(new long[]{});
         for(long i : primitiveArray) {
@@ -148,9 +146,6 @@ public class RuneslateEntity extends BlockEntity {
         }
         if(previous != null) {
             this.prev = BlockPos.of(previous);
-        }
-        if(uuid != null) {
-            this.chainUUID = UUID.fromString(uuid);
         }
     }
 
@@ -174,14 +169,6 @@ public class RuneslateEntity extends BlockEntity {
         level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
     }
 
-    public void setChainUUID(UUID chainUUID) {
-        this.chainUUID = chainUUID;
-    }
-
-    public UUID getChainUUID() {
-        return chainUUID;
-    }
-
     public BlockPos getPrevious() {
         return prev;
     }
@@ -199,11 +186,27 @@ public class RuneslateEntity extends BlockEntity {
     }
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, RuneslateEntity runeslateEntity) {
-
         if(level.getGameTime() % 5 == 0 && runeslateEntity.isLinked()) {
             for (BlockPos bp : runeslateEntity.arguments) {
                 runeslateEntity.createParticle(bp);
             }
+        }
+
+        if(!runeslateEntity.pendingTriggerTimes.isEmpty() && runeslateEntity.getAnchor() != null) {
+            long gameTime = level.getGameTime();
+            List<TriggerTypeAndTime> triggers = runeslateEntity.pendingTriggerTimes
+                    .stream()
+                    .filter(ttt-> ttt.triggerTime == gameTime)
+                    .toList();
+
+            triggers
+                    .forEach(ttt-> runeslateEntity.getAnchor().triggerCastingBlock(ttt.type, blockPos));
+
+            runeslateEntity.pendingTriggerTimes = new ArrayList<>(runeslateEntity.pendingTriggerTimes
+                    .stream()
+                    .filter(ttt-> ttt.triggerTime != gameTime)
+                    .toList()
+            );
         }
     }
 
@@ -232,7 +235,6 @@ public class RuneslateEntity extends BlockEntity {
     }
 
     public void clearOutData() {
-        chainUUID = null;
         linked = false;
         arguments = new ArrayList<>();
         anchorPos = null;
@@ -240,4 +242,57 @@ public class RuneslateEntity extends BlockEntity {
 
         setChanged();
     }
+
+    public Vec3 getPositionComponentPosition() {
+        if(level != null && this.components().has(RunicRitualsComponents.TARGET_ENTITY_REFERENCE)) {
+            String s = this.components().get(RunicRitualsComponents.TARGET_ENTITY_REFERENCE);
+            if(s != null){
+                Entity e = level.getEntity(UUID.fromString(s));
+                if(e != null) {
+                    return e.position();
+                }
+            }
+        }
+        if(level != null && this.components().has(RunicRitualsComponents.BOUND_POSITION)) {
+            return blockPosToVec3(Objects.requireNonNull(this.components().get(RunicRitualsComponents.BOUND_POSITION)));
+        }
+        return null;
+    }
+    
+    public Entity getBoundEntityTarget() {
+        if(level != null && this.components().has(RunicRitualsComponents.TARGET_ENTITY_REFERENCE)) {
+            String s = this.components().get(RunicRitualsComponents.TARGET_ENTITY_REFERENCE);
+            if(s == null) return null;
+            
+            return level.getEntity(UUID.fromString(s));
+        }
+        return null;
+    }
+
+    public void removeControlComponents() {
+        DataComponentMap.Builder builder = DataComponentMap.builder();
+        builder.addAll(components().filter(d ->
+            !d.equals(RunicRitualsComponents.BOUND_POSITION) &&
+            !d.equals(RunicRitualsComponents.TARGET_ENTITY_REFERENCE)
+        ));
+        setComponents(builder.build());
+    }
+
+    public <T> void setComponent(DataComponentType<T> type, T dataComponent) {
+        DataComponentMap.Builder builder = DataComponentMap.builder();
+        builder.addAll(components());
+        builder.set(type, dataComponent);
+        setComponents(builder.build());
+    }
+
+    // this should probably use scheduledTicks in some capacity, but it would add complexity, soooo
+    // TODO: save pendingTriggerTimes so they can trigger after a reload
+    public void setTriggerTimeout(CastTrigger castTrigger, int timeoutTicksInFuture) {
+
+        if(level == null) return;
+        long triggerTime = level.getGameTime() + timeoutTicksInFuture;
+        pendingTriggerTimes.add(new TriggerTypeAndTime(triggerTime, castTrigger));
+    }
+
+    private record TriggerTypeAndTime(long triggerTime, CastTrigger type) {}
 }

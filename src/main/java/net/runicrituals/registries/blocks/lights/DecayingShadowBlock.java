@@ -1,35 +1,63 @@
 package net.runicrituals.registries.blocks.lights;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.ticks.TickPriority;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.runicrituals.RunicRituals;
 import org.jspecify.annotations.NonNull;
 
-public class DecayingShadowBlock extends ShadowBlock {
+import java.util.Objects;
 
-    private static final int DECAY_TIME = 20 * 60 * 2;
+public class DecayingShadowBlock extends ShadowBlock {
 
     public DecayingShadowBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    protected void onPlace(final @NonNull BlockState state, final Level level, final @NonNull BlockPos pos, final @NonNull BlockState oldState, final boolean movedByPiston) {
-        level.scheduleTick(pos, this, DECAY_TIME, TickPriority.EXTREMELY_LOW);
+    protected void randomTick(final @NonNull BlockState state, final ServerLevel level, final BlockPos pos, final RandomSource random) {
+        int lightLevel = state.getValue(LEVEL);
+        if (lightLevel == 0) {
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            return;
+        }
+        BlockState newState = this.defaultBlockState().setValue(LEVEL, lightLevel - 1);
+        level.setBlock(pos, newState, Block.UPDATE_ALL);
     }
 
     @Override
-    protected void tick(BlockState state, @NonNull ServerLevel level, @NonNull BlockPos pos, @NonNull RandomSource random) {
-        int lightLevel = state.getValue(LEVEL);
-        if(lightLevel == 0) {
-            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-            return;
+    protected @NonNull BlockState updateShape(
+            final BlockState state,
+            final @NonNull LevelReader level,
+            final @NonNull ScheduledTickAccess ticks,
+            final @NonNull BlockPos pos,
+            final @NonNull Direction direction,
+            final @NonNull BlockPos neighbourPos,
+            final @NonNull BlockState neighbour,
+            final @NonNull RandomSource random
+    ) {
+        if (!state.getValue(WATERLOGGED)) {
+            FluidState neighborFluid = neighbour.getFluidState();
+            if (!neighborFluid.isEmpty()) {
+                return Blocks.AIR.defaultBlockState();
+            }
         }
-        level.setBlockAndUpdate(pos, this.defaultBlockState().setValue(LEVEL, lightLevel-1));
-        level.scheduleTick(pos, this, DECAY_TIME, TickPriority.EXTREMELY_LOW);
+        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbour, random);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(final BlockPlaceContext context) {
+        FluidState replacedFluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return Objects.requireNonNull(super.getStateForPlacement(context))
+                .setValue(WATERLOGGED, replacedFluidState.is(Fluids.WATER));
     }
 }

@@ -14,61 +14,53 @@ public enum RuneSymbol implements StringRepresentable {
 //    as long as you don't update the old ones (I re-arrange/add/remove these a lot)
 
 //    Elemental
-    ARCANE(0, RuneType.ELEMENT, ChatFormatting.AQUA, "Arcane", List.of(RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND)),
-    KINETIC(1, RuneType.ELEMENT, ChatFormatting.GRAY, "Kinetic", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.ETCHED, RuneInlayMaterial.NETHERITE, RuneInlayMaterial.SOUL, RuneInlayMaterial.BREEZE)),
-    THERMAL(2, RuneType.ELEMENT, ChatFormatting.RED, "Thermal", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.COPPER, RuneInlayMaterial.BLAZE, RuneInlayMaterial.ICE)),
-    ELECTRIC(3, RuneType.ELEMENT, ChatFormatting.YELLOW, "Electric", List.of(RuneInlayMaterial.GOLD, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.COPPER, RuneInlayMaterial.REDSTONE)),
-    LIGHT(4, RuneType.ELEMENT, ChatFormatting.WHITE, "Light", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND, RuneInlayMaterial.OBSIDIAN)),
-    MATTER(5, RuneType.ELEMENT, ChatFormatting.GOLD, "Matter", List.of(RuneInlayMaterial.NETHERITE, RuneInlayMaterial.OBSIDIAN)),
-    SPACE(6, RuneType.ELEMENT, ChatFormatting.LIGHT_PURPLE, "Space", List.of(RuneInlayMaterial.ECHO, RuneInlayMaterial.CHORUS)),
-    TIME(7, RuneType.ELEMENT, ChatFormatting.GREEN, "Time", List.of(RuneInlayMaterial.ECHO)),
+    ARCANE(0, RuneType.ELEMENT, "Arcane", List.of(RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND)),
+    KINETIC(1, RuneType.ELEMENT, "Kinetic", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.ETCHED, RuneInlayMaterial.NETHERITE, RuneInlayMaterial.SOUL1, RuneInlayMaterial.SOUL2, RuneInlayMaterial.BREEZE)),
+    THERMAL(2, RuneType.ELEMENT, "Thermal", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.COPPER, RuneInlayMaterial.BLAZE, RuneInlayMaterial.ICE)),
+    ELECTRIC(3, RuneType.ELEMENT, "Electric", List.of(RuneInlayMaterial.GOLD, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.COPPER, RuneInlayMaterial.REDSTONE)),
+    LIGHT(4, RuneType.ELEMENT, "Light", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND, RuneInlayMaterial.OBSIDIAN)),
+    MATTER(5, RuneType.ELEMENT, "Matter", List.of(RuneInlayMaterial.NETHERITE, RuneInlayMaterial.OBSIDIAN)),
+    SPACE(6, RuneType.ELEMENT, "Space", List.of(RuneInlayMaterial.ECHO, RuneInlayMaterial.CHORUS)),
+    TIME(7, RuneType.ELEMENT, "Time", List.of(RuneInlayMaterial.ECHO)),
 
 //    Actions
-    MANIFEST(8, RuneType.ACTION, ChatFormatting.BLUE, "Manifest Action"),
-    SACRIFICE(9, RuneType.ACTION, ChatFormatting.BLUE, "Sacrifice Action"),
-    ANIMATE(10, RuneType.ACTION, ChatFormatting.BLUE, "Animate Action"),
+    MANIFEST(8, RuneType.ACTION, "Manifest Action"),
+    SACRIFICE(9, RuneType.ACTION, "Sacrifice Action"),
+    ANIMATE(10, RuneType.ACTION, "Animate Action", List.of(RuneInlayMaterial.SOUL1, RuneInlayMaterial.SOUL2, RuneInlayMaterial.RESIN, RuneInlayMaterial.ECHO)),
 
 //    Forms
-    CUBE(11, RuneType.FORM, ChatFormatting.GOLD, "Prism Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.GOLD, RuneInlayMaterial.DIAMOND, RuneInlayMaterial.GLASS)),
-    SHEET(12, RuneType.FORM, ChatFormatting.GOLD, "Sheet Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.COPPER, RuneInlayMaterial.BLAZE, RuneInlayMaterial.GLASS)),
-    DOME(13, RuneType.FORM, ChatFormatting.GOLD, "Dome Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.ICE, RuneInlayMaterial.BREEZE, RuneInlayMaterial.GLASS)),
+    CUBE(11, RuneType.FORM, "Prism Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.GOLD, RuneInlayMaterial.DIAMOND, RuneInlayMaterial.GLASS)),
+    SHEET(12, RuneType.FORM, "Sheet Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.COPPER, RuneInlayMaterial.BLAZE, RuneInlayMaterial.GLASS)),
+    DOME(13, RuneType.FORM, "Dome Form", List.of(RuneInlayMaterial.IRON, RuneInlayMaterial.ICE, RuneInlayMaterial.BREEZE, RuneInlayMaterial.GLASS)),
 
-//    Activator Modifiers
-    CONTROL(14, RuneType.CONDITION_MODIFIER, ChatFormatting.WHITE, "Control Activation", List.of(RuneInlayMaterial.NETHERITE, RuneInlayMaterial.ECHO, RuneInlayMaterial.CHORUS)),
-    POWERED(15, RuneType.CONDITION_MODIFIER, ChatFormatting.WHITE, "Redstone Activation", List.of(RuneInlayMaterial.REDSTONE)),
-    DELAY(16, RuneType.CONDITION_MODIFIER, ChatFormatting.WHITE, "Delay Activation", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.SOUL, RuneInlayMaterial.BREEZE)),
-
-//    Position Modifiers
-    BOUND(17, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Bind Position", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.IRON, RuneInlayMaterial.ICE)),
-    BOLT(18, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Bolt Position", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
-    HIT(19, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Hit Position", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.SOUL)),
-    STATIC(20, RuneType.POSITION_MODIFIER, ChatFormatting.WHITE, "Static Position", List.of(RuneInlayMaterial.ETCHED, RuneInlayMaterial.AMETHYST, RuneInlayMaterial.DIAMOND)),
+//    Modifiers
+    POWERED(15, RuneType.MODIFIER, "Redstone Activation", List.of(RuneInlayMaterial.REDSTONE)),
+    DELAY(16, RuneType.MODIFIER, "Delay Activation", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.SOUL1, RuneInlayMaterial.SOUL2, RuneInlayMaterial.BREEZE)),
+    BOUND(17, RuneType.MODIFIER, "Bind Position", List.of(RuneInlayMaterial.OBSIDIAN, RuneInlayMaterial.IRON, RuneInlayMaterial.ICE)),
+    BOLT(18, RuneType.MODIFIER, "Bolt Position", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
+    HIT(19, RuneType.MODIFIER, "Hit Position", List.of(RuneInlayMaterial.BREEZE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.SOUL1, RuneInlayMaterial.SOUL2)),
+    GROW(21, RuneType.MODIFIER, "Grow Modification", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
+    SHRINK(22, RuneType.MODIFIER, "Shrink Modification", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.ICE, RuneInlayMaterial.SOUL1, RuneInlayMaterial.SOUL2)),
 
 //    Mana Binding
-    MANABOUND(23, RuneType.MANA_BOUND, ChatFormatting.WHITE, "Mana Bound", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.ENDER)),
-
-//    Form Modifiers
-    GROW(21, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Grow Modification", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.BLAZE, RuneInlayMaterial.CHORUS)),
-    SHRINK(22, RuneType.FORM_MODIFIER, ChatFormatting.WHITE, "Shrink Modification", List.of(RuneInlayMaterial.GLASS, RuneInlayMaterial.ICE, RuneInlayMaterial.SOUL)),
+    MANABOUND(23, RuneType.MANA_BOUND, "Mana Bound", List.of(RuneInlayMaterial.REDSTONE, RuneInlayMaterial.ENDER, RuneInlayMaterial.CHORUS)),
 ;
+
     private final int id;
     private final RuneType runeType;
     private final String name;
-    private final ChatFormatting formatting;
     private static final Map<String, Identifier> identifiers = new HashMap<>();
     private List<RuneInlayMaterial> materialsAllowed = new ArrayList<>();
 
-    RuneSymbol(int id, RuneType type, ChatFormatting formatting, String name){
+    RuneSymbol(int id, RuneType type, String name){
         this.id = id;
         this.name = name;
-        this.formatting = formatting;
         this.runeType = type;
     }
 
-    RuneSymbol(int id, RuneType type, ChatFormatting formatting, String name, List<RuneInlayMaterial> materialsAllowed){
+    RuneSymbol(int id, RuneType type, String name, List<RuneInlayMaterial> materialsAllowed){
         this.id = id;
         this.name = name;
-        this.formatting = formatting;
         this.materialsAllowed = materialsAllowed;
         this.runeType = type;
     }
@@ -90,7 +82,29 @@ public enum RuneSymbol implements StringRepresentable {
     }
 
     public ChatFormatting getFormatting() {
-        return formatting;
+        switch (runeType) {
+            case FORM -> {
+                return ChatFormatting.GOLD;
+            }
+            case ELEMENT -> {
+                return ChatFormatting.RED;
+            }
+            case ACTION -> {
+                return ChatFormatting.BLUE;
+            }
+            case ANCHOR -> {
+                return ChatFormatting.GREEN;
+            }
+            case MODIFIER -> {
+                return ChatFormatting.WHITE;
+            }
+            case MANA_BOUND -> {
+                return ChatFormatting.LIGHT_PURPLE;
+            }
+            case null, default -> {
+                return ChatFormatting.STRIKETHROUGH;
+            }
+        }
     }
 
     public static RuneSymbol getSymbolFromId(int id){

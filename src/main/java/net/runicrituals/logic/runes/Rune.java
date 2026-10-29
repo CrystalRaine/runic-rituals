@@ -2,23 +2,21 @@ package net.runicrituals.logic.runes;
 
 import net.runicrituals.logic.runes.action.Manifest;
 import net.runicrituals.logic.runes.action.Sacrifice;
-import net.runicrituals.logic.runes.condition_modifier.Control;
+import net.runicrituals.logic.runes.modifier.*;
 import net.runicrituals.logic.runes.element.*;
 import net.runicrituals.logic.runes.element.Void;
 import net.runicrituals.logic.runes.enums.RuneInlayMaterial;
 import net.runicrituals.logic.runes.enums.RuneSymbol;
 import net.runicrituals.logic.runes.enums.RuneType;
 import net.runicrituals.logic.runes.form.*;
-import net.runicrituals.logic.runes.form_modifier.Grow;
-import net.runicrituals.logic.runes.form_modifier.Shrink;
-import net.runicrituals.logic.runes.position_modifier.Bound;
-import net.runicrituals.logic.runes.position_modifier.Static;
+import net.runicrituals.registries.blocks.rune_slate.RuneslateEntity;
 
 public abstract class Rune {
 
     protected final double BASE_RUNE_MANA_COST = 10;
 
     protected RuneInlayMaterial material;
+    protected RuneslateEntity runeslateEntity;
 
     private boolean canRunClientSide = false;
 
@@ -50,8 +48,11 @@ public abstract class Rune {
         return 1 + efficiency();
     }
 
-    public static Rune create(RuneSymbol symbol, RuneInlayMaterial material) {
-        Rune createdRune = new Void();
+    public static Rune create(RuneslateEntity rse) {
+
+        RuneSymbol symbol = RuneSymbol.getSymbolFromId(rse.getRuneDataComponent().runeSymbol());
+        RuneInlayMaterial material = RuneInlayMaterial.getElementFromId(rse.getRuneDataComponent().inlay());
+        Rune createdRune;
 
         switch (symbol) {
 //            Elements
@@ -72,22 +73,19 @@ public abstract class Rune {
             case SHEET -> createdRune = new Sheet();
             case DOME -> createdRune = new Dome();
 
-//            Form modifier
+//            Modifier
             case GROW -> createdRune = new Grow();
             case SHRINK -> createdRune = new Shrink();
-
-//            Position modifier
-            case CONTROL -> createdRune = new Control();
-
-//            Condition modifier
-            case STATIC -> createdRune = new Static();
             case BOUND -> createdRune = new Bound();
+            case DELAY -> createdRune = new Delay();
+            case BOLT -> createdRune = new Bolt();
 
 //            Unimplemented / Default
             default -> createdRune = new Void();
         }
 
         createdRune.material = material;
+        createdRune.runeslateEntity = rse;
 
         return createdRune;
     }

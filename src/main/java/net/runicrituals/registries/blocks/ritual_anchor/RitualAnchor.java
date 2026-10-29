@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.runicrituals.RunicRituals;
 import net.runicrituals.registries.RunicRitualsBlockEntities;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;

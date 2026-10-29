@@ -36,6 +36,7 @@ public class RunicRitualsCreativeTabs {
                 output.accept(RunicRitualsItems.ECHO_WAND);
                 output.accept(RunicRitualsItems.MANAMETER);
                 output.accept(RunicRitualsItems.BASIC_STAFF);
+                output.accept(RunicRitualsItems.BOUND_RUNESTONE);
 
                 // General
                 output.accept(RunicRitualsBlocks.RUNESLATE);

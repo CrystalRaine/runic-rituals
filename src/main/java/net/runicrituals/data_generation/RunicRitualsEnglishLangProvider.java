@@ -22,6 +22,8 @@ public class RunicRitualsEnglishLangProvider extends FabricLanguageProvider {
         for(RuneSymbol s : runeSymbols) {
             translationBuilder.add("item.runic-rituals." + s.getName().toLowerCase(Locale.ROOT).replace(" ", "_") + "_rune", s.getName() + " Rune");
         }
+        translationBuilder.add("status.runic-rituals.active",                       "Active");
+        translationBuilder.add("status.runic-rituals.inactive",                     "Inactive");
 
         translationBuilder.add("item.runic-rituals.wand",                           "Wand");
         translationBuilder.add("item.runic-rituals.diamond_wand",                   "Diamond Wand");
@@ -35,6 +37,9 @@ public class RunicRitualsEnglishLangProvider extends FabricLanguageProvider {
         translationBuilder.add("item.runic-rituals.staff.info",                     "Channel a ritual's power through your hands");
         translationBuilder.add("item.runic-rituals.manameter",                      "Manameter");
         translationBuilder.add("item.runic-rituals.manameter.info",                 "This seems a bit anachronistic...");
+        translationBuilder.add("item.runic-rituals.bound_runestone",                "Bound Runestone");
+        translationBuilder.add("item.runic-rituals.bound_runestone.info",           "Its a magic rock!");
+        translationBuilder.add("item.runic-rituals.active_bound_runestone.info",    "%1$s");
 
         translationBuilder.add("block.runic-rituals.rune_engraver",                 "Rune Engraver");
         translationBuilder.add("block.runic-rituals.runeslate",                     "Runeslate");
