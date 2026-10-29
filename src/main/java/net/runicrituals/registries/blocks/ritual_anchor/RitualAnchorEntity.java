@@ -34,7 +34,6 @@ import static net.runicrituals.logic.Util.delta;
 public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
     private static final int RITUAL_SIZE_MAX = 50;
 
-    UUID chainUUID = null;
     boolean linked = false;
     int runeChainSize = 0;
     List<BlockPos> chainStarts = new ArrayList<>();
@@ -46,8 +45,7 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
         super(RunicRitualsBlockEntities.RITUAL_ANCHOR_BLOCK_ENTITY, worldPosition, blockState);
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, RitualAnchorEntity blockEntity) {
-
+    public static void tick(Level level, BlockPos pos, BlockState ignoredState, RitualAnchorEntity blockEntity) {
 //        Try to build the sequence 1x per second.
         if(blockEntity.sequence == null && level.getGameTime() % 20 == 0 && blockEntity.linked) {
             blockEntity.sequence = blockEntity.assembleSequence();
@@ -72,7 +70,6 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
 
     public void link() {
 
-        this.chainUUID = UUID.randomUUID();
         this.sequence = assembleSequence();
         this.runeChainSize = sequence.size();
         this.linked = true;
@@ -93,7 +90,6 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
 
         this.runeChainSize = 0;
         this.linked = false;
-        this.chainUUID = null;
         this.mana = new ManaStorageHandler();
         this.sequence = new RuneSequence();
         this.chainStarts = new ArrayList<>();
@@ -181,7 +177,6 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
                         rsePrev.addArgument(rse);
                     }
                     rse.setAnchor(this);
-                    rse.setChainUUID(this.chainUUID);
                     rse.setLinked();
                     rse.setPrevious(pos);
                     rse.setChanged();
@@ -200,7 +195,15 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
             }
         }
     }
-
+    
+    public void triggerCastingBlock(CastTrigger castTrigger, BlockPos triggeringRSEPos) {
+        this.sequence.triggeredCastingBlock(castTrigger, triggeringRSEPos, this.mana, this.level);
+    }
+    
+    public void triggerCastingBlock(CastTrigger castTrigger, BlockPos triggeringRSEPos, Vec3 overridePos) {
+        this.sequence.triggeredCastingBlockWithOverridePos(castTrigger, triggeringRSEPos, this.mana, this.level, overridePos);
+    }
+    
     private static int sign(double i) {
         return Double.compare(i, 0);
     }
@@ -265,10 +268,6 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
         output.putDouble("mana", mana.getMana());
         output.putInt("runeChainSize", runeChainSize);
 
-        if(chainUUID != null){
-            output.putString("UUID", chainUUID.toString());
-        }
-
         long[] primitiveLongArray = chainStarts.stream()
                 .map(BlockPos::asLong)
                 .mapToLong(Long::longValue)
@@ -285,7 +284,6 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
         this.linked = input.getBooleanOr("isLinked", false);
         this.runeChainSize = input.getIntOr("runeChainSize", 0);
         this.mana = new ManaStorageHandler(input.getDoubleOr("mana", 0));
-        input.getString("UUID").ifPresent(uuid -> this.chainUUID = UUID.fromString(uuid));
 
         long[] primitiveArray = input.getOptionalLongArray("chainStarts").orElse(new long[]{});
         for(long i : primitiveArray) {
@@ -294,8 +292,6 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
     }
 
     /* Network management */
-
-
     @Override
     public @NonNull CompoundTag getUpdateTag(HolderLookup.@NonNull Provider registryLookup) {
         return saveWithoutMetadata(registryLookup);
@@ -314,13 +310,5 @@ public class RitualAnchorEntity extends BlockEntity implements ManaStorage {
 
         BlockState state = getBlockState();
         level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
-    }
-    
-    public void triggerCastingBlock(CastTrigger castTrigger, BlockPos triggeringRSEPos) {
-        this.sequence.triggeredCastingBlock(castTrigger, triggeringRSEPos, this.mana, this.level);
-    }
-    
-    public void triggerCastingBlock(CastTrigger castTrigger, BlockPos triggeringRSEPos, Vec3 overridePos) {
-        this.sequence.triggeredCastingBlockWithOverridePos(castTrigger, triggeringRSEPos, this.mana, this.level, overridePos);
     }
 }

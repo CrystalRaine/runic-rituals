@@ -1,9 +1,13 @@
 package net.runicrituals.logic.runes.modifier;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.runicrituals.logic.runes.CastingBlock;
 import net.runicrituals.logic.runes.enums.CastTrigger;
 import net.runicrituals.registries.RunicRitualsEntities;
@@ -12,8 +16,8 @@ import net.runicrituals.registries.entities.RitualBolt;
 public class Bolt extends ModifierRune{
     @Override
     public CastTrigger preformModification(CastingBlock castingBlock) {
-        
         if(runeslateEntity.getLevel() == null) return CastTrigger.KILL_EXECUTION;
+        if(runeslateEntity.getLevel().isClientSide()) return CastTrigger.KILL_EXECUTION;
         
         RitualBolt rb = RunicRitualsEntities.RITUAL_BOLT.create(runeslateEntity.getLevel(), EntitySpawnReason.TRIGGERED);
         
@@ -21,23 +25,32 @@ public class Bolt extends ModifierRune{
         
         Entity e = castingBlock.getForm().getBoundEntity();
         if(!(e instanceof LivingEntity livingEntity)) {
-            runeslateEntity.getLevel().addFreshEntity(rb);
-            Vec3 pos = castingBlock.getForm().getPosition();
-            rb.shoot(0, 5, 0, 3, 1f);
-            rb.teleportTo(pos.x() + 0.5f, pos.y() + 0.5f, pos.z() + 0.5f);
-            rb.setTriggerLocation(runeslateEntity.getBlockPos());
             
-            return CastTrigger.BOLT_HIT;
+            Projectile.spawnProjectile(
+                rb,
+                (ServerLevel) runeslateEntity.getLevel(),
+                new ItemStack(Items.AMETHYST_SHARD),
+                projectileEntity -> {
+                    float xd = -Mth.sin(90 * (float) (Math.PI / 180.0)) * Mth.cos(0 * (float) (Math.PI / 180.0));
+                    float yd = -Mth.sin((0) * (float) (Math.PI / 180.0));
+                    float zd = Mth.cos(90 * (float) (Math.PI / 180.0)) * Mth.cos(0 * (float) (Math.PI / 180.0));
+                    projectileEntity.shoot(xd, yd, zd, 3, 1);
+                }
+            );
+            rb.teleportTo(castingBlock.getForm().getPosition().x(), castingBlock.getForm().getPosition().y(), castingBlock.getForm().getPosition().z());
+            
         } else {
-            Vec3 entityFacing = livingEntity.getForward();
-            runeslateEntity.getLevel().addFreshEntity(rb);
-            Vec3 pos = castingBlock.getForm().getPosition();
-            rb.shoot(entityFacing.x(), entityFacing.y(), entityFacing.z(), 3, 1f);
-            rb.teleportTo(pos.x(), pos.y() + 1.5, pos.z());
-            rb.setTriggerLocation(runeslateEntity.getBlockPos());
+            Projectile.spawnProjectile(
+                rb,
+                (ServerLevel) runeslateEntity.getLevel(),
+                new ItemStack(Items.AMETHYST_SHARD),
+                projectileEntity -> projectileEntity.shootFromRotation(livingEntity, livingEntity.getXRot(), livingEntity.getYRot(), 0.0F, 3, 1)
+            );
+            rb.teleportTo(livingEntity.getEyePosition().x(), livingEntity.getEyePosition().y(), livingEntity.getEyePosition().z());
             
-            return CastTrigger.BOLT_HIT;
         }
+        rb.setTriggerLocation(runeslateEntity.getBlockPos());
+        return CastTrigger.BOLT_HIT;
     }
     
     @Override

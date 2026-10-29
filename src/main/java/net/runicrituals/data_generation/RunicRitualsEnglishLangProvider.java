@@ -22,6 +22,8 @@ public class RunicRitualsEnglishLangProvider extends FabricLanguageProvider {
         for(RuneSymbol s : runeSymbols) {
             translationBuilder.add("item.runic-rituals." + s.getName().toLowerCase(Locale.ROOT).replace(" ", "_") + "_rune", s.getName() + " Rune");
         }
+        translationBuilder.add("status.runic-rituals.active",                       "Active");
+        translationBuilder.add("status.runic-rituals.inactive",                     "Inactive");
 
         translationBuilder.add("item.runic-rituals.wand",                           "Wand");
         translationBuilder.add("item.runic-rituals.diamond_wand",                   "Diamond Wand");

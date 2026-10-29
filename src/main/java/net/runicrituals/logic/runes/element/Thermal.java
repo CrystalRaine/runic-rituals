@@ -91,11 +91,20 @@ public class Thermal extends ElementRune{
                 if(block.intensity >= 2) replaceBlock(level, position, Blocks.BLUE_ICE, Blocks.PACKED_ICE);
                 if(block.intensity >= 3) replaceBlock(level, position, ConventionalBlockTags.STONES, Blocks.LAVA);
                 if(block.intensity >= 2) replaceBlock(level, position, Blocks.COBBLED_DEEPSLATE, Blocks.DEEPSLATE);
+                if(block.intensity >= 3) replaceBlock(level, position, Blocks.SANDSTONE, Blocks.GLASS);
+                if(block.intensity >= 3) replaceBlock(level, position, Blocks.RED_SANDSTONE, Blocks.GLASS);
+                if(block.intensity >= 2) replaceBlock(level, position, Blocks.SAND, Blocks.SANDSTONE);
+                if(block.intensity >= 2) replaceBlock(level, position, Blocks.RED_SAND, Blocks.RED_SANDSTONE);
                 if(block.intensity >= 2) replaceBlock(level, position, Blocks.COBBLESTONE, Blocks.STONE);
                 if(block.intensity >= 2) replaceBlock(level, position, Blocks.MOSSY_COBBLESTONE, Blocks.STONE);
                 if(block.intensity >= 2) replaceBlock(level, position, Blocks.INFESTED_COBBLESTONE, Blocks.INFESTED_STONE);
                 if(block.intensity >= 5) replaceBlock(level, position, Blocks.OBSIDIAN, Blocks.LAVA);
                 if(block.intensity >= 6) replaceBlock(level, position, Blocks.CRYING_OBSIDIAN, Blocks.LAVA);
+                if(block.intensity >= 5) replaceBlock(level, position, Blocks.GRAVEL, Blocks.COBBLESTONE);
+                if(block.intensity >= 4) replaceBlock(level, position, Blocks.COARSE_DIRT, Blocks.GRAVEL);
+                if(block.intensity >= 3) replaceBlock(level, position, Blocks.DIRT, Blocks.COARSE_DIRT);
+                if(block.intensity >= 2) replaceBlock(level, position, Blocks.DIRT_PATH, Blocks.DIRT);
+                if(block.intensity >= 1) replaceBlock(level, position, Blocks.GRASS_BLOCK, Blocks.DIRT_PATH);
 
                 BlockState fire = BaseFireBlock.getState(level, position);
                 boolean fireCanSurvive = fire.canSurvive(level, position.below());

@@ -2,6 +2,7 @@ package net.runicrituals.registries.entities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.arrow.Arrow;
@@ -52,6 +53,9 @@ public class RitualBolt extends Arrow {
     }
     
     private void hitEffect(Vec3 pos) {
+        
+//        level().explode(this, this.getX(), this.getY(), this.getZ(), 5, Level.ExplosionInteraction.TRIGGER);
+        
         if(triggerPos == null) return;
         
         RuneslateEntity rse = Runeslate.getBlockEntity(level(), triggerPos);

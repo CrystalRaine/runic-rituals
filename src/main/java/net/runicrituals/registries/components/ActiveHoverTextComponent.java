@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
@@ -34,7 +35,7 @@ public class ActiveHoverTextComponent implements TooltipProvider {
     @Override
     public void addToTooltip(Item.@NonNull TooltipContext context, Consumer<Component> consumer, @NonNull TooltipFlag flag, @NonNull DataComponentGetter components) {
         consumer.accept(
-            Component.translatable("item.runic-rituals.active_" + textId + ".info", Boolean.TRUE.equals(components.get(ACTIVE_ITEM)) ? "Active" : "Inactive")
+            Component.translatable("item.runic-rituals.active_" + textId + ".info", components.getOrDefault(ACTIVE_ITEM, false) ? Component.translatable("status.runic-rituals.active") : Component.translatable("status.runic-rituals.inactive"))
                 .withStyle(Boolean.TRUE.equals(components.get(ACTIVE_ITEM)) ? ChatFormatting.GREEN : ChatFormatting.RED)
         );
     }

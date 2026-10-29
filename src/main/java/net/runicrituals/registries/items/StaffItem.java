@@ -31,7 +31,6 @@ public class StaffItem extends RunicRitualsItem {
 
     @Override
     public @NonNull InteractionResult useOn(@NonNull UseOnContext context) {
-        bindControl(context);
         bindPosition(context);
 
         return super.useOn(context);
@@ -41,25 +40,12 @@ public class StaffItem extends RunicRitualsItem {
     public void onUseTick(@NonNull Level level, @NonNull LivingEntity livingEntity, @NonNull ItemStack itemStack, int ticksRemaining) {
 
         sendPosition(level, itemStack, livingEntity);
-        triggerControlledBlock(level, itemStack, livingEntity, CastTrigger.USE_BOUND_ITEM);
 
         if((!itemStack.has(RunicRitualsComponents.BOUND_CONTROL_POSITION)) && (!itemStack.has(RunicRitualsComponents.BOUND_POSITION)) && livingEntity instanceof Player) {
             ((Player)livingEntity).sendOverlayMessage(Component.literal("No runes are bound to this staff"));
         }
 
         super.onUseTick(level, livingEntity, itemStack, ticksRemaining);
-    }
-
-    @Override
-    public void inventoryTick(@NonNull ItemStack itemStack, @NonNull ServerLevel level, @NonNull Entity owner, @Nullable EquipmentSlot slot) {
-        if(owner instanceof LivingEntity le && le.isUsingItem()) return;
-        if(itemStack.has(RunicRitualsComponents.BOUND_POSITION)) {
-            RuneslateEntity rse = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_POSITION)));
-            if (rse != null) {
-                rse.removeControlComponents();
-            }
-        }
-        super.inventoryTick(itemStack, level, owner, slot);
     }
 
     @Override

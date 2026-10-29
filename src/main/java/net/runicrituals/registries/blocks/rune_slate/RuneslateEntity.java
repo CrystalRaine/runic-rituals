@@ -38,7 +38,6 @@ public class RuneslateEntity extends BlockEntity {
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
-    UUID chainUUID = null;
     boolean linked = false;
     List<BlockPos> arguments = new ArrayList<>();
     BlockPos anchorPos = null;
@@ -120,9 +119,6 @@ public class RuneslateEntity extends BlockEntity {
 
         output.putLongArray("argumentArray", primitiveLongArray);
 
-        if(chainUUID != null){
-            output.putString("UUID", chainUUID.toString());
-        }
         if(anchorPos != null) {
             output.putLong("anchor", anchorPos.asLong());
         }
@@ -139,7 +135,6 @@ public class RuneslateEntity extends BlockEntity {
         this.linked = input.getBooleanOr("isLinked", false);
         Long anchor = input.getLong("anchor").orElse(null);
         Long previous = input.getLong("previous").orElse(null);
-        String uuid = input.getString("UUID").orElse(null);
 
         long[] primitiveArray = input.getOptionalLongArray("argumentArray").orElse(new long[]{});
         for(long i : primitiveArray) {
@@ -151,9 +146,6 @@ public class RuneslateEntity extends BlockEntity {
         }
         if(previous != null) {
             this.prev = BlockPos.of(previous);
-        }
-        if(uuid != null) {
-            this.chainUUID = UUID.fromString(uuid);
         }
     }
 
@@ -175,14 +167,6 @@ public class RuneslateEntity extends BlockEntity {
 
         BlockState state = getBlockState();
         level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
-    }
-
-    public void setChainUUID(UUID chainUUID) {
-        this.chainUUID = chainUUID;
-    }
-
-    public UUID getChainUUID() {
-        return chainUUID;
     }
 
     public BlockPos getPrevious() {
@@ -251,7 +235,6 @@ public class RuneslateEntity extends BlockEntity {
     }
 
     public void clearOutData() {
-        chainUUID = null;
         linked = false;
         arguments = new ArrayList<>();
         anchorPos = null;

@@ -85,23 +85,7 @@ public class RunicRitualsItem extends Item {
         return false;
     }
 
-    public void bindControl(UseOnContext context) {
-        BlockPos pos = context.getClickedPos();
-        Level level = context.getLevel();
-        Player player = context.getPlayer();
-        RuneslateEntity rse = Runeslate.getBlockEntity(level, pos);
-
-        if(rse != null && player != null) {
-            if(rse.getRuneDataComponent().runeSymbol() == RuneSymbol.CONTROL.getId()) {
-
-                context.getItemInHand().set(RunicRitualsComponents.BOUND_CONTROL_POSITION, rse.getBlockPos());
-                player.sendOverlayMessage(Component.literal("Linking " + context.getItemInHand().getItemName().getString() + " to Control Ritual"));
-            }
-        }
-    }
-
     public boolean sendPosition(Level level, ItemStack itemStack, LivingEntity livingEntity) {
-        ;
         level.getEntity(UUID.fromString(livingEntity.getStringUUID()));
         if(itemStack.has(RunicRitualsComponents.BOUND_POSITION)) {
             RuneslateEntity rse = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_POSITION)));
@@ -110,24 +94,6 @@ public class RunicRitualsItem extends Item {
             } else if(livingEntity instanceof Player) {
                 ((Player)livingEntity).sendOverlayMessage(Component.literal("Could not find bound position rune"));
                 return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean triggerControlledBlock(Level level, ItemStack itemStack, LivingEntity livingEntity, CastTrigger triggerType){
-        if(itemStack.has(RunicRitualsComponents.BOUND_CONTROL_POSITION)) {
-            RuneslateEntity rse2 = Runeslate.getBlockEntity(level, Objects.requireNonNull(itemStack.get(RunicRitualsComponents.BOUND_CONTROL_POSITION)));
-            if (rse2 != null && rse2.getAnchor() != null) {
-                rse2.getAnchor().triggerCastingBlock(triggerType, rse2.getBlockPos());
-            } else if(livingEntity instanceof Player) {
-                if(rse2 == null) {
-                    ((Player) livingEntity).sendOverlayMessage(Component.literal("Could not find bound control rune"));
-                    return false;
-                } else if (rse2.getAnchor() == null) {
-                    ((Player) livingEntity).sendOverlayMessage(Component.literal("Attached rune is not part of an active ritual"));
-                    return false;
-                }
             }
         }
         return true;

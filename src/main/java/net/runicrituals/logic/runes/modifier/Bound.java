@@ -19,7 +19,7 @@ public class Bound extends ModifierRune {
     public String name() {
         return "Bound";
     }
-
+    
     @Override
     public CastTrigger preformModification(CastingBlock castingBlock) {
 
@@ -29,11 +29,7 @@ public class Bound extends ModifierRune {
         if(pos != null) {
             castingBlock.getForm().setPosition(pos);
         }
-        if(entity != null) {
-            castingBlock.getForm().setBoundEntity(entity);
-        } else {
-            castingBlock.getForm().setBoundEntity(null);
-        }
+        castingBlock.getForm().setBoundEntity(entity);
 
         runeslateEntity.removeControlComponents();
         

@@ -22,9 +22,13 @@ public class RunicRitualsClientEventRegistration {
             for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
                 if(stack.getItem() instanceof RunicRitualsItem rri) {
                     rri.clientInventoryTick(stack, (ClientLevel) player.level(), player);
-                    break;
                 }
             }
+            
+            if(player.getOffhandItem().getItem() instanceof RunicRitualsItem rri) {
+                rri.clientInventoryTick(player.getOffhandItem(), (ClientLevel) player.level(), player);
+            }
+            
             
             ClientLevel clientLevel = client.level;
             if(clientLevel == null) return;

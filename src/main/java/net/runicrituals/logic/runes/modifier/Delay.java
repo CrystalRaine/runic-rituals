@@ -6,9 +6,7 @@ import net.runicrituals.logic.runes.enums.CastTrigger;
 public class Delay extends ModifierRune{
     @Override
     public CastTrigger preformModification(CastingBlock castingBlock) {
-
         runeslateEntity.setTriggerTimeout(CastTrigger.DELAY, 10 * 20);
-
         return CastTrigger.DELAY;
     }
 

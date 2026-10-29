@@ -76,7 +76,6 @@ public abstract class Rune {
 //            Modifier
             case GROW -> createdRune = new Grow();
             case SHRINK -> createdRune = new Shrink();
-            case CONTROL -> createdRune = new Control();
             case BOUND -> createdRune = new Bound();
             case DELAY -> createdRune = new Delay();
             case BOLT -> createdRune = new Bolt();

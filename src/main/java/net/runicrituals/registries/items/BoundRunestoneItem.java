@@ -1,6 +1,7 @@
 package net.runicrituals.registries.items;
 
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +30,8 @@ public class BoundRunestoneItem extends RunicRitualsItem{
     public @NonNull InteractionResult use(final @NonNull Level level, final @NonNull Player player, final @NonNull InteractionHand hand) {
 
         this.toggleActive(player.getItemInHand(hand));
-        player.sendOverlayMessage(Component.literal("Runestone: " + (this.isActive(player.getItemInHand(hand)) ? "Active" : "Inactive")));
+//        super fancy translation, should turn into Item Name: [Active/Inactive]
+        player.sendOverlayMessage(Component.literal(player.getItemInHand(hand).getComponents().getOrDefault(DataComponents.CUSTOM_NAME, Component.translatable("item.runic-rituals.bound_runestone")).getString() + ": " + (this.isActive(player.getItemInHand(hand)) ? Component.translatable("status.runic-rituals.active") : Component.translatable("status.runic-rituals.inactive")).getString()));
         return super.use(level, player, hand);
     }
 

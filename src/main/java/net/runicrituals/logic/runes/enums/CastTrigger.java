@@ -2,7 +2,6 @@ package net.runicrituals.logic.runes.enums;
 
 public enum CastTrigger {
 
-    USE_BOUND_ITEM(false, true),
     DELAY(true, true),
     KILL_EXECUTION(false, false),
     BOLT_HIT(true, true);
